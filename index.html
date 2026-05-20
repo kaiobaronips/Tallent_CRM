@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOREN — Talent Intelligence Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+  :root {
+    /* ── COLOUR ── */
+    --bg: #0a0e14;
+    --bg2: #111620;
+    --bg3: #161d2b;
+    --border: #1e2a3d;
+    --gold: #c9a84c;
+    --gold2: #e8c876;
+    --blue: #3b6fd4;
+    --blue2: #5a8ff0;
+    --green: #2ecc71;
+    --orange: #e67e22;
+    --red: #e74c3c;
+    --purple: #9b59b6;
+    --text: #dde4f0;
+    --text2: #8a9ab8;
+    --text3: #4a5a72;
+    --radius: 12px;
+    --radius-sm: 8px;
+
+    /* ── TYPOGRAPHY — FAMILIES ── */
+    --font-display:  'Neue Helvetica', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-body:     'Neue Helvetica', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-utility:  'Neue Helvetica', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-data:     'IBM Plex Mono', 'Courier New', monospace;
+
+    /* ── TYPOGRAPHY — WEIGHTS ── */
+    --fw-display:  700;   /* Neue Helvetica Pro 75 Bold  */
+    --fw-body:     300;   /* Neue Helvetica Pro 35 Thin  */
+    --fw-utility:  400;   /* Neue Helvetica 55 Roman     */
+    --fw-data-lt:  300;   /* IBM Plex Mono Light         */
+    --fw-data:     400;   /* IBM Plex Mono Regular       */
+    --fw-data-md:  500;   /* IBM Plex Mono Medium        */
+
+    /* ── TYPOGRAPHY — SCALE ── */
+    --fs-display:  40px;  /* DISPLAY L    — Bold    */
+    --fs-h1:       28px;  /* HEADING 1    — Bold    */
+    --fs-h2:       22px;  /* HEADING 2    — Bold    */
+    --fs-h3:       18px;  /* HEADING 3    — Bold    */
+    --fs-body:     16px;  /* BODY         — Thin    */
+    --fs-body-sm:  14px;  /* BODY SMALL   — Thin    */
+    --fs-caption:  13px;  /* CAPTION      — Light   */
+    --fs-utility:  11px;  /* UTILITY LABEL— Roman   */
+    --fs-data:     10px;  /* DATA         — Mono    */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    font-weight: var(--fw-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: var(--fs-body-sm);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-mark {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 18px;
+    color: #0a0e14;
+    letter-spacing: -1px;
+  }
+
+  .logo-text h1 {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-display);
+    color: var(--text);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .logo-text span {
+    font-family: var(--font-utility);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-utility);
+    color: var(--text2);
+    letter-spacing: 1px;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(46, 204, 113, 0.1);
+    border: 1px solid rgba(46, 204, 113, 0.25);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-family: var(--font-utility);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-utility);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .topbar-date {
+    font-family: var(--font-utility);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-utility);
+    color: var(--text2);
+  }
+
+  /* ── LAYOUT ── */
+  .main {
+    padding: 28px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: var(--font-utility);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-utility);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 14px;
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── KPI CARDS ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .kpi-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .kpi-card:hover { border-color: var(--gold); }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent, var(--gold));
+  }
+
+  .kpi-label {
+    font-family: var(--font-utility);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-utility);
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+  }
+
+  .kpi-value {
+    font-family: var(--font-data);
+    font-size: var(--fs-display);
+    font-weight: var(--fw-data-md);
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 6px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -1px;
+  }
+
+  .kpi-sub {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-body);
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .kpi-badge {
+    font-family: var(--font-utility);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-utility);
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-green { background: rgba(46,204,113,.15); color: var(--green); }
+  .badge-gold  { background: rgba(201,168,76,.15);  color: var(--gold); }
+  .badge-blue  { background: rgba(59,111,212,.15);  color: var(--blue2); }
+  .badge-red   { background: rgba(231,76,60,.15);   color: var(--red); }
+
+  .kpi-icon {
+    position: absolute;
+    right: 18px;
+    top: 18px;
+    font-size: 28px;
+    opacity: 0.12;
+  }
+
+  /* ── TWO COLUMNS ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-display);
+    color: var(--text);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.3px;
+  }
+
+  .card-title .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  /* ── PIPELINE FUNNEL ── */
+  .funnel-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .funnel-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .funnel-stage {
+    font-family: var(--font-body);
+    font-size: var(--fs-body-sm);
+    font-weight: var(--fw-body);
+    color: var(--text2);
+    width: 170px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .funnel-bar-wrap {
+    flex: 1;
+    background: var(--bg3);
+    border-radius: 4px;
+    height: 20px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .funnel-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+    position: relative;
+  }
+
+  .funnel-count {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-data);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-data-md);
+    color: rgba(255,255,255,0.7);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .funnel-num {
+    font-family: var(--font-data);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-data-md);
+    color: var(--text);
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── AGENTS GRID ── */
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .agent-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .agent-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .agent-num {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    font-weight: var(--fw-data-md);
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .agent-name {
+    font-family: var(--font-display);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-display);
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .agent-desc {
+    font-family: var(--font-body);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-body);
+    color: var(--text2);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .agent-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-utility);
+    font-size: var(--fs-data);
+    font-weight: var(--fw-utility);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+
+  .status-active   { background: rgba(46,204,113,.12); color: var(--green); }
+  .status-building { background: rgba(201,168,76,.12);  color: var(--gold); }
+  .status-planned  { background: rgba(74,90,114,.15);   color: var(--text3); }
+
+  /* ── SCORE DONUT ── */
+  .score-section {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+
+  .donut-wrap {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+  }
+
+  .donut-wrap svg { transform: rotate(-90deg); }
+
+  .donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .donut-center .big {
+    font-family: var(--font-data);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-data-md);
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -1px;
+  }
+  .donut-center .lbl {
+    font-family: var(--font-utility);
+    font-size: var(--fs-data);
+    font-weight: var(--fw-utility);
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .score-legend {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .score-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .score-label {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: var(--fs-body-sm);
+    font-weight: var(--fw-body);
+    color: var(--text2);
+  }
+
+  .score-val {
+    font-family: var(--font-data);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-data-md);
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .score-pct {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    font-weight: var(--fw-data);
+    color: var(--text3);
+    width: 36px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── CRON SCHEDULE ── */
+  .cron-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .cron-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .cron-item:last-child { border-bottom: none; }
+
+  .cron-time {
+    font-family: var(--font-data);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-data-md);
+    color: var(--gold);
+    width: 52px;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.3px;
+  }
+
+  .cron-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .cron-body {
+    flex: 1;
+  }
+
+  .cron-name {
+    font-family: var(--font-display);
+    font-size: var(--fs-body-sm);
+    font-weight: var(--fw-display);
+    color: var(--text);
+  }
+
+  .cron-action {
+    font-family: var(--font-body);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-body);
+    color: var(--text2);
+    margin-top: 2px;
+  }
+
+  /* ── N8N WORKFLOWS ── */
+  .wf-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .wf-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--bg3);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+
+  .wf-id {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    font-weight: var(--fw-data-md);
+    color: var(--text3);
+    font-variant-numeric: tabular-nums;
+    width: 42px;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+  }
+
+  .wf-name {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: var(--fs-body-sm);
+    font-weight: var(--fw-body);
+    color: var(--text);
+  }
+
+  .wf-badge {
+    font-family: var(--font-utility);
+    font-size: var(--fs-data);
+    font-weight: var(--fw-utility);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .wf-active   { background: rgba(46,204,113,.12); color: var(--green); }
+  .wf-inactive { background: rgba(74,90,114,.15);  color: var(--text3); }
+
+  /* ── LOG ENTRIES ── */
+  .log-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  .log-list::-webkit-scrollbar { width: 4px; }
+  .log-list::-webkit-scrollbar-track { background: var(--bg); }
+  .log-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .log-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg3);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--border);
+  }
+
+  .log-item.info   { border-left-color: var(--blue2); }
+  .log-item.ok     { border-left-color: var(--green); }
+  .log-item.warn   { border-left-color: var(--orange); }
+
+  .log-ts {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    font-weight: var(--fw-data-lt);
+    color: var(--text3);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    margin-top: 2px;
+    letter-spacing: 0.3px;
+  }
+
+  .log-body {
+    flex: 1;
+  }
+
+  .log-tag {
+    font-family: var(--font-utility);
+    font-size: var(--fs-data);
+    font-weight: var(--fw-utility);
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+
+  .log-msg {
+    font-family: var(--font-body);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-body);
+    color: var(--text2);
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 40px;
+    padding: 20px 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-utility);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-utility);
+    letter-spacing: 0.3px;
+    color: var(--text3);
+  }
+
+  /* ── MINI STAT ── */
+  .mini-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .mini-stat {
+    background: var(--bg3);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .mini-stat .v {
+    font-family: var(--font-data);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-data-md);
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.5px;
+  }
+  .mini-stat .l {
+    font-family: var(--font-utility);
+    font-size: var(--fs-data);
+    font-weight: var(--fw-utility);
+    color: var(--text2);
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── CADENCE TABLE ── */
+  .cadence-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .cadence-table th {
+    font-family: var(--font-utility);
+    font-size: var(--fs-data);
+    font-weight: var(--fw-utility);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text3);
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+
+  .cadence-table td {
+    font-family: var(--font-body);
+    font-size: var(--fs-body-sm);
+    font-weight: var(--fw-body);
+    color: var(--text2);
+    padding: 9px 10px;
+    border-bottom: 1px solid rgba(30,42,61,0.5);
+    vertical-align: top;
+  }
+
+  .cadence-table tr:last-child td { border-bottom: none; }
+
+  .cadence-table td:first-child {
+    font-family: var(--font-data);
+    font-weight: var(--fw-data-md);
+    color: var(--gold);
+    font-size: var(--fs-caption);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cadence-table td:nth-child(2) {
+    font-family: var(--font-display);
+    font-weight: var(--fw-display);
+    color: var(--text);
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    background: var(--bg3);
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+
+  .progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+  }
+
+  /* ── SCORE CRITERIA ── */
+  .criteria-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .criteria-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .criteria-label {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-body);
+    color: var(--text2);
+  }
+
+  .criteria-pts {
+    font-family: var(--font-data);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-data-md);
+    color: var(--text);
+    width: 32px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .criteria-bar-wrap {
+    width: 80px;
+    background: var(--bg3);
+    border-radius: 3px;
+    height: 5px;
+    overflow: hidden;
+  }
+
+  .criteria-bar {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--gold);
+  }
+
+  /* ── TOOLTIP-LIKE TAG ── */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-family: var(--font-utility);
+    font-size: var(--fs-data);
+    font-weight: var(--fw-utility);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+
+  .chip-gold   { color: var(--gold);  border-color: rgba(201,168,76,.3);  background: rgba(201,168,76,.08); }
+  .chip-green  { color: var(--green); border-color: rgba(46,204,113,.3);  background: rgba(46,204,113,.08); }
+  .chip-blue   { color: var(--blue2); border-color: rgba(90,143,240,.3);  background: rgba(59,111,212,.08); }
+  .chip-purple { color: var(--purple);border-color: rgba(155,89,182,.3);  background: rgba(155,89,182,.08); }
+
+</style>
+</head>
+<body>
+
+<!-- ══ TOP BAR ══════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-mark">S</div>
+    <div class="logo-text">
+      <h1>SOREN</h1>
+      <span>Talent Intelligence CRM · North Paraná</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="status-pill" id="status-pill">
+      <div class="status-dot" id="status-dot"></div>
+      <span id="status-text">Conectando...</span>
+    </div>
+    <div class="topbar-date" id="topbar-date">20 Mai 2026 · Fase 02</div>
+    <div id="updated-badge" style="font-family:var(--font-data); font-size:var(--fs-data); font-weight:var(--fw-data-lt); color:var(--text3); display:none; letter-spacing:0.3px;">—</div>
+  </div>
+</header>
+
+<!-- ══ MAIN ══════════════════════════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- ── KPIs ── -->
+  <div class="section-title">Indicadores Operacionais</div>
+  <div class="kpi-grid">
+
+    <div class="kpi-card" style="--accent: var(--gold)">
+      <div class="kpi-icon">👤</div>
+      <div class="kpi-label">Talentos no CRM</div>
+      <div class="kpi-value" id="kpi-talentos">—</div>
+      <div class="kpi-sub">
+        <span class="kpi-badge badge-gold">Base Ativa</span>
+        <span id="kpi-talentos-sub">carregando...</span>
+      </div>
+    </div>
+
+    <div class="kpi-card" style="--accent: var(--blue2)">
+      <div class="kpi-icon">💼</div>
+      <div class="kpi-label">Interações LinkedIn</div>
+      <div class="kpi-value" id="kpi-linkedin">—</div>
+      <div class="kpi-sub">
+        <span class="kpi-badge badge-blue" id="kpi-linkedin-pct">—</span>
+        <span>Via WF12 / Expandi</span>
+      </div>
+    </div>
+
+    <div class="kpi-card" style="--accent: var(--green)">
+      <div class="kpi-icon">✉️</div>
+      <div class="kpi-label">Interações E-mail</div>
+      <div class="kpi-value" id="kpi-email">—</div>
+      <div class="kpi-sub">
+        <span class="kpi-badge badge-green">Gmail API</span>
+        <span>Full automático</span>
+      </div>
+    </div>
+
+    <div class="kpi-card" style="--accent: var(--purple)">
+      <div class="kpi-icon">⚙️</div>
+      <div class="kpi-label">Workflows n8n</div>
+      <div class="kpi-value">20</div>
+      <div class="kpi-sub">
+        <span class="kpi-badge badge-green">Ativos</span>
+        <span>2 inativos preservados</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── PIPELINE + SCORE ── -->
+  <div class="section-title">Pipeline de Recrutamento</div>
+  <div class="two-col">
+
+    <!-- PIPELINE -->
+    <div class="card">
+      <div class="card-title"><div class="dot"></div> Funil Operacional — <span id="funnel-stage-count">11</span> Etapas</div>
+      <div class="funnel-list" id="funnel-list">
+        <div class="funnel-item">
+          <span class="funnel-stage">1. Mapeado</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:100%; background: linear-gradient(90deg, #3b6fd4, #5a8ff0);">
+              <span class="funnel-count">59</span>
+            </div>
+          </div>
+          <span class="funnel-num">59</span>
+        </div>
+        <div class="funnel-item">
+          <span class="funnel-stage">2. Pré-qualificado</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:83%; background: linear-gradient(90deg, #5a8ff0, #7aaff5);">
+              <span class="funnel-count">49</span>
+            </div>
+          </div>
+          <span class="funnel-num">49</span>
+        </div>
+        <div class="funnel-item">
+          <span class="funnel-stage">3. Enriquecido</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:70%; background: linear-gradient(90deg, #c9a84c, #e8c876);">
+              <span class="funnel-count">41</span>
+            </div>
+          </div>
+          <span class="funnel-num">41</span>
+        </div>
+        <div class="funnel-item">
+          <span class="funnel-stage">4. Score aplicado</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:62%; background: linear-gradient(90deg, #e8c876, #f0d88a);">
+              <span class="funnel-count">37</span>
+            </div>
+          </div>
+          <span class="funnel-num">37</span>
+        </div>
+        <div class="funnel-item">
+          <span class="funnel-stage">5. Aprovado p/ contato</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:51%; background: linear-gradient(90deg, #2ecc71, #54d98c);">
+              <span class="funnel-count">30</span>
+            </div>
+          </div>
+          <span class="funnel-num">30</span>
+        </div>
+        <div class="funnel-item">
+          <span class="funnel-stage">6. Contato enviado</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:44%; background: linear-gradient(90deg, #54d98c, #7be4a6);">
+              <span class="funnel-count">26</span>
+            </div>
+          </div>
+          <span class="funnel-num">26</span>
+        </div>
+        <div class="funnel-item">
+          <span class="funnel-stage">7. Aguardando resposta</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:32%; background: linear-gradient(90deg, #e67e22, #f39c42);">
+              <span class="funnel-count">19</span>
+            </div>
+          </div>
+          <span class="funnel-num">19</span>
+        </div>
+        <div class="funnel-item">
+          <span class="funnel-stage">8. Respondeu</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:15%; background: linear-gradient(90deg, #f39c42, #f5b963);">
+              <span class="funnel-count">9</span>
+            </div>
+          </div>
+          <span class="funnel-num">9</span>
+        </div>
+        <div class="funnel-item">
+          <span class="funnel-stage">9. Reunião marcada</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:7%; background: linear-gradient(90deg, #9b59b6, #b07cc6);">
+              <span class="funnel-count">4</span>
+            </div>
+          </div>
+          <span class="funnel-num">4</span>
+        </div>
+        <div class="funnel-item">
+          <span class="funnel-stage">10. Entrevistado</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:3%; background: linear-gradient(90deg, #b07cc6, #c49fd6);">
+              <span class="funnel-count">2</span>
+            </div>
+          </div>
+          <span class="funnel-num">2</span>
+        </div>
+        <div class="funnel-item">
+          <span class="funnel-stage">11. Aprovado / Contratado</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:2%; background: linear-gradient(90deg, #c9a84c, #e8c876);">
+              <span class="funnel-count">1</span>
+            </div>
+          </div>
+          <span class="funnel-num">1</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCORE BREAKDOWN -->
+    <div class="card">
+      <div class="card-title"><div class="dot"></div> Classificação A+/A/B/C</div>
+
+      <div class="score-section">
+        <!-- donut SVG -->
+        <div class="donut-wrap">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="48" fill="none" stroke="#161d2b" stroke-width="16"/>
+            <!-- A+: 12% → offset 301.59 * (1-0.12) = 265.4 -->
+            <circle cx="60" cy="60" r="48" fill="none" stroke="#c9a84c" stroke-width="16"
+              stroke-dasharray="36.19 265.4" stroke-dashoffset="0"/>
+            <!-- A: 25% → 75.4 -->
+            <circle cx="60" cy="60" r="48" fill="none" stroke="#e8c876" stroke-width="16"
+              stroke-dasharray="75.4 226.2" stroke-dashoffset="-36.19"/>
+            <!-- B: 35% → 105.6 -->
+            <circle cx="60" cy="60" r="48" fill="none" stroke="#3b6fd4" stroke-width="16"
+              stroke-dasharray="105.56 195.8" stroke-dashoffset="-111.59"/>
+            <!-- C: 28% → 84.4 -->
+            <circle cx="60" cy="60" r="48" fill="none" stroke="#1e2a3d" stroke-width="16"
+              stroke-dasharray="84.4 217" stroke-dashoffset="-217.15"/>
+          </svg>
+          <div class="donut-center">
+            <div class="big">59</div>
+            <div class="lbl">talentos</div>
+          </div>
+        </div>
+
+        <div class="score-legend">
+          <div class="score-row">
+            <div class="score-swatch" style="background: var(--gold)"></div>
+            <div class="score-label"><strong style="color:var(--gold)">A+</strong> 85-100pts</div>
+            <div class="score-val" id="classif-aplus">—</div>
+            <div class="score-pct" id="classif-aplus-pct">—</div>
+          </div>
+          <div class="score-row">
+            <div class="score-swatch" style="background: var(--gold2)"></div>
+            <div class="score-label"><strong style="color:var(--gold2)">A</strong> 70-84pts</div>
+            <div class="score-val" id="classif-a">—</div>
+            <div class="score-pct" id="classif-a-pct">—</div>
+          </div>
+          <div class="score-row">
+            <div class="score-swatch" style="background: var(--blue)"></div>
+            <div class="score-label"><strong style="color:var(--blue2)">B</strong> 55-69pts</div>
+            <div class="score-val" id="classif-b">—</div>
+            <div class="score-pct" id="classif-b-pct">—</div>
+          </div>
+          <div class="score-row">
+            <div class="score-swatch" style="background: var(--border)"></div>
+            <div class="score-label"><strong style="color:var(--text3)">C</strong> &lt;55pts</div>
+            <div class="score-val" id="classif-c">—</div>
+            <div class="score-pct" id="classif-c-pct">—</div>
+          </div>
+
+          <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+            <div style="font-family:var(--font-utility); font-size:var(--fs-utility); font-weight:var(--fw-utility); color:var(--text2); margin-bottom:6px; text-transform:uppercase; letter-spacing:1px;">Critérios de Score (100pts)</div>
+            <div class="criteria-list">
+              <div class="criteria-item">
+                <div class="criteria-label">Experiência comercial</div>
+                <div class="criteria-pts">20</div>
+                <div class="criteria-bar-wrap"><div class="criteria-bar" style="width:100%"></div></div>
+              </div>
+              <div class="criteria-item">
+                <div class="criteria-label">Exp. mercado financeiro</div>
+                <div class="criteria-pts">20</div>
+                <div class="criteria-bar-wrap"><div class="criteria-bar" style="width:100%"></div></div>
+              </div>
+              <div class="criteria-item">
+                <div class="criteria-label">Potencial de carteira</div>
+                <div class="criteria-pts">20</div>
+                <div class="criteria-bar-wrap"><div class="criteria-bar" style="width:100%"></div></div>
+              </div>
+              <div class="criteria-item">
+                <div class="criteria-label">Fit com assessoria</div>
+                <div class="criteria-pts">15</div>
+                <div class="criteria-bar-wrap"><div class="criteria-bar" style="width:75%"></div></div>
+              </div>
+              <div class="criteria-item">
+                <div class="criteria-label">Proximidade geográfica</div>
+                <div class="criteria-pts">10</div>
+                <div class="criteria-bar-wrap"><div class="criteria-bar" style="width:50%"></div></div>
+              </div>
+              <div class="criteria-item">
+                <div class="criteria-label">Senioridade</div>
+                <div class="criteria-pts">10</div>
+                <div class="criteria-bar-wrap"><div class="criteria-bar" style="width:50%"></div></div>
+              </div>
+              <div class="criteria-item">
+                <div class="criteria-label">Sinais de mobilidade</div>
+                <div class="criteria-pts">5</div>
+                <div class="criteria-bar-wrap"><div class="criteria-bar" style="width:25%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /two-col -->
+
+  <!-- ── AGENTS ── -->
+  <div class="section-title">Arquitetura dos 8 Agentes</div>
+  <div class="agents-grid">
+
+    <div class="agent-card">
+      <div class="agent-num">Agente 01</div>
+      <div class="agent-name">Hunter Regional</div>
+      <div class="agent-desc">Busca perfis no LinkedIn, Google e Sales Navigator por cidade, segmento e cargo.</div>
+      <span class="agent-status status-active"><span class="status-dot"></span>Ativo</span>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num">Agente 02</div>
+      <div class="agent-name">CRM Notion Builder</div>
+      <div class="agent-desc">Organiza candidatos no Notion CRM com 40+ campos estruturados.</div>
+      <span class="agent-status status-active"><span class="status-dot"></span>Ativo</span>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num">Agente 03</div>
+      <div class="agent-name">Enriquecedor de Perfil</div>
+      <div class="agent-desc">Complementa histórico, certificações (CPA-20, CEA, CFP) e potencial de carteira.</div>
+      <span class="agent-status status-active"><span class="status-dot"></span>Ativo</span>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num">Agente 04</div>
+      <div class="agent-name">Scorer de Candidatos</div>
+      <div class="agent-desc">Pontua 0-100 e classifica A+/A/B/C com recomendação de ação.</div>
+      <span class="agent-status status-active"><span class="status-dot"></span>Ativo</span>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num">Agente 05</div>
+      <div class="agent-name">Copywriter Institucional</div>
+      <div class="agent-desc">Gera 4 mensagens personalizadas: conexão, principal, follow-up e encerramento.</div>
+      <span class="agent-status status-building">Em Construção</span>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num">Agente 06</div>
+      <div class="agent-name">Agente de Contato</div>
+      <div class="agent-desc">Executa envios via LinkedIn (Expandi), Gmail e registra no CRM.</div>
+      <span class="agent-status status-active"><span class="status-dot"></span>Ativo</span>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num">Agente 07</div>
+      <div class="agent-name">Agente de Follow-up</div>
+      <div class="agent-desc">Rastreia cadências, detecta respostas e atualiza status no CRM automaticamente.</div>
+      <span class="agent-status status-building">Em Construção</span>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num">Agente 08 + 09</div>
+      <div class="agent-name">Performance & Reviewer</div>
+      <div class="agent-desc">Relatórios diários/semanais + auditoria WF19 (Notion + Obsidian, append-mode).</div>
+      <span class="agent-status status-active"><span class="status-dot"></span>Ativo</span>
+    </div>
+
+  </div>
+
+  <!-- ── SCHEDULE + CADENCE ── -->
+  <div class="section-title">Rotina Diária & Cadência de Contato</div>
+  <div class="two-col">
+
+    <!-- CRON -->
+    <div class="card">
+      <div class="card-title"><div class="dot"></div> Cron Jobs Diários (9h – 17h)</div>
+      <div class="cron-list">
+        <div class="cron-item">
+          <span class="cron-time">09:00</span>
+          <div class="cron-dot" style="background:var(--blue2)"></div>
+          <div class="cron-body">
+            <div class="cron-name">Hunter Regional</div>
+            <div class="cron-action">Busca novos perfis por região e segmento</div>
+          </div>
+        </div>
+        <div class="cron-item">
+          <span class="cron-time">10:00</span>
+          <div class="cron-dot" style="background:var(--orange)"></div>
+          <div class="cron-body">
+            <div class="cron-name">Validador / Deduplicador</div>
+            <div class="cron-action">Limpa duplicados e valida campos obrigatórios</div>
+          </div>
+        </div>
+        <div class="cron-item">
+          <span class="cron-time">11:00</span>
+          <div class="cron-dot" style="background:var(--gold)"></div>
+          <div class="cron-body">
+            <div class="cron-name">Enriquecedor de Perfil</div>
+            <div class="cron-action">Busca certificações, histórico e carteira estimada</div>
+          </div>
+        </div>
+        <div class="cron-item">
+          <span class="cron-time">12:00</span>
+          <div class="cron-dot" style="background:var(--gold2)"></div>
+          <div class="cron-body">
+            <div class="cron-name">Scorer</div>
+            <div class="cron-action">Classifica candidatos A+/A/B/C (score 0-100)</div>
+          </div>
+        </div>
+        <div class="cron-item">
+          <span class="cron-time">14:00</span>
+          <div class="cron-dot" style="background:var(--purple)"></div>
+          <div class="cron-body">
+            <div class="cron-name">Copywriter Institucional</div>
+            <div class="cron-action">Gera mensagens personalizadas por perfil aprovado</div>
+          </div>
+        </div>
+        <div class="cron-item">
+          <span class="cron-time">15:00</span>
+          <div class="cron-dot" style="background:var(--green)"></div>
+          <div class="cron-body">
+            <div class="cron-name">Agente de Contato</div>
+            <div class="cron-action">Envia e-mails e agenda mensagens LinkedIn</div>
+          </div>
+        </div>
+        <div class="cron-item">
+          <span class="cron-time">16:00</span>
+          <div class="cron-dot" style="background:var(--blue)"></div>
+          <div class="cron-body">
+            <div class="cron-name">Follow-up Automático</div>
+            <div class="cron-action">Roda cadências vencidas, detecta respostas</div>
+          </div>
+        </div>
+        <div class="cron-item">
+          <span class="cron-time">17:00</span>
+          <div class="cron-dot" style="background:var(--red)"></div>
+          <div class="cron-body">
+            <div class="cron-name">Gestor de Performance</div>
+            <div class="cron-action">Gera relatório diário + auditoria FALLEN</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CADENCE TABLE -->
+    <div class="card">
+      <div class="card-title"><div class="dot"></div> Cadência de Contato Padrão</div>
+      <table class="cadence-table">
+        <thead>
+          <tr>
+            <th>Dia</th>
+            <th>Ação</th>
+            <th>Canal</th>
+            <th>Objetivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>D+0</td>
+            <td>Pedido de conexão</td>
+            <td><span class="chip chip-blue">LinkedIn</span></td>
+            <td>Abrir canal, mensagem curta</td>
+          </tr>
+          <tr>
+            <td>D+2</td>
+            <td>Mensagem principal</td>
+            <td><span class="chip chip-blue">LinkedIn</span></td>
+            <td>Proposta de carreira institucional</td>
+          </tr>
+          <tr>
+            <td>D+5</td>
+            <td>Follow-up 1</td>
+            <td><span class="chip chip-green">E-mail</span></td>
+            <td>Reforço com proposta de valor</td>
+          </tr>
+          <tr>
+            <td>D+10</td>
+            <td>Follow-up 2</td>
+            <td><span class="chip chip-blue">LinkedIn</span></td>
+            <td>Último contato ativo</td>
+          </tr>
+          <tr>
+            <td>D+20</td>
+            <td>Encerramento elegante</td>
+            <td><span class="chip chip-green">E-mail</span></td>
+            <td>Deixar porta aberta</td>
+          </tr>
+          <tr>
+            <td>D+45</td>
+            <td>Reativação A+</td>
+            <td><span class="chip chip-gold">Sócio</span></td>
+            <td>Retomada personalizada A+</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top: 18px;">
+        <div style="font-family:var(--font-utility); font-size:var(--fs-utility); font-weight:var(--fw-utility); color:var(--text2); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;">Perfis-alvo por Prioridade</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+          <span class="chip chip-gold">Assessor AAI</span>
+          <span class="chip chip-gold">Private Banker</span>
+          <span class="chip chip-gold">Gerente Alta Renda</span>
+          <span class="chip chip-blue">Corretor Seguros</span>
+          <span class="chip chip-blue">Consultor Crédito</span>
+          <span class="chip chip-blue">Fintech</span>
+          <span class="chip chip-purple">B2B Alto Ticket</span>
+          <span class="chip chip-purple">Closer</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── WORKFLOWS + LOG ── -->
+  <div class="section-title">n8n Workflows & Log Operacional</div>
+  <div class="two-col">
+
+    <!-- WORKFLOWS -->
+    <div class="card">
+      <div class="card-title"><div class="dot"></div> Workflows Principais (n8n)</div>
+      <div class="wf-list">
+        <div class="wf-item">
+          <span class="wf-id">WF01</span>
+          <span class="wf-name">Hunter — Busca de Perfis</span>
+          <span class="wf-badge wf-active">Ativo</span>
+        </div>
+        <div class="wf-item">
+          <span class="wf-id">WF05</span>
+          <span class="wf-name">Enriquecedor de Perfil</span>
+          <span class="wf-badge wf-active">Ativo</span>
+        </div>
+        <div class="wf-item">
+          <span class="wf-id">WF06</span>
+          <span class="wf-name">Enriquecimento de E-mail (Zero-Block)</span>
+          <span class="wf-badge wf-active">Ativo</span>
+        </div>
+        <div class="wf-item">
+          <span class="wf-id">WF12</span>
+          <span class="wf-name">LinkedIn Outreach via Expandi</span>
+          <span class="wf-badge wf-active">Ativo</span>
+        </div>
+        <div class="wf-item">
+          <span class="wf-id">WF18</span>
+          <span class="wf-name">Agendamento — Gmail → Calendar</span>
+          <span class="wf-badge wf-active">Ativo</span>
+        </div>
+        <div class="wf-item">
+          <span class="wf-id">WF19</span>
+          <span class="wf-name">Reviewer Auditor — Duplo Registro</span>
+          <span class="wf-badge wf-active">Ativo</span>
+        </div>
+        <div class="wf-item">
+          <span class="wf-id">WF22</span>
+          <span class="wf-name">FALLEN — Orchestration Daily</span>
+          <span class="wf-badge wf-active">Ativo</span>
+        </div>
+        <div class="wf-item">
+          <span class="wf-id">SERENA</span>
+          <span class="wf-name">Monitor de Inconsistências CRM</span>
+          <span class="wf-badge wf-active">Ativo</span>
+        </div>
+      </div>
+
+      <div class="mini-stats">
+        <div class="mini-stat">
+          <div class="v" style="color:var(--green)">20</div>
+          <div class="l">Workflows Ativos</div>
+        </div>
+        <div class="mini-stat">
+          <div class="v" style="color:var(--text3)">2</div>
+          <div class="l">Inativos</div>
+        </div>
+        <div class="mini-stat">
+          <div class="v" style="color:var(--red)">0</div>
+          <div class="l">Bloqueadores</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOG -->
+    <div class="card">
+      <div class="card-title"><div class="dot"></div> Log Operacional Recente</div>
+      <div class="log-list" id="log-list">
+
+        <div class="log-item ok">
+          <div class="log-ts">17:50<br>20/05</div>
+          <div class="log-body">
+            <div class="log-tag">Produção</div>
+            <div class="log-msg">Auditoria final pré-produção concluída. 39 itens Notion, 0 bloqueadores, 7 workflows temporários deletados.</div>
+          </div>
+        </div>
+
+        <div class="log-item ok">
+          <div class="log-ts">17:11<br>20/05</div>
+          <div class="log-body">
+            <div class="log-tag">Containers</div>
+            <div class="log-msg">Regra de containers únicos aplicada. WF05 e WF06 criando registros em "Enriquecimentos" DB.</div>
+          </div>
+        </div>
+
+        <div class="log-item ok">
+          <div class="log-ts">17:02<br>20/05</div>
+          <div class="log-body">
+            <div class="log-tag">WF06 Fix</div>
+            <div class="log-msg">Zero-block corrigido. Carlos Oliveira: LinkedIn válido, Pronto para automação=true. 93 notas legadas arquivadas.</div>
+          </div>
+        </div>
+
+        <div class="log-item info">
+          <div class="log-ts">14:32<br>20/05</div>
+          <div class="log-body">
+            <div class="log-tag">FALLEN Audit</div>
+            <div class="log-msg">Residual ativo fechado. Página vazia arquivada. Talentos=59, LinkedIn=56, Email=7.</div>
+          </div>
+        </div>
+
+        <div class="log-item info">
+          <div class="log-ts">14:20<br>20/05</div>
+          <div class="log-body">
+            <div class="log-tag">WF-SERENA Patch</div>
+            <div class="log-msg">SERENA e FALLEN ajustados para regra zero-bloqueio. Ignoram passivo histórico RECONCILIAR_LINKEDIN=26.</div>
+          </div>
+        </div>
+
+        <div class="log-item ok">
+          <div class="log-ts">20:20<br>19/05</div>
+          <div class="log-body">
+            <div class="log-tag">WF19 Encerrado</div>
+            <div class="log-msg">Duplo registro 100% operacional: Notion (automático) + Obsidian (ngrok → webhook → vault).</div>
+          </div>
+        </div>
+
+        <div class="log-item info">
+          <div class="log-ts">20:00<br>19/05</div>
+          <div class="log-body">
+            <div class="log-tag">ngrok Ativo</div>
+            <div class="log-msg">ngrok substituiu Cloudflare Tunnel. Script auto-update detecta URL nova via 127.0.0.1:4040.</div>
+          </div>
+        </div>
+
+        <div class="log-item ok">
+          <div class="log-ts">19:55<br>19/05</div>
+          <div class="log-body">
+            <div class="log-tag">Step 6 Ativo</div>
+            <div class="log-msg">Cloudflare Tunnel validado. POST → arquivo auditoria-*.md criado no vault Obsidian com frontmatter YAML.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── PROGRESS ── -->
+  <div class="section-title">Progresso do Projeto — Fase 02</div>
+  <div class="card">
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+
+      <div>
+        <div style="font-family:var(--font-display); font-size:var(--fs-body-sm); font-weight:var(--fw-display); color:var(--text2); margin-bottom:8px;">Blueprint & Arquitetura</div>
+        <div style="display:flex; flex-direction:column; gap:7px;">
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>Blueprint técnico-operacional</span><span style="color:var(--green)">✓</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>8 agentes com prompts definidos</span><span style="color:var(--green)">✓</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>Score 100pts com critérios</span><span style="color:var(--green)">✓</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>Cadência de contato modelada</span><span style="color:var(--green)">✓</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:100%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:var(--font-display); font-size:var(--fs-body-sm); font-weight:var(--fw-display); color:var(--text2); margin-bottom:8px;">Infraestrutura & CRM</div>
+        <div style="display:flex; flex-direction:column; gap:7px;">
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>n8n conectado (20 WFs ativos)</span><span style="color:var(--green)">✓</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>Notion CRM (5 bases, 40+ campos)</span><span style="color:var(--green)">✓</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>Duplo registro Notion + Obsidian</span><span style="color:var(--green)">✓</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>Expandi (LinkedIn outreach)</span><span style="color:var(--green)">✓</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:100%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:var(--font-display); font-size:var(--fs-body-sm); font-weight:var(--fw-display); color:var(--text2); margin-bottom:8px;">Automações & Produção</div>
+        <div style="display:flex; flex-direction:column; gap:7px;">
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>Auditoria final pré-produção</span><span style="color:var(--green)">✓</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>WF19 Reviewer (duplo registro)</span><span style="color:var(--green)">✓</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>Copywriter + Step 4b OpenAI</span><span style="color:var(--gold)">~70%</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:70%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-body); font-size:var(--fs-utility); font-weight:var(--fw-body); color:var(--text2); margin-bottom:3px;">
+              <span>Dashboard visual</span><span style="color:var(--gold)">Em curso</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:85%"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- overall bar -->
+    <div style="margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-family:var(--font-display); font-size:var(--fs-body-sm); font-weight:var(--fw-display); color:var(--text)">Conclusão Geral — Fase 02</span>
+        <span style="font-family:var(--font-data); font-size:var(--fs-h2); font-weight:var(--fw-data-md); color:var(--gold); font-variant-numeric:tabular-nums; letter-spacing:-0.5px;">87%</span>
+      </div>
+      <div class="progress-wrap" style="height:12px;">
+        <div class="progress-bar" style="width:87%"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div>© Copyright 2026 — Tallent Intelligence CRM</div>
+  <div style="display:flex; gap:16px;">
+    <span>n8n Cloud · Notion API · Gmail API · OpenAI · Expandi</span>
+  </div>
+</footer>
+
+
+<script>
+// SOREN Dashboard — Auto-update via dashboard_server.py
+// Dados vêm de Notion API (servidor local) — sem input de usuário
+
+const API_URL = '/api/data';
+const POLL_MS = 60000;
+let lastFetch = null;
+
+function byId(id) { return document.getElementById(id); }
+function setText(id, val) {
+  const el = byId(id);
+  if (el) el.textContent = (val !== null && val !== undefined) ? String(val) : '—';
+}
+
+// Cores fixas por estágio do funil (não vêm de input externo)
+const FUNNEL_COLORS = {
+  'Mapeado':               'linear-gradient(90deg,#3b6fd4,#5a8ff0)',
+  'Pre-qualificado':       'linear-gradient(90deg,#5a8ff0,#7aaff5)',
+  'Enriquecido':           'linear-gradient(90deg,#c9a84c,#e8c876)',
+  'Score aplicado':        'linear-gradient(90deg,#e8c876,#f0d88a)',
+  'Aprovado para contato': 'linear-gradient(90deg,#2ecc71,#54d98c)',
+  'Contato enviado':       'linear-gradient(90deg,#54d98c,#7be4a6)',
+  'Aguardando resposta':   'linear-gradient(90deg,#e67e22,#f39c42)',
+  'Respondeu':             'linear-gradient(90deg,#f39c42,#f5b963)',
+  'Reuniao marcada':       'linear-gradient(90deg,#9b59b6,#b07cc6)',
+  'Entrevistado':          'linear-gradient(90deg,#b07cc6,#c49fd6)',
+};
+const FUNNEL_DEFAULT = 'linear-gradient(90deg,#c9a84c,#e8c876)';
+
+async function refresh() {
+  try {
+    const res = await fetch(API_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error(res.status);
+    const d = await res.json();
+    applyData(d);
+    lastFetch = Date.now();
+    setOnline(!!d.stale);
+  } catch (_) {
+    setOffline();
+  }
+}
+
+function applyData(d) {
+  const total = d.talentos || 0;
+
+  // KPIs
+  setText('kpi-talentos', total);
+  setText('kpi-linkedin', d.linkedin ?? 0);
+  setText('kpi-email',    d.email    ?? 0);
+
+  const liPct = total > 0 ? Math.round((d.linkedin / total) * 100) : 0;
+  setText('kpi-linkedin-pct', liPct + '% da base');
+  setText('kpi-talentos-sub', 'Bloqueadores: 0');
+
+  const donutBig = document.querySelector('.donut-center .big');
+  if (donutBig) donutBig.textContent = String(total);
+
+  // Classificação
+  const cl = d.classification || {};
+  const clTotal = Object.values(cl).reduce(function(s,v){ return s+v; }, 0) || 1;
+  function pct(v) { return Math.round((v || 0) / clTotal * 100) + '%'; }
+  setText('classif-aplus',     cl['A+'] ?? 0);
+  setText('classif-aplus-pct', pct(cl['A+']));
+  setText('classif-a',         cl['A']  ?? 0);
+  setText('classif-a-pct',     pct(cl['A']));
+  setText('classif-b',         cl['B']  ?? 0);
+  setText('classif-b-pct',     pct(cl['B']));
+  setText('classif-c',         cl['C']  ?? 0);
+  setText('classif-c-pct',     pct(cl['C']));
+
+  renderFunnel(d.pipeline || []);
+  renderLog(d.log || []);
+}
+
+function renderFunnel(pipeline) {
+  const container = byId('funnel-list');
+  if (!container) return;
+  const visible = pipeline.filter(function(s){ return s.count > 0; });
+  if (!visible.length) return;
+
+  const cnt = byId('funnel-stage-count');
+  if (cnt) cnt.textContent = String(visible.length);
+
+  // Build DOM nodes without innerHTML
+  const fragment = document.createDocumentFragment();
+  visible.forEach(function(s) {
+    const item = document.createElement('div');
+    item.className = 'funnel-item';
+
+    const stage = document.createElement('span');
+    stage.className = 'funnel-stage';
+    stage.title = s.stage;
+    stage.textContent = s.stage;
+
+    const barWrap = document.createElement('div');
+    barWrap.className = 'funnel-bar-wrap';
+
+    const bar = document.createElement('div');
+    bar.className = 'funnel-bar';
+    bar.style.width = Math.max(s.pct, 2) + '%';
+    // Stage name is from a fixed enum (Notion select), not user text input
+    const normalizedStage = String(s.stage)
+      .replace(/ã/g,'a').replace(/é/g,'e').replace(/ç/g,'c')
+      .replace(/â/g,'a').replace(/ú/g,'u').replace(/õ/g,'o');
+    bar.style.background = FUNNEL_COLORS[s.stage]
+      || FUNNEL_COLORS[normalizedStage]
+      || FUNNEL_DEFAULT;
+
+    const barCount = document.createElement('span');
+    barCount.className = 'funnel-count';
+    barCount.textContent = String(s.count);
+
+    const num = document.createElement('span');
+    num.className = 'funnel-num';
+    num.textContent = String(s.count);
+
+    bar.appendChild(barCount);
+    barWrap.appendChild(bar);
+    item.appendChild(stage);
+    item.appendChild(barWrap);
+    item.appendChild(num);
+    fragment.appendChild(item);
+  });
+
+  container.textContent = '';
+  container.appendChild(fragment);
+}
+
+function renderLog(entries) {
+  const container = byId('log-list');
+  if (!container || !entries.length) return;
+
+  const fragment = document.createDocumentFragment();
+  var reversed = entries.slice().reverse();
+  reversed.forEach(function(e) {
+    const item = document.createElement('div');
+    const tagLower = (e.tag || '').toLowerCase();
+    item.className = 'log-item ' + (
+      tagLower.includes('erro') ? 'warn' :
+      tagLower.includes('ok')   ? 'ok'   : 'info'
+    );
+
+    const ts = document.createElement('div');
+    ts.className = 'log-ts';
+    const dateShort = (e.date || '').slice(5).replace('-', '/');
+    ts.textContent = e.time ? e.time + ' ' + dateShort : dateShort;
+
+    const body = document.createElement('div');
+    body.className = 'log-body';
+
+    const tag = document.createElement('div');
+    tag.className = 'log-tag';
+    tag.textContent = e.tag || '';
+
+    const msg = document.createElement('div');
+    msg.className = 'log-msg';
+    msg.textContent = e.msg || '';
+
+    body.appendChild(tag);
+    body.appendChild(msg);
+    item.appendChild(ts);
+    item.appendChild(body);
+    fragment.appendChild(item);
+  });
+
+  container.textContent = '';
+  container.appendChild(fragment);
+}
+
+function setOnline(stale) {
+  const pill = byId('status-pill');
+  const dot  = byId('status-dot');
+  const txt  = byId('status-text');
+  if (pill) { pill.style.background = 'rgba(46,204,113,.1)'; pill.style.borderColor = 'rgba(46,204,113,.25)'; }
+  if (dot)  { dot.style.background = '#2ecc71'; dot.style.animation = 'pulse 2s infinite'; }
+  if (txt)  { txt.style.color = ''; txt.textContent = stale ? 'Cache (desatualizado)' : 'Ao Vivo'; }
+  updateTimeBadge();
+}
+
+function setOffline() {
+  const pill = byId('status-pill');
+  const dot  = byId('status-dot');
+  const txt  = byId('status-text');
+  if (pill) { pill.style.background = 'rgba(231,76,60,.1)'; pill.style.borderColor = 'rgba(231,76,60,.25)'; }
+  if (dot)  { dot.style.background = '#e74c3c'; dot.style.animation = 'none'; }
+  if (txt)  { txt.style.color = '#e74c3c'; txt.textContent = 'Servidor offline'; }
+  const badge = byId('updated-badge');
+  if (badge) {
+    badge.style.display = 'block';
+    badge.style.color   = '#e67e22';
+    badge.textContent   = 'Erro ao carregar dados. Tente recarregar.';
+  }
+}
+
+function updateTimeBadge() {
+  const badge = byId('updated-badge');
+  if (!badge || !lastFetch) return;
+  badge.style.display = 'block';
+  badge.style.color   = 'var(--text3)';
+  const sec = Math.round((Date.now() - lastFetch) / 1000);
+  badge.textContent = sec < 5 ? 'Atualizado agora' : 'Atualizado há ' + sec + 's';
+}
+
+refresh();
+setInterval(refresh, POLL_MS);
+setInterval(updateTimeBadge, 5000);
+</script>
+</body>
+</html>
