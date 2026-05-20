@@ -1,11 +1,17 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/data.py", "use": "@vercel/python" },
-    { "src": "index.html",  "use": "@vercel/static" }
+    { "src": "api/data.py",     "use": "@vercel/python" },
+    { "src": "api/insights.py", "use": "@vercel/python" },
+    { "src": "api/chat.py",     "use": "@vercel/python" },
+    { "src": "index.html",      "use": "@vercel/static" },
+    { "src": "assets/**",       "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/api/data", "dest": "/api/data.py" },
-    { "src": "/(.*)",     "dest": "/index.html"  }
+    { "src": "/api/data",       "dest": "/api/data.py" },
+    { "src": "/api/insights",   "dest": "/api/insights.py" },
+    { "src": "/api/chat",       "dest": "/api/chat.py" },
+    { "src": "/assets/(.*)",    "dest": "/assets/$1" },
+    { "src": "/(.*)",           "dest": "/index.html" }
   ]
 }

@@ -989,6 +989,383 @@
     background: var(--color-spring-green);
   }
 
+  /* ───────────────── INTERACTIVE LAYER ───────────────── */
+
+  /* ── AI INSIGHTS CARD ── */
+  .insights-card {
+    margin-top: 24px;
+    background: linear-gradient(180deg, rgba(168,255,83,0.04), transparent 60%), var(--color-charcoal-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    padding: 24px var(--card-padding);
+    position: relative;
+    overflow: hidden;
+  }
+  .insights-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-spring-green) 30%, var(--color-cloud-violet) 70%, transparent);
+    opacity: 0.5;
+  }
+  .insights-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .insights-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-subheading);
+    font-weight: var(--fw-semibold);
+    color: var(--color-whisper-white);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .insights-title .ai-orb {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff 0%, var(--color-spring-green) 35%, var(--color-deep-plum) 100%);
+    box-shadow: 0 0 14px rgba(168,255,83,0.4);
+    animation: orb 4s ease-in-out infinite;
+  }
+  @keyframes orb {
+    0%, 100% { transform: scale(1); filter: hue-rotate(0deg); }
+    50%      { transform: scale(1.08); filter: hue-rotate(20deg); }
+  }
+  .insights-meta {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    color: var(--color-steel-muted);
+    letter-spacing: 0.3px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 12px;
+  }
+  .insight-tile {
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-soft);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    position: relative;
+    transition: border-color var(--t-fast), transform var(--t-fast);
+  }
+  .insight-tile:hover {
+    border-color: rgba(168,255,83,0.35);
+    transform: translateY(-1px);
+  }
+  .insight-tile.info     { border-left: 2px solid var(--color-cloud-violet); }
+  .insight-tile.ok       { border-left: 2px solid var(--color-spring-green); }
+  .insight-tile.warn     { border-left: 2px solid var(--color-flare-orange); }
+  .insight-tile.critical { border-left: 2px solid var(--color-action-red); }
+  .insight-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-body-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--color-whisper-white);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .insight-desc {
+    font-family: var(--font-body);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-regular);
+    color: var(--color-steel-accent);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .insight-action {
+    font-family: var(--font-utility);
+    font-size: 10px;
+    font-weight: var(--fw-medium);
+    color: var(--color-spring-green);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .insight-action::before {
+    content: '→';
+    font-family: var(--font-data);
+  }
+  .insights-skeleton {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 12px;
+  }
+  .skel {
+    height: 84px;
+    background: linear-gradient(90deg, var(--color-charcoal-raised), var(--color-ash-soft), var(--color-charcoal-raised));
+    background-size: 200% 100%;
+    border-radius: var(--radius-md);
+    animation: shimmer 1.4s linear infinite;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* ── KPI CARD INTERACTION ── */
+  .kpi-card { cursor: pointer; }
+  .kpi-card .kpi-drill {
+    position: absolute;
+    bottom: 14px; right: 14px;
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-gray);
+    color: var(--color-steel-accent);
+    font-size: 14px;
+    opacity: 0; transform: translateY(4px);
+    transition: opacity var(--t-fast), transform var(--t-fast);
+  }
+  .kpi-card:hover .kpi-drill { opacity: 1; transform: translateY(0); }
+
+  /* ── MODAL (KPI DRILL-DOWN) ── */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(10, 12, 16, 0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    transition: opacity 180ms ease;
+  }
+  .modal-backdrop.open { display: flex; opacity: 1; }
+  .modal {
+    background: var(--color-charcoal-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: 8px;
+    padding: 28px;
+    max-width: 540px;
+    width: calc(100% - 40px);
+    transform: scale(0.96);
+    transition: transform 220ms cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 30px 60px -10px rgba(0,0,0,0.5);
+  }
+  .modal-backdrop.open .modal { transform: scale(1); }
+  .modal-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-semibold);
+    color: var(--color-whisper-white);
+  }
+  .modal-close {
+    background: transparent;
+    border: 1px solid var(--color-ash-gray);
+    border-radius: 4px;
+    color: var(--color-steel-accent);
+    width: 28px; height: 28px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    transition: border-color var(--t-fast), color var(--t-fast);
+  }
+  .modal-close:hover { color: var(--color-whisper-white); border-color: var(--color-spring-green); }
+  .modal-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-ash-soft);
+    font-family: var(--font-body);
+    font-size: var(--fs-body-sm);
+  }
+  .modal-row:last-child { border-bottom: none; }
+  .modal-row .k { color: var(--color-steel-accent); }
+  .modal-row .v {
+    font-family: var(--font-data);
+    font-weight: var(--fw-medium);
+    color: var(--color-whisper-white);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── AI CHAT WIDGET ── */
+  .chat-fab {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-spring-green), var(--color-cloud-violet));
+    color: var(--color-obsidian-black);
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    box-shadow: 0 12px 32px -8px rgba(168,255,83,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+    z-index: 150;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform var(--t-med);
+  }
+  .chat-fab:hover { transform: translateY(-2px) scale(1.05); }
+  .chat-fab.hidden { display: none; }
+
+  .chat-panel {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    width: 380px;
+    max-width: calc(100vw - 40px);
+    height: 540px;
+    max-height: calc(100vh - 56px);
+    background: var(--color-charcoal-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: 8px;
+    box-shadow: 0 30px 60px -10px rgba(0,0,0,0.6);
+    display: none;
+    flex-direction: column;
+    z-index: 160;
+    overflow: hidden;
+    transform: translateY(20px) scale(0.96);
+    opacity: 0;
+    transition: transform 220ms cubic-bezier(.4,0,.2,1), opacity 180ms ease;
+  }
+  .chat-panel.open {
+    display: flex;
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  .chat-header {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--color-ash-soft);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px;
+    background: linear-gradient(180deg, rgba(168,255,83,0.04), transparent 80%);
+  }
+  .chat-header-title {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-semibold);
+    color: var(--color-whisper-white);
+  }
+  .chat-header-sub {
+    font-family: var(--font-data);
+    font-size: 10px;
+    color: var(--color-steel-muted);
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+  }
+  .chat-body {
+    flex: 1;
+    padding: 18px;
+    overflow-y: auto;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .chat-msg {
+    max-width: 85%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: var(--fs-body-sm);
+    line-height: 1.5;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+  .chat-msg.user {
+    align-self: flex-end;
+    background: var(--color-spring-green);
+    color: var(--color-obsidian-black);
+    border-bottom-right-radius: 2px;
+    font-weight: var(--fw-medium);
+  }
+  .chat-msg.assistant {
+    align-self: flex-start;
+    background: var(--color-charcoal-raised);
+    color: var(--color-slate-text);
+    border: 1px solid var(--color-ash-soft);
+    border-bottom-left-radius: 2px;
+  }
+  .chat-msg.thinking {
+    align-self: flex-start;
+    background: var(--color-charcoal-raised);
+    color: var(--color-steel-muted);
+    border: 1px solid var(--color-ash-soft);
+    font-style: italic;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .chat-msg.thinking::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--color-spring-green);
+    animation: pulse 1.2s infinite;
+  }
+  .chat-suggestions {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 0 18px 12px;
+  }
+  .chat-chip {
+    font-family: var(--font-utility);
+    font-size: 11px;
+    font-weight: var(--fw-medium);
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-soft);
+    color: var(--color-steel-accent);
+    padding: 5px 10px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all var(--t-fast);
+  }
+  .chat-chip:hover {
+    color: var(--color-spring-green);
+    border-color: rgba(168,255,83,0.30);
+    background: rgba(168,255,83,0.06);
+  }
+  .chat-input-wrap {
+    border-top: 1px solid var(--color-ash-soft);
+    padding: 12px;
+    display: flex; gap: 8px;
+    background: var(--color-charcoal-surface);
+  }
+  .chat-input {
+    flex: 1;
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-soft);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    color: var(--color-whisper-white);
+    font-family: var(--font-body);
+    font-size: var(--fs-body-sm);
+    outline: none;
+    transition: border-color var(--t-fast);
+    resize: none;
+    min-height: 40px;
+    max-height: 110px;
+    font-weight: var(--fw-regular);
+  }
+  .chat-input:focus { border-color: var(--color-spring-green); }
+  .chat-send {
+    background: var(--color-spring-green);
+    color: var(--color-obsidian-black);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0 14px;
+    cursor: pointer;
+    font-family: var(--font-utility);
+    font-size: var(--fs-body-sm);
+    font-weight: var(--fw-semibold);
+    transition: opacity var(--t-fast), transform var(--t-fast);
+    align-self: stretch;
+  }
+  .chat-send:hover { opacity: 0.9; transform: translateY(-1px); }
+  .chat-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ── SCORE FILTER CHIPS ── */
+  .score-row {
+    cursor: pointer;
+    padding: 2px 8px;
+    margin: 0 -8px;
+    border-radius: 4px;
+    transition: background var(--t-fast);
+  }
+  .score-row:hover { background: rgba(168,255,83,0.04); }
+  .score-row.dim { opacity: 0.35; }
+  .score-row.active { background: rgba(168,255,83,0.08); }
+
   /* ── ENTRY ANIMATION ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(8px); }
@@ -1059,21 +1436,43 @@
 <!-- ══ MAIN ══════════════════════════════════════════════════════════════ -->
 <main class="main">
 
+  <!-- ── AI INSIGHTS ── -->
+  <div class="insights-card" id="insights-card">
+    <div class="insights-head">
+      <div class="insights-title">
+        <span class="ai-orb"></span>
+        Insights do Dia
+      </div>
+      <div class="insights-meta">
+        <span id="insights-source">analisando…</span>
+        <span>·</span>
+        <span id="insights-time">—</span>
+      </div>
+    </div>
+    <div class="insights-grid" id="insights-grid">
+      <div class="insights-skeleton">
+        <div class="skel"></div><div class="skel"></div>
+        <div class="skel"></div><div class="skel"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── KPIs ── -->
   <div class="section-title">Indicadores Operacionais</div>
   <div class="kpi-grid">
 
-    <div class="kpi-card" style="--accent: var(--gold)">
+    <div class="kpi-card" data-kpi="talentos" style="--accent: var(--color-spring-green); --accent-glow: rgba(168,255,83,0.08);">
       <div class="kpi-icon">👤</div>
       <div class="kpi-label">Talentos no CRM</div>
       <div class="kpi-value" id="kpi-talentos">—</div>
       <div class="kpi-sub">
         <span class="kpi-badge badge-gold">Base Ativa</span>
-        <span id="kpi-talentos-sub">carregando...</span>
+        <span id="kpi-talentos-sub">carregando…</span>
       </div>
+      <div class="kpi-drill" aria-hidden="true">↗</div>
     </div>
 
-    <div class="kpi-card" style="--accent: var(--blue2)">
+    <div class="kpi-card" data-kpi="linkedin" style="--accent: var(--color-cloud-violet); --accent-glow: rgba(156,154,242,0.10);">
       <div class="kpi-icon">💼</div>
       <div class="kpi-label">Interações LinkedIn</div>
       <div class="kpi-value" id="kpi-linkedin">—</div>
@@ -1081,9 +1480,10 @@
         <span class="kpi-badge badge-blue" id="kpi-linkedin-pct">—</span>
         <span>Via WF12 / Expandi</span>
       </div>
+      <div class="kpi-drill" aria-hidden="true">↗</div>
     </div>
 
-    <div class="kpi-card" style="--accent: var(--green)">
+    <div class="kpi-card" data-kpi="email" style="--accent: var(--color-success-green); --accent-glow: rgba(175,236,115,0.08);">
       <div class="kpi-icon">✉️</div>
       <div class="kpi-label">Interações E-mail</div>
       <div class="kpi-value" id="kpi-email">—</div>
@@ -1091,9 +1491,10 @@
         <span class="kpi-badge badge-green">Gmail API</span>
         <span>Full automático</span>
       </div>
+      <div class="kpi-drill" aria-hidden="true">↗</div>
     </div>
 
-    <div class="kpi-card" style="--accent: var(--purple)">
+    <div class="kpi-card" data-kpi="workflows" style="--accent: var(--color-deep-plum); --accent-glow: rgba(118,85,253,0.10);">
       <div class="kpi-icon">⚙️</div>
       <div class="kpi-label">Workflows n8n</div>
       <div class="kpi-value">20</div>
@@ -1101,6 +1502,7 @@
         <span class="kpi-badge badge-green">Ativos</span>
         <span>2 inativos preservados</span>
       </div>
+      <div class="kpi-drill" aria-hidden="true">↗</div>
     </div>
 
   </div>
@@ -1244,27 +1646,27 @@
         </div>
 
         <div class="score-legend">
-          <div class="score-row">
-            <div class="score-swatch" style="background: var(--gold)"></div>
-            <div class="score-label"><strong style="color:var(--gold)">A+</strong> 85-100pts</div>
+          <div class="score-row" data-classif="A+">
+            <div class="score-swatch" style="background: var(--color-spring-green)"></div>
+            <div class="score-label"><strong style="color:var(--color-spring-green)">A+</strong> 85-100pts</div>
             <div class="score-val" id="classif-aplus">—</div>
             <div class="score-pct" id="classif-aplus-pct">—</div>
           </div>
-          <div class="score-row">
-            <div class="score-swatch" style="background: var(--gold2)"></div>
-            <div class="score-label"><strong style="color:var(--gold2)">A</strong> 70-84pts</div>
+          <div class="score-row" data-classif="A">
+            <div class="score-swatch" style="background: var(--color-cloud-violet)"></div>
+            <div class="score-label"><strong style="color:var(--color-cloud-violet)">A</strong> 70-84pts</div>
             <div class="score-val" id="classif-a">—</div>
             <div class="score-pct" id="classif-a-pct">—</div>
           </div>
-          <div class="score-row">
-            <div class="score-swatch" style="background: var(--blue)"></div>
-            <div class="score-label"><strong style="color:var(--blue2)">B</strong> 55-69pts</div>
+          <div class="score-row" data-classif="B">
+            <div class="score-swatch" style="background: var(--color-cosmic-blue)"></div>
+            <div class="score-label"><strong style="color:var(--color-cosmic-blue)">B</strong> 55-69pts</div>
             <div class="score-val" id="classif-b">—</div>
             <div class="score-pct" id="classif-b-pct">—</div>
           </div>
-          <div class="score-row">
-            <div class="score-swatch" style="background: var(--border)"></div>
-            <div class="score-label"><strong style="color:var(--text3)">C</strong> &lt;55pts</div>
+          <div class="score-row" data-classif="C">
+            <div class="score-swatch" style="background: var(--color-ash-gray)"></div>
+            <div class="score-label"><strong style="color:var(--color-steel-muted)">C</strong> &lt;55pts</div>
             <div class="score-val" id="classif-c">—</div>
             <div class="score-pct" id="classif-c-pct">—</div>
           </div>
@@ -1780,6 +2182,51 @@
   </div>
 </footer>
 
+<!-- ══ MODAL (KPI drill-down) ════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-title">—</div>
+      <button class="modal-close" id="modal-close" aria-label="Fechar">×</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ══ AI CHAT WIDGET ════════════════════════════════════════════════════ -->
+<button class="chat-fab" id="chat-fab" aria-label="Abrir assistente">✨</button>
+
+<div class="chat-panel" id="chat-panel" role="dialog" aria-label="Assistente Tallent">
+  <div class="chat-header">
+    <div>
+      <div class="chat-header-title">
+        <span class="ai-orb"></span>
+        Tallent Assistant
+      </div>
+      <div class="chat-header-sub" id="chat-status">Claude Sonnet 4.6 · contexto live</div>
+    </div>
+    <button class="modal-close" id="chat-close" aria-label="Fechar">×</button>
+  </div>
+
+  <div class="chat-body" id="chat-body">
+    <div class="chat-msg assistant">
+      Pergunte sobre o estado atual do funil, classificações, workflows ou cadência. Resposta executiva, 1-3 frases.
+    </div>
+  </div>
+
+  <div class="chat-suggestions" id="chat-suggestions">
+    <button class="chat-chip" data-q="Qual o maior bottleneck no funil agora?">Bottleneck</button>
+    <button class="chat-chip" data-q="Quantos A+ tenho e o que fazer com eles?">A+ ativos</button>
+    <button class="chat-chip" data-q="Quais workflows precisam de atenção hoje?">WFs hoje</button>
+    <button class="chat-chip" data-q="Resumo de 1 linha do dia.">Resumo</button>
+  </div>
+
+  <div class="chat-input-wrap">
+    <textarea class="chat-input" id="chat-input" placeholder="Pergunte ao Tallent…" rows="1"></textarea>
+    <button class="chat-send" id="chat-send" aria-label="Enviar">Enviar</button>
+  </div>
+</div>
+
 
 <script>
 // SOREN Dashboard — Auto-update via dashboard_server.py
@@ -1987,6 +2434,252 @@ function updateTimeBadge() {
 refresh();
 setInterval(refresh, POLL_MS);
 setInterval(updateTimeBadge, 5000);
+
+/* ════════════════════════════════════════════════════════════════════════
+   INTERACTIVE LAYER — AI Insights · KPI Modal · Score Filter · Chat
+   ════════════════════════════════════════════════════════════════════════ */
+
+// ── 1. AI INSIGHTS ──────────────────────────────────────────────────
+const INSIGHTS_TTL = 10 * 60 * 1000;   // 10 min
+let insightsLastAt = 0;
+
+async function loadInsights(force) {
+  if (!force && Date.now() - insightsLastAt < INSIGHTS_TTL) return;
+  try {
+    const res = await fetch('/api/insights', { cache: 'no-store' });
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    renderInsights(data);
+    insightsLastAt = Date.now();
+  } catch (e) {
+    renderInsights({ insights: [], source: 'error', error: String(e) });
+  }
+}
+
+function renderInsights(data) {
+  const grid = byId('insights-grid');
+  const src  = byId('insights-source');
+  const tm   = byId('insights-time');
+  if (!grid) return;
+  const list = data.insights || [];
+  if (src) src.textContent = data.source === 'claude' ? 'Claude Sonnet' :
+                              data.source === 'heuristic' ? 'modo heurístico' :
+                              data.source === 'error' ? 'erro' : '—';
+  if (tm)  tm.textContent  = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  grid.textContent = '';
+  if (!list.length) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'font-family:var(--font-body);font-size:var(--fs-body-sm);color:var(--color-steel-muted);padding:8px 4px;';
+    empty.textContent = data.source === 'error'
+      ? 'Falha ao carregar insights. Tente novamente em 1 minuto.'
+      : 'Nenhum insight crítico detectado no momento.';
+    grid.appendChild(empty);
+    return;
+  }
+  list.slice(0, 6).forEach(function(it, i) {
+    const sev = ['info','ok','warn','critical'].includes(it.severity) ? it.severity : 'info';
+    const tile = document.createElement('div');
+    tile.className = 'insight-tile ' + sev;
+    tile.style.animationDelay = (i * 0.04) + 's';
+    tile.style.animation = 'fadeUp 0.45s cubic-bezier(.4,0,.2,1) both';
+
+    const title = document.createElement('div');
+    title.className = 'insight-title';
+    title.textContent = it.title || '';
+
+    const desc = document.createElement('div');
+    desc.className = 'insight-desc';
+    desc.textContent = it.description || '';
+
+    const action = document.createElement('div');
+    action.className = 'insight-action';
+    action.textContent = it.action || '';
+
+    tile.appendChild(title);
+    tile.appendChild(desc);
+    if (it.action) tile.appendChild(action);
+    grid.appendChild(tile);
+  });
+}
+loadInsights();
+setInterval(loadInsights, INSIGHTS_TTL);
+
+// ── 2. KPI DRILL-DOWN MODAL ─────────────────────────────────────────
+const modalBackdrop = byId('modal-backdrop');
+const modalTitle    = byId('modal-title');
+const modalBody     = byId('modal-body');
+const modalClose    = byId('modal-close');
+
+const KPI_DETAILS = {
+  talentos: {
+    title: 'Talentos no CRM',
+    fields: function(d){ return [
+      ['Total na base',           d.talentos],
+      ['Aprovado para contato',   (d.pipeline||[]).find(s=>s.stage==='Aprovado para contato')?.count || 0],
+      ['Aguardando resposta',     (d.pipeline||[]).find(s=>s.stage==='Aguardando resposta')?.count || 0],
+      ['Reunião marcada',         (d.pipeline||[]).find(s=>s.stage==='Reunião marcada')?.count || 0],
+      ['A+ (high potential)',     (d.classification||{})['A+'] || 0],
+    ]; }
+  },
+  linkedin: {
+    title: 'Interações LinkedIn',
+    fields: function(d){ return [
+      ['Total LinkedIn',         d.linkedin],
+      ['% da base',              d.talentos ? Math.round(d.linkedin/d.talentos*100)+'%' : '—'],
+      ['Workflow gerador',       'WF12 (Expandi)'],
+      ['Última cadência rodada', 'D+0 / D+2 / D+10'],
+    ]; }
+  },
+  email: {
+    title: 'Interações E-mail',
+    fields: function(d){ return [
+      ['Total e-mail',          d.email],
+      ['% da base',             d.talentos ? Math.round(d.email/d.talentos*100)+'%' : '—'],
+      ['Workflow',              'WF06 (Zero-Block)'],
+      ['Provider',              'Gmail API · OAuth2'],
+    ]; }
+  },
+  workflows: {
+    title: 'Workflows n8n',
+    fields: function(){ return [
+      ['Ativos em produção', 20],
+      ['Inativos preservados', 2],
+      ['Frequência cron',     '9h–17h diários'],
+      ['Auditoria duplo registro', 'WF19 (Notion + Obsidian)'],
+    ]; }
+  },
+};
+
+function openKpiModal(kind, snapshot) {
+  const spec = KPI_DETAILS[kind];
+  if (!spec) return;
+  modalTitle.textContent = spec.title;
+  modalBody.textContent = '';
+  spec.fields(snapshot || {}).forEach(function(pair) {
+    const row = document.createElement('div');
+    row.className = 'modal-row';
+    const k = document.createElement('span');
+    k.className = 'k'; k.textContent = pair[0];
+    const v = document.createElement('span');
+    v.className = 'v'; v.textContent = pair[1];
+    row.appendChild(k); row.appendChild(v);
+    modalBody.appendChild(row);
+  });
+  modalBackdrop.classList.add('open');
+}
+function closeModal() { modalBackdrop.classList.remove('open'); }
+
+document.querySelectorAll('.kpi-card[data-kpi]').forEach(function(card) {
+  card.addEventListener('click', async function() {
+    const kind = card.dataset.kpi;
+    // pull fresh snapshot for the modal
+    try {
+      const r = await fetch('/api/data', { cache: 'no-store' });
+      const d = await r.json();
+      openKpiModal(kind, d);
+    } catch (e) { openKpiModal(kind, {}); }
+  });
+});
+modalClose.addEventListener('click', closeModal);
+modalBackdrop.addEventListener('click', function(e){ if (e.target === modalBackdrop) closeModal(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeModal(); });
+
+// ── 3. SCORE FILTER CHIPS ───────────────────────────────────────────
+let activeClassif = null;
+document.querySelectorAll('.score-row[data-classif]').forEach(function(row) {
+  row.addEventListener('click', function() {
+    const c = row.dataset.classif;
+    activeClassif = (activeClassif === c) ? null : c;
+    document.querySelectorAll('.score-row[data-classif]').forEach(function(r) {
+      r.classList.remove('active','dim');
+      if (activeClassif) {
+        if (r.dataset.classif === activeClassif) r.classList.add('active');
+        else r.classList.add('dim');
+      }
+    });
+    // Dim donut sectors not matching (visual only — sectors are static SVG circles)
+    const svg = document.querySelector('.donut-wrap svg');
+    if (svg) {
+      const order = ['A+','A','B','C'];
+      svg.querySelectorAll('circle').forEach(function(c, i) {
+        if (i === 0) return; // background ring
+        const idx = i - 1;
+        if (!activeClassif) c.style.opacity = '1';
+        else c.style.opacity = (order[idx] === activeClassif) ? '1' : '0.18';
+      });
+    }
+  });
+});
+
+// ── 4. AI CHAT WIDGET ───────────────────────────────────────────────
+const chatFab    = byId('chat-fab');
+const chatPanel  = byId('chat-panel');
+const chatClose  = byId('chat-close');
+const chatBody   = byId('chat-body');
+const chatInput  = byId('chat-input');
+const chatSend   = byId('chat-send');
+const chatSuggs  = byId('chat-suggestions');
+const chatHistory = [];
+
+function openChat()  { chatPanel.classList.add('open'); chatFab.classList.add('hidden'); chatInput.focus(); }
+function closeChat() { chatPanel.classList.remove('open'); chatFab.classList.remove('hidden'); }
+chatFab.addEventListener('click', openChat);
+chatClose.addEventListener('click', closeChat);
+
+function appendMsg(role, text, cls) {
+  const el = document.createElement('div');
+  el.className = 'chat-msg ' + (cls || role);
+  el.textContent = text;
+  chatBody.appendChild(el);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  return el;
+}
+
+async function sendChat(text) {
+  if (!text.trim()) return;
+  appendMsg('user', text);
+  chatHistory.push({ role: 'user', content: text });
+  chatInput.value = '';
+  chatInput.style.height = '40px';
+  chatSend.disabled = true;
+  const thinking = appendMsg('assistant', 'pensando…', 'thinking');
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, history: chatHistory.slice(0, -1) }),
+    });
+    const data = await res.json();
+    thinking.remove();
+    const reply = data.reply || '(sem resposta)';
+    appendMsg('assistant', reply);
+    chatHistory.push({ role: 'assistant', content: reply });
+    if (chatSuggs) chatSuggs.style.display = 'none';
+  } catch (e) {
+    thinking.remove();
+    appendMsg('assistant', 'Erro: ' + e);
+  } finally {
+    chatSend.disabled = false;
+    chatInput.focus();
+  }
+}
+
+chatSend.addEventListener('click', function() { sendChat(chatInput.value); });
+chatInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChat(chatInput.value);
+  }
+});
+chatInput.addEventListener('input', function() {
+  this.style.height = '40px';
+  this.style.height = Math.min(this.scrollHeight, 110) + 'px';
+});
+if (chatSuggs) {
+  chatSuggs.querySelectorAll('.chat-chip').forEach(function(chip) {
+    chip.addEventListener('click', function() { sendChat(chip.dataset.q); });
+  });
+}
 </script>
 </body>
 </html>
