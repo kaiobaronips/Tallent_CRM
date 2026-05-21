@@ -1628,6 +1628,196 @@
   .chip-blue   { color: var(--color-cloud-violet);  border-color: rgba(156,154,242,0.30); background: rgba(156,154,242,0.08); }
   .chip-purple { color: var(--color-deep-plum);     border-color: rgba(118,85,253,0.30);  background: rgba(118,85,253,0.08); }
 
+  /* ── VIEW SYSTEM ── */
+  .view { display: none; }
+  .view.active { display: block; animation: viewFadeIn 280ms cubic-bezier(.4,0,.2,1); }
+  @keyframes viewFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── PLACEHOLDER (views ainda em construção) ── */
+  .view-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    color: var(--color-steel-muted);
+  }
+  .view-placeholder-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--color-charcoal-surface);
+    border: 1px solid var(--color-ash-gray);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 18px;
+    color: var(--color-steel-accent);
+  }
+  .view-placeholder h2 {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-semibold);
+    color: var(--color-whisper-white);
+    margin-bottom: 8px;
+    letter-spacing: 0.2px;
+  }
+  .view-placeholder p {
+    font-size: var(--fs-body-sm);
+    max-width: 360px;
+    line-height: 1.6;
+  }
+
+  /* ── VIEW HEADER (titulos de pagina) ── */
+  .view-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-ash-soft);
+    margin-bottom: 24px;
+  }
+  .view-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-semibold);
+    color: var(--color-whisper-white);
+    letter-spacing: -0.2px;
+  }
+  .view-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--fs-body-sm);
+    color: var(--color-steel-accent);
+    margin-top: 4px;
+  }
+
+  /* ── EMPRESAS SUMMARY (mini-stat row no topo) ── */
+  .emp-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .emp-stat {
+    background: var(--color-charcoal-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+  }
+  .emp-stat-label {
+    font-family: var(--font-utility);
+    font-size: 10px;
+    font-weight: var(--fw-medium);
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--color-steel-muted);
+    margin-bottom: 8px;
+  }
+  .emp-stat-value {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: var(--fw-semibold);
+    color: var(--color-whisper-white);
+    line-height: 1;
+  }
+  .emp-stat-value.green { color: var(--color-spring-green); }
+
+  /* ── EMPRESAS TABLE ── */
+  .emp-table-wrap {
+    background: var(--color-charcoal-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .emp-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .emp-table th {
+    text-align: left;
+    font-family: var(--font-utility);
+    font-size: 10px;
+    font-weight: var(--fw-medium);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--color-steel-muted);
+    padding: 14px 16px;
+    background: var(--color-charcoal-raised);
+    border-bottom: 1px solid var(--color-ash-gray);
+    white-space: nowrap;
+  }
+  .emp-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-ash-soft);
+    font-family: var(--font-body);
+    font-size: var(--fs-body-sm);
+    color: var(--color-slate-text);
+    vertical-align: middle;
+  }
+  .emp-table tr:last-child td { border-bottom: none; }
+  .emp-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+  .emp-name {
+    font-weight: var(--fw-medium);
+    color: var(--color-whisper-white);
+  }
+  .emp-loc {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    color: var(--color-steel-accent);
+  }
+  .emp-talentos {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    color: var(--color-spring-green);
+    font-weight: var(--fw-medium);
+  }
+  .emp-link {
+    color: var(--color-steel-muted);
+    text-decoration: none;
+    font-size: 12px;
+    transition: color var(--t-fast);
+    margin-right: 8px;
+  }
+  .emp-link:hover { color: var(--color-spring-green); }
+
+  /* Pill helpers (prioridade / status / segmento) */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: var(--radius-full);
+    border: 1px solid transparent;
+    font-family: var(--font-utility);
+    font-size: 10px;
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .pill-red    { color: #f87171; background: rgba(244,63,94,0.10);  border-color: rgba(244,63,94,0.30); }
+  .pill-yellow { color: #fbbf24; background: rgba(236,207,6,0.10);  border-color: rgba(236,207,6,0.30); }
+  .pill-gray   { color: var(--color-steel-muted); background: rgba(110,113,120,0.10); border-color: rgba(110,113,120,0.30); }
+  .pill-green  { color: var(--color-spring-green); background: rgba(168,255,83,0.08); border-color: rgba(168,255,83,0.30); }
+  .pill-blue   { color: var(--color-cosmic-blue); background: rgba(71,157,236,0.10); border-color: rgba(71,157,236,0.30); }
+  .pill-orange { color: var(--color-flare-orange); background: rgba(236,207,6,0.08); border-color: rgba(236,207,6,0.30); }
+  .pill-purple { color: var(--color-cloud-violet); background: rgba(156,154,242,0.10); border-color: rgba(156,154,242,0.30); }
+  .pill-pink   { color: var(--color-fuchsia); background: rgba(250,58,191,0.10); border-color: rgba(250,58,191,0.30); }
+
+  .emp-loading, .emp-empty {
+    padding: 40px;
+    text-align: center;
+    color: var(--color-steel-muted);
+    font-size: var(--fs-body-sm);
+  }
+
+  @media (max-width: 900px) {
+    .emp-summary { grid-template-columns: repeat(2, 1fr); }
+  }
+
 </style>
 </head>
 <body>
@@ -1726,6 +1916,9 @@
 
 <!-- ══ MAIN ══════════════════════════════════════════════════════════════ -->
 <main class="main">
+
+  <!-- ══ VIEW: DASHBOARD ══════════════════════════════════════════════════ -->
+  <div class="view active" id="view-dashboard">
 
   <!-- ── AI INSIGHTS ── -->
   <div class="insights-card" id="insights-card">
@@ -2463,6 +2656,102 @@
     </div>
   </div>
 
+  </div><!-- /#view-dashboard -->
+
+  <!-- ══ VIEW: EMPRESAS-ALVO ═════════════════════════════════════════════ -->
+  <div class="view" id="view-empresas">
+    <div class="view-header">
+      <div>
+        <div class="view-title">Empresas-alvo</div>
+        <div class="view-subtitle">Base de mapeamento — origem dos talentos hunting regional</div>
+      </div>
+      <div id="emp-updated" style="font-family:var(--font-data); font-size:var(--fs-data); color:var(--color-steel-muted);">—</div>
+    </div>
+
+    <div class="emp-summary" id="emp-summary">
+      <div class="emp-stat"><div class="emp-stat-label">Total Empresas</div><div class="emp-stat-value" id="emp-total">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Talentos Estimados</div><div class="emp-stat-value green" id="emp-talentos-total">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Mapeadas</div><div class="emp-stat-value" id="emp-mapeadas">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Prioridade Alta</div><div class="emp-stat-value" id="emp-alta">—</div></div>
+    </div>
+
+    <div class="emp-table-wrap">
+      <table class="emp-table">
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>Segmento</th>
+            <th>Localização</th>
+            <th>Talentos est.</th>
+            <th>Prioridade</th>
+            <th>Status</th>
+            <th>Links</th>
+          </tr>
+        </thead>
+        <tbody id="emp-tbody">
+          <tr><td colspan="7" class="emp-loading">Carregando empresas…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: PLACEHOLDERS (talentos, pipeline, interacoes, workflows, agentes, manual) ══ -->
+  <div class="view" id="view-talentos">
+    <div class="view-placeholder">
+      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="4.5" r="2.5" fill="currentColor"/><path d="M2.5 12.5c0-2.761 2.239-5 5-5s5 2.239 5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      <h2>Talentos</h2>
+      <p>Lista detalhada do banco de talentos chega na próxima etapa.</p>
+    </div>
+  </div>
+
+  <div class="view" id="view-pipeline">
+    <div class="view-placeholder">
+      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><path d="M1 3h13M3 7h9M5 11h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+      <h2>Pipeline</h2>
+      <p>Visualização detalhada do funil de recrutamento por estágio.</p>
+    </div>
+  </div>
+
+  <div class="view" id="view-linkedin">
+    <div class="view-placeholder">
+      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><path d="M12.5 2.5h-10a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h3l2 2 2-2h3a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="1.2"/></svg></div>
+      <h2>Interações LinkedIn</h2>
+      <p>Timeline de mensagens, follow-ups e respostas via Expandi.</p>
+    </div>
+  </div>
+
+  <div class="view" id="view-email">
+    <div class="view-placeholder">
+      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="3" width="12" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l5.5 4L13 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      <h2>Interações E-mail</h2>
+      <p>Timeline de envios e respostas via Gmail API.</p>
+    </div>
+  </div>
+
+  <div class="view" id="view-workflows">
+    <div class="view-placeholder">
+      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><circle cx="3" cy="7.5" r="1.5" fill="currentColor"/><circle cx="12" cy="3" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M4.5 7.5h3L10.5 3M7.5 7.5l3 4.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+      <h2>Workflows n8n</h2>
+      <p>Status e execuções recentes de cada workflow.</p>
+    </div>
+  </div>
+
+  <div class="view" id="view-agentes">
+    <div class="view-placeholder">
+      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><rect x="2" y="4" width="11" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 4V3a2.5 2.5 0 0 1 5 0v1" stroke="currentColor" stroke-width="1.2"/><circle cx="5.5" cy="8" r="1" fill="currentColor"/><circle cx="9.5" cy="8" r="1" fill="currentColor"/></svg></div>
+      <h2>Agentes n8n</h2>
+      <p>Os 8 agentes ativos com métricas detalhadas de execução.</p>
+    </div>
+  </div>
+
+  <div class="view" id="view-manual">
+    <div class="view-placeholder">
+      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><rect x="2" y="1" width="11" height="13" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h5M5 7.5h5M5 10h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+      <h2>Manual</h2>
+      <p>Documentação operacional, glossário de workflows e SOPs.</p>
+    </div>
+  </div>
+
 </main>
 
 </div><!-- /.app-body -->
@@ -2553,31 +2842,161 @@
     interacoesToggle.classList.toggle('open', isOpen);
   });
 
-  // Activate top-level items (skip interacoes toggle — it's an accordion)
+  // ── ROUTER ──
+  function showView(viewId) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const target = document.getElementById('view-' + viewId);
+    if (target) target.classList.add('active');
+    if (viewId === 'empresas') loadEmpresas();
+  }
+
   navItems.forEach(item => {
     if (item.id === 'nav-interacoes') return;
     item.addEventListener('click', () => {
       navItems.forEach(i => i.classList.remove('active'));
       subItems.forEach(i => i.classList.remove('active'));
       item.classList.add('active');
+      showView(item.getAttribute('data-view'));
     });
   });
 
-  // Activate sub-items
   subItems.forEach(sub => {
     sub.addEventListener('click', () => {
       navItems.forEach(i => i.classList.remove('active'));
       subItems.forEach(i => i.classList.remove('active'));
       sub.classList.add('active');
-      // Keep accordion open
       subMenu.classList.add('open');
       interacoesToggle.classList.add('open');
+      showView(sub.getAttribute('data-view'));
     });
   });
 
-  // Open Interações accordion by default
   subMenu.classList.add('open');
   interacoesToggle.classList.add('open');
+
+  // ── EMPRESAS LOADER ──
+  let empresasLoaded = false;
+  async function loadEmpresas() {
+    if (empresasLoaded) return;
+    empresasLoaded = true;
+    try {
+      const r = await fetch('/api/empresas');
+      const data = await r.json();
+      renderEmpresas(data);
+    } catch (e) {
+      const tbody = document.getElementById('emp-tbody');
+      tbody.replaceChildren();
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 7; td.className = 'emp-empty';
+      td.textContent = 'Erro ao carregar empresas: ' + (e.message || e);
+      tr.appendChild(td); tbody.appendChild(tr);
+    }
+  }
+
+  function pillClass(value, kind) {
+    if (kind === 'prioridade') {
+      return { 'Alta': 'pill-red', 'Média': 'pill-yellow', 'Baixa': 'pill-gray' }[value] || 'pill-gray';
+    }
+    if (kind === 'status') {
+      return {
+        'Mapeada': 'pill-green', 'Em mapeamento': 'pill-yellow',
+        'Pendente': 'pill-gray', 'Pausada': 'pill-red',
+      }[value] || 'pill-gray';
+    }
+    if (kind === 'segmento') {
+      return {
+        'Banco': 'pill-blue', 'Cooperativa': 'pill-green', 'Seguradora': 'pill-orange',
+        'Consórcio': 'pill-yellow', 'Corretora': 'pill-purple', 'Assessoria': 'pill-blue',
+        'Fintech': 'pill-pink', 'Crédito': 'pill-orange',
+        'Imobiliário premium': 'pill-gray', 'Vendas B2B': 'pill-gray',
+      }[value] || 'pill-gray';
+    }
+    return 'pill-gray';
+  }
+
+  // Safe DOM helpers
+  function el(tag, attrs, text) {
+    const e = document.createElement(tag);
+    if (attrs) for (const k in attrs) {
+      if (k === 'className') e.className = attrs[k];
+      else if (k === 'colSpan') e.colSpan = attrs[k];
+      else e.setAttribute(k, attrs[k]);
+    }
+    if (text != null) e.textContent = String(text);
+    return e;
+  }
+  function pill(value, kind) {
+    if (!value) {
+      const span = el('span', null, '—');
+      span.style.color = 'var(--color-steel-muted)';
+      return span;
+    }
+    return el('span', { className: 'pill ' + pillClass(value, kind) }, value);
+  }
+  function safeLink(href, label, title) {
+    const a = el('a', { href: href, target: '_blank', rel: 'noopener', class: 'emp-link', title: title }, label);
+    return a;
+  }
+
+  function renderEmpresas(data) {
+    const empresas = data.empresas || [];
+    const s = data.summary || {};
+
+    document.getElementById('emp-total').textContent = s.total || 0;
+    document.getElementById('emp-talentos-total').textContent = s.talentos_estimados || 0;
+    document.getElementById('emp-mapeadas').textContent = (s.por_status && s.por_status['Mapeada']) || 0;
+    document.getElementById('emp-alta').textContent = (s.por_prioridade && s.por_prioridade['Alta']) || 0;
+
+    if (data.updated_at) {
+      const d = new Date(data.updated_at * 1000);
+      document.getElementById('emp-updated').textContent =
+        'Atualizado ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+    }
+
+    const tbody = document.getElementById('emp-tbody');
+    tbody.replaceChildren();
+    if (!empresas.length) {
+      const tr = el('tr');
+      tr.appendChild(el('td', { colSpan: 7, className: 'emp-empty' }, 'Nenhuma empresa cadastrada.'));
+      tbody.appendChild(tr);
+      return;
+    }
+    empresas.forEach(e => {
+      const tr = el('tr');
+      // Empresa
+      const tdEmp = el('td');
+      tdEmp.appendChild(el('div', { className: 'emp-name' }, e.empresa || '—'));
+      tr.appendChild(tdEmp);
+      // Segmento
+      const tdSeg = el('td'); tdSeg.appendChild(pill(e.segmento, 'segmento')); tr.appendChild(tdSeg);
+      // Localização
+      const loc = [e.cidade, e.estado].filter(Boolean).join(' / ');
+      const tdLoc = el('td');
+      tdLoc.appendChild(el('span', { className: 'emp-loc' }, loc || '—'));
+      tr.appendChild(tdLoc);
+      // Talentos
+      const tdTal = el('td');
+      tdTal.appendChild(el('span', { className: 'emp-talentos' }, e.talentos_est != null ? e.talentos_est : '—'));
+      tr.appendChild(tdTal);
+      // Prioridade
+      const tdPrio = el('td'); tdPrio.appendChild(pill(e.prioridade, 'prioridade')); tr.appendChild(tdPrio);
+      // Status
+      const tdStat = el('td'); tdStat.appendChild(pill(e.status, 'status')); tr.appendChild(tdStat);
+      // Links
+      const tdLinks = el('td');
+      if (e.linkedin) tdLinks.appendChild(safeLink(e.linkedin, 'in', 'LinkedIn'));
+      if (e.site)     tdLinks.appendChild(safeLink(e.site, '↗', 'Site'));
+      if (!e.linkedin && !e.site) {
+        const dash = el('span', null, '—');
+        dash.style.color = 'var(--color-steel-muted)';
+        tdLinks.appendChild(dash);
+      }
+      tr.appendChild(tdLinks);
+
+      tbody.appendChild(tr);
+    });
+  }
 })();
 
 // SOREN Dashboard — Auto-update via dashboard_server.py
