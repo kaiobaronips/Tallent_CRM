@@ -203,6 +203,102 @@ Quando um workflow do n8n grava algo no Notion, o dashboard reflete na próxima 
 
 ---
 
+## Clonar e rodar em outra máquina
+
+O GitHub guarda **o código**. A Vercel guarda **as configurações e env vars**. O Notion guarda **os dados**. Os três são independentes — nenhum tem cópia dos outros. Esta seção cobre os 3 cenários práticos de uso.
+
+### Pré-requisitos comuns
+
+```bash
+# Node.js + Vercel CLI
+npm i -g vercel
+
+# Login com sua conta Vercel
+vercel login
+```
+
+### Cenário A — Mesmo dashboard, na mesma URL, em outra máquina
+
+Use quando você quer apenas continuar trabalhando no mesmo projeto Vercel a partir de outra máquina. **Tempo: ~5 min**.
+
+```bash
+git clone https://github.com/kaiobaronips/Tallent_CRM.git
+cd Tallent_CRM
+vercel link          # vincula a pasta ao projeto "tallent-crm" existente
+vercel pull          # baixa env vars locais (sensíveis ficam cifradas)
+vercel dev           # roda local em http://localhost:3000
+# OU
+vercel --prod        # deploy direto pra produção
+```
+
+As env vars (`NOTION_TOKEN`, `ANTHROPIC_API_KEY`) já estão no projeto Vercel e não precisam ser configuradas de novo.
+
+### Cenário B — Fork para outra conta Vercel + outro workspace Notion
+
+Use quando você quer criar uma **cópia independente** (outra conta Vercel, outro workspace Notion). **Tempo: ~30 min**.
+
+```bash
+git clone https://github.com/kaiobaronips/Tallent_CRM.git
+cd Tallent_CRM
+vercel               # primeira vez nesta pasta — vai pedir nome novo de projeto
+```
+
+Depois:
+
+1. **Criar a integração Notion** em https://www.notion.so/profile/integrations
+   - Salvar o token (formato `secret_...`)
+2. **Criar 4 databases no Notion** com as mesmas propriedades das originais (ver schemas em [Backends](#backends) — copiar os tipos/opções de `Status`, `Tipo de contato`, `Canal recomendado`, etc.)
+   - Talentos
+   - Interação E-mail
+   - Interação LinkedIn
+   - Empresas-alvo
+3. **Compartilhar cada database com a integração** (no Notion: `…` → Connections → adicionar a integração)
+4. **Pegar os IDs das databases** (da URL do Notion — string de 32 caracteres antes do `?`)
+5. **Trocar os IDs hardcoded** nos arquivos Python:
+   - `api/data.py` — linhas com `DB_TALENTOS`, `DB_LINKEDIN`, `DB_EMAIL`
+   - `api/talentos.py` — `DB_TALENTOS`
+   - `api/empresas.py` — `DB_EMPRESAS`
+   - `api/interacoes.py` — `DB_LINKEDIN`, `DB_EMAIL`
+6. **Configurar env vars na Vercel** (Settings → Environment Variables):
+   - `NOTION_TOKEN`
+   - `ANTHROPIC_API_KEY` (opcional — sem ela, `/api/insights` cai em heurística e `/api/chat` retorna erro)
+7. **Deploy**:
+   ```bash
+   vercel --prod
+   ```
+
+### Cenário C — Rodar 100% local sem Vercel
+
+O `vercel dev` é a forma mais fácil — simula o ambiente serverless local lendo as env vars do projeto Vercel.
+
+```bash
+vercel link
+vercel pull
+vercel dev    # http://localhost:3000
+```
+
+Se não quiser usar Vercel nem para dev local, é possível mas exige escrever um pequeno router que mapeia `/api/talentos` → `api/talentos.py:handler`, etc. (cada arquivo já é um `BaseHTTPRequestHandler` standalone). Não é o caminho recomendado.
+
+### Backup das env vars (recomendado)
+
+Em uma máquina já configurada, antes de migrar:
+
+```bash
+vercel env pull .env.production
+```
+
+Isso baixa as env vars (incluindo segredos) num arquivo local. Mantenha esse arquivo **fora do Git** — o `.gitignore` já cobre `.env*.local`, mas `.env.production` precisa ser adicionado manualmente se quiser usar exatamente esse nome.
+
+### Tabela resumo
+
+| Cenário | Quem você é | Esforço | Notion novo? | Vercel novo? |
+|---|---|---|---|---|
+| **A** | Você (mesma conta) | 5 min | Não | Não |
+| **B** | Você forkando ou outra pessoa | 30 min | Sim | Sim |
+| **C** | Dev local | 5 min | Não | Não (usa dev local) |
+
+---
+
 ## Deploy & operação
 
 ```bash
