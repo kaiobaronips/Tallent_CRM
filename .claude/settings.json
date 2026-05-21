@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /Users/kaiobp/Desktop/tallent-intelligence-crm--dashboard-vercel && /opt/homebrew/bin/vercel --prod 2>&1 | tail -5 || true",
+            "timeout": 120,
+            "statusMessage": "Fazendo deploy no Vercel..."
+          }
+        ]
+      }
+    ]
+  }
+}

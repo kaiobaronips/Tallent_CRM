@@ -4,7 +4,11 @@
     { "src": "api/data.py",     "use": "@vercel/python" },
     { "src": "api/insights.py", "use": "@vercel/python" },
     { "src": "api/chat.py",     "use": "@vercel/python" },
-    { "src": "api/empresas.py", "use": "@vercel/python" },
+    { "src": "api/empresas.py",        "use": "@vercel/python" },
+    { "src": "api/update_empresa.py", "use": "@vercel/python" },
+    { "src": "api/talentos.py",       "use": "@vercel/python" },
+    { "src": "api/update_talento.py", "use": "@vercel/python" },
+    { "src": "api/interacoes.py",     "use": "@vercel/python" },
     { "src": "index.html",      "use": "@vercel/static" },
     { "src": "assets/**",       "use": "@vercel/static" }
   ],
@@ -12,7 +16,11 @@
     { "src": "/api/data",       "dest": "/api/data.py" },
     { "src": "/api/insights",   "dest": "/api/insights.py" },
     { "src": "/api/chat",       "dest": "/api/chat.py" },
-    { "src": "/api/empresas",   "dest": "/api/empresas.py" },
+    { "src": "/api/empresas",        "dest": "/api/empresas.py" },
+    { "src": "/api/update_empresa", "dest": "/api/update_empresa.py" },
+    { "src": "/api/talentos",       "dest": "/api/talentos.py" },
+    { "src": "/api/update_talento", "dest": "/api/update_talento.py" },
+    { "src": "/api/interacoes",    "dest": "/api/interacoes.py" },
     { "src": "/assets/(.*)",    "dest": "/assets/$1" },
     { "src": "/(.*)",           "dest": "/index.html" }
   ]

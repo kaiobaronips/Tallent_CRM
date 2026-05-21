@@ -1787,14 +1787,14 @@
   .pill {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 3px 9px;
+    gap: 4px;
+    padding: 2px 6px;
     border-radius: var(--radius-full);
     border: 1px solid transparent;
     font-family: var(--font-utility);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: var(--fw-medium);
-    letter-spacing: 0.6px;
+    letter-spacing: 0.4px;
     text-transform: uppercase;
     white-space: nowrap;
   }
@@ -1814,8 +1814,838 @@
     font-size: var(--fs-body-sm);
   }
 
+  /* ── EMPRESAS FILTER BAR ── */
+  .emp-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding: 12px 18px;
+    background: var(--color-charcoal-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    align-items: center;
+  }
+  .emp-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .emp-filter-label {
+    font-family: var(--font-utility);
+    font-size: 10px;
+    font-weight: var(--fw-medium);
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    color: var(--color-steel-muted);
+  }
+  /* ── Filter select (dropdown style) ── */
+  .emp-filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-sm);
+    color: var(--color-slate-text);
+    font-family: var(--font-utility);
+    font-size: 11px;
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.4px;
+    padding: 5px 28px 5px 10px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 160ms, color 160ms;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236e7178' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+    min-width: 110px;
+  }
+  .emp-filter-select:hover { border-color: var(--color-steel-accent); }
+  .emp-filter-select:focus { border-color: var(--color-spring-green); color: var(--color-whisper-white); }
+  .emp-filter-select option { background: var(--color-charcoal-raised); color: var(--color-slate-text); }
+  /* ── Filter chips (Status only) ── */
+  .emp-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 11px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-ash-gray);
+    background: transparent;
+    font-family: var(--font-utility);
+    font-size: 10px;
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--color-steel-muted);
+    cursor: pointer;
+    transition: all 160ms;
+  }
+  .emp-chip:hover { border-color: var(--color-steel-accent); color: var(--color-slate-text); }
+  .emp-chip.active { background: rgba(255,255,255,0.06); color: var(--color-whisper-white); border-color: var(--color-steel-accent); }
+  .emp-filter-divider {
+    width: 1px; height: 18px;
+    background: var(--color-ash-gray);
+    margin: 0 2px;
+  }
+  .emp-filter-count {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    color: var(--color-steel-muted);
+    margin-left: auto;
+  }
+
+  /* ── PRIORIDADE INLINE EDIT ── */
+  .prio-edit-btn {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    font: inherit;
+    padding: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: opacity 160ms, filter 160ms;
+  }
+  .prio-edit-btn:hover { filter: brightness(1.2); }
+  .prio-edit-btn .prio-chevron { font-size: 8px; opacity: 0.6; transition: opacity 160ms; }
+  .prio-edit-btn:hover .prio-chevron { opacity: 1; }
+  .prio-edit-btn.saving { opacity: 0.5; pointer-events: none; }
+
+  /* Floating dropdown */
+  .prio-dropdown {
+    position: fixed;
+    z-index: 9999;
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    padding: 6px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    display: none;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 120px;
+  }
+  .prio-dropdown.open { display: flex; }
+  .prio-dropdown-item {
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    padding: 5px 10px;
+    font-family: var(--font-utility);
+    font-size: 10px;
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    transition: filter 140ms;
+  }
+  .prio-dropdown-item:hover { filter: brightness(1.3); }
+  .prio-dropdown-item.selected { box-shadow: inset 0 0 0 1px currentColor; }
+  .prio-dropdown-sep {
+    height: 1px;
+    background: var(--color-ash-gray);
+    margin: 3px 0;
+  }
+  .prio-dropdown-clear {
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 5px 10px;
+    font-family: var(--font-utility);
+    font-size: 10px;
+    letter-spacing: 0.6px;
+    color: var(--color-steel-muted);
+    transition: color 140ms;
+  }
+  .prio-dropdown-clear:hover { color: var(--color-action-red); }
+
+  /* ── TALENTOS — Classificação bar ── */
+  .tal-class-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .tal-class-item { display: flex; align-items: center; gap: 5px; }
+  .tal-class-label {
+    font-family: var(--font-utility);
+    font-size: 10px;
+    letter-spacing: 0.8px;
+    color: var(--color-steel-muted);
+    text-transform: uppercase;
+  }
+  .tal-class-chip {
+    cursor: pointer;
+    padding: 3px 12px;
+    border-radius: var(--radius-full);
+    border: 1px solid transparent;
+    font-family: var(--font-utility);
+    font-size: 11px;
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.4px;
+    transition: all 160ms;
+    opacity: 0.55;
+  }
+  .tal-class-chip.active, .tal-class-chip:hover { opacity: 1; }
+  .tal-class-chip.chip-aplus { color: var(--color-spring-green); border-color: rgba(168,255,83,0.4); background: rgba(168,255,83,0.08); }
+  .tal-class-chip.chip-a     { color: var(--color-cosmic-blue);  border-color: rgba(71,157,236,0.4); background: rgba(71,157,236,0.08); }
+  .tal-class-chip.chip-b     { color: var(--color-flare-orange); border-color: rgba(236,207,6,0.4);  background: rgba(236,207,6,0.08); }
+  .tal-class-chip.chip-c     { color: var(--color-action-red);   border-color: rgba(244,63,94,0.4);  background: rgba(244,63,94,0.08); }
+  .tal-class-chip.chip-all   { color: var(--color-steel-muted);  border-color: var(--color-ash-gray); background: transparent; }
+  .tal-class-chip.chip-all.active { color: var(--color-whisper-white); border-color: var(--color-steel-accent); background: rgba(255,255,255,0.05); }
+  /* Score cell */
+  .tal-score-wrap { display: flex; flex-direction: column; gap: 3px; min-width: 60px; }
+  .tal-score-val  { font-family: var(--font-data); font-size: 12px; font-weight: 500; color: var(--color-whisper-white); }
+  .tal-score-bar  { height: 3px; border-radius: 2px; background: var(--color-ash-gray); overflow: hidden; }
+  .tal-score-fill { height: 100%; border-radius: 2px; background: var(--color-spring-green); transition: width 400ms ease; }
+  /* Nome / Cargo / Empresa cells */
+  .tal-nome    { font-weight: var(--fw-medium); color: var(--color-whisper-white); word-break: break-word; }
+  .tal-cargo   { font-size: 12px; color: var(--color-steel-accent); word-break: break-word; }
+  .tal-empresa { font-size: 12px; color: var(--color-slate-text); word-break: break-word; }
+
+  /* ════════════════════════════════════════════════════════════════
+     KANBAN — Pipeline view
+     ════════════════════════════════════════════════════════════════ */
+  .kanban-board {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(260px, 1fr);
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 14px;
+    min-height: 60vh;
+    scroll-behavior: smooth;
+  }
+  .kanban-board::-webkit-scrollbar { height: 10px; }
+  .kanban-board::-webkit-scrollbar-track { background: var(--color-charcoal-base); border-radius: 4px; }
+  .kanban-board::-webkit-scrollbar-thumb { background: var(--color-ash-gray); border-radius: 4px; }
+  .kanban-board::-webkit-scrollbar-thumb:hover { background: var(--color-steel-accent); }
+
+  .kanban-loading {
+    grid-column: 1 / -1;
+    padding: 60px;
+    text-align: center;
+    color: var(--color-steel-muted);
+    font-family: var(--font-data);
+    font-size: 12px;
+  }
+
+  .kanban-col {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-charcoal-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    min-height: 60vh;
+    transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+  }
+  .kanban-col.drag-over {
+    border-color: var(--col-accent, var(--color-spring-green));
+    background: var(--color-charcoal-raised);
+    box-shadow: 0 0 0 1px var(--col-accent, var(--color-spring-green)), 0 6px 24px rgba(0,0,0,0.4);
+  }
+
+  .kanban-col-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--color-ash-gray);
+    background: var(--color-charcoal-raised);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  .kanban-col-header::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--col-accent, var(--color-steel-muted));
+  }
+  .kanban-col-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-utility);
+    font-size: 11px;
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--color-whisper-white);
+  }
+  .kanban-col-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--col-accent, var(--color-steel-muted));
+    box-shadow: 0 0 8px var(--col-accent, transparent);
+  }
+  .kanban-col-count {
+    font-family: var(--font-data);
+    font-size: 11px;
+    color: var(--color-steel-muted);
+    background: var(--color-charcoal-base);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-full);
+    padding: 1px 8px;
+    min-width: 24px;
+    text-align: center;
+  }
+
+  .kanban-col-body {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    scrollbar-width: thin;
+  }
+  .kanban-col-body::-webkit-scrollbar { width: 6px; }
+  .kanban-col-body::-webkit-scrollbar-thumb { background: var(--color-ash-gray); border-radius: 3px; }
+
+  .kanban-col-empty {
+    text-align: center;
+    color: var(--color-steel-muted);
+    font-size: 11px;
+    font-family: var(--font-utility);
+    letter-spacing: 0.4px;
+    padding: 30px 8px;
+    border: 1px dashed var(--color-ash-gray);
+    border-radius: var(--radius-sm);
+    opacity: 0.5;
+  }
+
+  /* ── Card ── */
+  .kanban-card {
+    background: var(--color-charcoal-base);
+    border: 1px solid var(--color-ash-gray);
+    border-left: 3px solid var(--col-accent, var(--color-steel-muted));
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    cursor: grab;
+    transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+    position: relative;
+    user-select: none;
+  }
+  .kanban-card:hover {
+    border-color: var(--color-steel-accent);
+    background: var(--color-charcoal-raised);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  }
+  .kanban-card:active { cursor: grabbing; }
+  .kanban-card.dragging {
+    opacity: 0.4;
+    transform: scale(0.98) rotate(-1deg);
+    cursor: grabbing;
+  }
+
+  .kanban-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .kanban-card-name {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: var(--fw-medium);
+    color: var(--color-whisper-white);
+    line-height: 1.3;
+    word-break: break-word;
+    flex: 1;
+  }
+  .kanban-card-class {
+    flex-shrink: 0;
+  }
+
+  .kanban-card-role {
+    font-size: 11px;
+    color: var(--color-steel-accent);
+    line-height: 1.4;
+    margin-bottom: 2px;
+    word-break: break-word;
+  }
+  .kanban-card-company {
+    font-size: 11px;
+    color: var(--color-slate-text);
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  .kanban-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-ash-soft);
+  }
+  .kanban-card-score {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-data);
+    font-size: 11px;
+    color: var(--color-steel-muted);
+  }
+  .kanban-card-score-val {
+    color: var(--color-whisper-white);
+    font-weight: var(--fw-medium);
+  }
+  .kanban-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kanban-card-status {
+    font-size: 9px;
+    font-family: var(--font-utility);
+    letter-spacing: 0.3px;
+    color: var(--color-steel-muted);
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+  }
+  .kanban-card-link {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    color: var(--color-steel-muted);
+    background: transparent;
+    border: 1px solid var(--color-ash-gray);
+    font-size: 11px;
+    text-decoration: none;
+    transition: color 140ms, border-color 140ms, background 140ms;
+  }
+  .kanban-card-link:hover {
+    color: var(--color-spring-green);
+    border-color: var(--color-spring-green);
+    background: rgba(168,255,83,0.08);
+  }
+
+  .kanban-card-saving {
+    position: absolute;
+    inset: 0;
+    background: rgba(20,22,26,0.6);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-utility);
+    font-size: 10px;
+    color: var(--color-spring-green);
+    letter-spacing: 0.6px;
+    pointer-events: none;
+  }
+
+  /* ── Refresh button ── */
+  .kanban-refresh-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-sm);
+    color: var(--color-slate-text);
+    font-family: var(--font-utility);
+    font-size: 10px;
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 160ms, border-color 160ms, background 160ms, transform 160ms;
+  }
+  .kanban-refresh-btn:hover:not(:disabled) {
+    color: var(--color-spring-green);
+    border-color: var(--color-spring-green);
+    background: rgba(168,255,83,0.05);
+  }
+  .kanban-refresh-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+  .kanban-refresh-btn.spinning svg {
+    animation: kanban-spin 800ms linear infinite;
+  }
+  @keyframes kanban-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* ── Toast ── */
+  .kanban-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 12px 18px;
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-gray);
+    border-left: 3px solid var(--color-spring-green);
+    border-radius: var(--radius-sm);
+    color: var(--color-whisper-white);
+    font-family: var(--font-body);
+    font-size: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 220ms ease, transform 220ms ease;
+    max-width: 320px;
+  }
+  .kanban-toast.show { opacity: 1; transform: translateY(0); }
+  .kanban-toast.error { border-left-color: var(--color-action-red); color: #fda4af; }
+
   @media (max-width: 900px) {
     .emp-summary { grid-template-columns: repeat(2, 1fr); }
+    .emp-filters { gap: 12px; }
+    .kanban-board { grid-auto-columns: minmax(220px, 85vw); }
+  }
+
+  /* ── Ícone histórico no card (inline, ao lado do LinkedIn ↗) ── */
+  .kanban-card-hist {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 3px;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    color: var(--color-cloud-gray);
+    cursor: pointer;
+    transition: color 150ms, background 150ms;
+    line-height: 1;
+  }
+  .kanban-card-hist:hover {
+    color: var(--col-accent, var(--color-spring-green));
+    background: color-mix(in srgb, var(--col-accent, var(--color-spring-green)) 10%, transparent);
+  }
+
+  /* ── Modal overlay ── */
+  .hist-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.72);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+  }
+  .hist-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .hist-modal {
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    width: min(560px, 96vw);
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    transform: translateY(12px) scale(0.98);
+    transition: transform 200ms ease;
+  }
+  .hist-overlay.open .hist-modal {
+    transform: translateY(0) scale(1);
+  }
+  .hist-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--color-ash-gray);
+    flex-shrink: 0;
+  }
+  .hist-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .hist-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-whisper-white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+  }
+  .hist-subtitle {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--color-cloud-gray);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+  }
+  .hist-subtitle:empty { display: none; }
+  .hist-close {
+    background: none;
+    border: none;
+    color: var(--color-cloud-gray);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 150ms, background 150ms;
+  }
+  .hist-close:hover { color: var(--color-whisper-white); background: var(--color-midnight-surface); }
+
+  .hist-summary {
+    display: flex;
+    gap: 16px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--color-ash-gray);
+    flex-shrink: 0;
+  }
+  .hist-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .hist-stat-val {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-spring-green);
+  }
+  .hist-stat-lbl {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--color-cloud-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .hist-divider { width: 1px; background: var(--color-ash-gray); align-self: stretch; }
+
+  .hist-body {
+    overflow-y: auto;
+    padding: 16px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hist-empty {
+    text-align: center;
+    color: var(--color-cloud-gray);
+    font-family: var(--font-body);
+    font-size: 13px;
+    padding: 32px 0;
+  }
+  .hist-loading {
+    text-align: center;
+    color: var(--color-cloud-gray);
+    font-family: var(--font-body);
+    font-size: 13px;
+    padding: 32px 0;
+  }
+
+  /* ── Timeline items ── */
+  .hist-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 12px;
+    position: relative;
+  }
+  .hist-item-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .hist-item-dot.canal-linkedin { background: #0a66c2; }
+  .hist-item-dot.canal-email    { background: var(--color-spring-green); }
+  .hist-item-content {
+    background: var(--color-midnight-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .hist-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .hist-badge-canal {
+    font-family: var(--font-body);
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .hist-badge-canal.canal-linkedin { background: rgba(10,102,194,0.18); color: #60a5fa; }
+  .hist-badge-canal.canal-email    { background: rgba(16,185,129,0.12); color: var(--color-spring-green); }
+  .hist-badge-tipo {
+    font-family: var(--font-body);
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background: var(--color-charcoal-raised);
+    color: var(--color-cloud-gray);
+  }
+  .hist-date {
+    margin-left: auto;
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--color-cloud-gray);
+    white-space: nowrap;
+  }
+  .hist-mensagem {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--color-whisper-white);
+    line-height: 1.5;
+  }
+  .hist-resposta {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--color-cloud-gray);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .hist-resposta::before { content: '↩'; color: var(--color-spring-green); }
+
+  /* ── Editor de notas finais (Motivo de descarte / Observações) ── */
+  .hist-notes {
+    border-top: 1px solid var(--color-ash-gray);
+    padding: 14px 20px 16px;
+    flex-shrink: 0;
+    background: var(--color-charcoal-raised);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .hist-notes-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .hist-notes-label {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-whisper-white);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .hist-notes-status {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--color-cloud-gray);
+    transition: color 200ms;
+  }
+  .hist-notes-status.success { color: var(--color-spring-green); }
+  .hist-notes-status.error   { color: var(--color-action-red); }
+  .hist-notes-input {
+    width: 100%;
+    min-height: 64px;
+    max-height: 140px;
+    resize: vertical;
+    padding: 8px 10px;
+    background: var(--color-midnight-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-sm);
+    color: var(--color-whisper-white);
+    font-family: var(--font-body);
+    font-size: 12px;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color 150ms;
+  }
+  .hist-notes-input:focus {
+    border-color: var(--color-spring-green);
+  }
+  .hist-notes-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .hist-notes-save {
+    padding: 6px 14px;
+    background: var(--color-spring-green);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #0a1a12;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 150ms, opacity 150ms;
+  }
+  .hist-notes-save:hover { background: #34d399; }
+  .hist-notes-save:disabled { opacity: 0.5; cursor: wait; }
+  /* Estado "atenção": quando candidato está em status de descarte */
+  .hist-notes.is-discarded {
+    background: rgba(244, 63, 94, 0.08);
+    border-top-color: rgba(244, 63, 94, 0.35);
+  }
+  .hist-notes.is-discarded .hist-notes-label { color: #fda4af; }
+
+  /* ── Info do talento no topo do modal ── */
+  .hist-talent-info {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--color-ash-gray);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .hist-talent-tag {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--color-cloud-gray);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .hist-talent-tag strong {
+    color: var(--color-whisper-white);
+    font-weight: 500;
   }
 
 </style>
@@ -2675,6 +3505,38 @@
       <div class="emp-stat"><div class="emp-stat-label">Prioridade Alta</div><div class="emp-stat-value" id="emp-alta">—</div></div>
     </div>
 
+    <!-- Filter bar -->
+    <div class="emp-filters" id="emp-filters" style="display:none;">
+      <!-- Prioridade — dropdown -->
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Prioridade</span>
+        <select class="emp-filter-select" id="filter-select-prio">
+          <option value="">Todas</option>
+          <option value="Alta">Alta</option>
+          <option value="Média">Média</option>
+          <option value="Baixa">Baixa</option>
+        </select>
+      </div>
+      <div class="emp-filter-divider"></div>
+      <!-- Segmento — dropdown populado dinamicamente -->
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Segmento</span>
+        <select class="emp-filter-select" id="filter-select-seg">
+          <option value="">Todos</option>
+        </select>
+      </div>
+      <div class="emp-filter-divider"></div>
+      <!-- Status — chips -->
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Status</span>
+        <button class="emp-chip active" data-filter-status="">Todos</button>
+        <button class="emp-chip" data-filter-status="Mapeada">Mapeada</button>
+        <button class="emp-chip" data-filter-status="Em mapeamento">Em mapeamento</button>
+        <button class="emp-chip" data-filter-status="Pendente">Pendente</button>
+      </div>
+      <span class="emp-filter-count" id="emp-filter-count"></span>
+    </div>
+
     <div class="emp-table-wrap">
       <table class="emp-table">
         <thead>
@@ -2695,20 +3557,198 @@
     </div>
   </div>
 
+
   <!-- ══ VIEW: PLACEHOLDERS (talentos, pipeline, interacoes, workflows, agentes, manual) ══ -->
   <div class="view" id="view-talentos">
-    <div class="view-placeholder">
-      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="4.5" r="2.5" fill="currentColor"/><path d="M2.5 12.5c0-2.761 2.239-5 5-5s5 2.239 5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-      <h2>Talentos</h2>
-      <p>Lista detalhada do banco de talentos chega na próxima etapa.</p>
+    <div class="view-header">
+      <div>
+        <div class="view-title">Talentos</div>
+        <div class="view-subtitle">Banco de talentos — hunting ativo regional</div>
+      </div>
+      <div id="tal-updated" style="font-family:var(--font-data);font-size:var(--fs-data);color:var(--color-steel-muted);">—</div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="emp-summary" id="tal-summary">
+      <div class="emp-stat"><div class="emp-stat-label">Total</div><div class="emp-stat-value" id="tal-total">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Ativos no funil</div><div class="emp-stat-value green" id="tal-ativos">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Score médio</div><div class="emp-stat-value" id="tal-score-medio">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Prontos p/ automação</div><div class="emp-stat-value" id="tal-prontos">—</div></div>
+    </div>
+
+    <!-- Classificação mini-bar -->
+    <div class="tal-class-bar" id="tal-class-bar" style="display:none;">
+      <div class="tal-class-item">
+        <span class="tal-class-label">A+</span>
+        <button class="tal-class-chip chip-aplus" data-tal-class="A+">—</button>
+      </div>
+      <div class="tal-class-item">
+        <span class="tal-class-label">A</span>
+        <button class="tal-class-chip chip-a" data-tal-class="A">—</button>
+      </div>
+      <div class="tal-class-item">
+        <span class="tal-class-label">B</span>
+        <button class="tal-class-chip chip-b" data-tal-class="B">—</button>
+      </div>
+      <div class="tal-class-item">
+        <span class="tal-class-label">C</span>
+        <button class="tal-class-chip chip-c" data-tal-class="C">—</button>
+      </div>
+      <button class="tal-class-chip chip-all active" data-tal-class="">Todos</button>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="emp-filters" id="tal-filters" style="display:none;">
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Status</span>
+        <select class="emp-filter-select" id="tal-filter-status">
+          <option value="">Todos</option>
+          <option value="Mapeado">Mapeado</option>
+          <option value="Qualificado">Qualificado</option>
+          <option value="Aprovado para contato">Aprovado p/ contato</option>
+          <option value="Contato enviado">Contato enviado</option>
+          <option value="Conexão aceita">Conexão aceita</option>
+          <option value="Aguardando resposta">Aguardando resposta</option>
+          <option value="Respondeu">Respondeu</option>
+          <option value="Reunião marcada">Reunião marcada</option>
+          <option value="Entrevistado">Entrevistado</option>
+          <option value="Aprovado">Aprovado</option>
+          <option value="Contratado">Contratado</option>
+          <option value="Não retornou">Não retornou</option>
+          <option value="Sem interesse">Sem interesse</option>
+          <option value="Descartado">Descartado</option>
+          <option value="Nutrição futura">Nutrição futura</option>
+        </select>
+      </div>
+      <div class="emp-filter-divider"></div>
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Segmento</span>
+        <select class="emp-filter-select" id="tal-filter-seg">
+          <option value="">Todos</option>
+        </select>
+      </div>
+      <div class="emp-filter-divider"></div>
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Perfil</span>
+        <select class="emp-filter-select" id="tal-filter-perfil">
+          <option value="">Todos</option>
+          <option value="Assessor/AAI">Assessor/AAI</option>
+          <option value="Gerente/Relacionamento">Gerente/Relacionamento</option>
+          <option value="Seguros">Seguros</option>
+          <option value="Consórcio">Consórcio</option>
+          <option value="Crédito">Crédito</option>
+          <option value="Comercial B2B">Comercial B2B</option>
+        </select>
+      </div>
+      <span class="emp-filter-count" id="tal-filter-count"></span>
+    </div>
+
+    <div class="emp-table-wrap">
+      <table class="emp-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Cargo</th>
+            <th>Empresa</th>
+            <th>Segmento</th>
+            <th>Localização</th>
+            <th>Score</th>
+            <th>Class.</th>
+            <th>Status</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody id="tal-tbody">
+          <tr><td colspan="9" class="emp-loading">Carregando talentos…</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
   <div class="view" id="view-pipeline">
-    <div class="view-placeholder">
-      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><path d="M1 3h13M3 7h9M5 11h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-      <h2>Pipeline</h2>
-      <p>Visualização detalhada do funil de recrutamento por estágio.</p>
+    <div class="view-header">
+      <div>
+        <div class="view-title">Pipeline</div>
+        <div class="view-subtitle">Funil de recrutamento — arraste cards entre estágios</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span id="kanban-updated" style="font-family:var(--font-data);font-size:var(--fs-data);color:var(--color-steel-muted);">—</span>
+        <button id="kanban-refresh" class="kanban-refresh-btn" title="Buscar dados atualizados do Notion">
+          <svg width="13" height="13" viewBox="0 0 15 15" fill="none"><path d="M11.5 7.5a4 4 0 1 1-1.2-2.85M11.5 3v3.5h-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Atualizar</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- KPIs do funil -->
+    <div class="emp-summary" id="kanban-summary">
+      <div class="emp-stat"><div class="emp-stat-label">Total no funil</div><div class="emp-stat-value" id="kanban-total">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Ativos</div><div class="emp-stat-value green" id="kanban-ativos">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Em conversa</div><div class="emp-stat-value" id="kanban-conversa">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Fechados</div><div class="emp-stat-value" id="kanban-fechados">—</div></div>
+    </div>
+
+    <!-- Filtros do Kanban -->
+    <div class="emp-filters" id="kanban-filters" style="display:none;">
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Busca</span>
+        <input class="emp-filter-select kanban-search" id="kanban-search" type="text" placeholder="nome, empresa, cargo…" style="min-width:200px;">
+      </div>
+      <div class="emp-filter-divider"></div>
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Classe</span>
+        <select class="emp-filter-select" id="kanban-filter-class">
+          <option value="">Todas</option>
+          <option value="A+">A+</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
+      </div>
+      <div class="emp-filter-divider"></div>
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Segmento</span>
+        <select class="emp-filter-select" id="kanban-filter-seg">
+          <option value="">Todos</option>
+        </select>
+      </div>
+      <span class="emp-filter-count" id="kanban-filter-count"></span>
+    </div>
+
+    <div class="kanban-board" id="kanban-board">
+      <div class="kanban-loading">Carregando pipeline…</div>
+    </div>
+
+    <!-- Toast de feedback -->
+    <div id="kanban-toast" class="kanban-toast"></div>
+  </div>
+
+  <!-- ── Modal de histórico de interações ── -->
+  <div class="hist-overlay" id="hist-overlay" role="dialog" aria-modal="true">
+    <div class="hist-modal">
+      <div class="hist-header">
+        <div class="hist-header-left">
+          <div class="hist-title" id="hist-modal-title">Histórico</div>
+          <div class="hist-subtitle" id="hist-modal-subtitle"></div>
+        </div>
+        <button class="hist-close" id="hist-close" title="Fechar">✕</button>
+      </div>
+      <div class="hist-talent-info" id="hist-talent-info"></div>
+      <div class="hist-summary" id="hist-summary"></div>
+      <div class="hist-body" id="hist-body">
+        <div class="hist-loading">Carregando interações…</div>
+      </div>
+      <div class="hist-notes" id="hist-notes">
+        <div class="hist-notes-header">
+          <span class="hist-notes-label" id="hist-notes-label">Motivo / Notas finais</span>
+          <span class="hist-notes-status" id="hist-notes-status"></span>
+        </div>
+        <textarea class="hist-notes-input" id="hist-notes-input"
+          placeholder="Descreva a última etapa do candidato — ex: motivo de descarte, decisão pós-reunião, observação final"></textarea>
+        <div class="hist-notes-actions">
+          <button class="hist-notes-save" id="hist-notes-save">Salvar</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2848,6 +3888,8 @@
     const target = document.getElementById('view-' + viewId);
     if (target) target.classList.add('active');
     if (viewId === 'empresas') loadEmpresas();
+  if (viewId === 'talentos') loadTalentos();
+  if (viewId === 'pipeline') loadKanban();
   }
 
   navItems.forEach(item => {
@@ -2874,8 +3916,14 @@
   subMenu.classList.add('open');
   interacoesToggle.classList.add('open');
 
-  // ── EMPRESAS LOADER ──
+  // ── EMPRESAS — STATE ──
   let empresasLoaded = false;
+  let _empData = null;
+  let _filterPrio   = '';
+  let _filterSeg    = '';
+  let _filterStatus = '';
+
+  // ── EMPRESAS LOADER ──
   async function loadEmpresas() {
     if (empresasLoaded) return;
     empresasLoaded = true;
@@ -2935,12 +3983,202 @@
     return el('span', { className: 'pill ' + pillClass(value, kind) }, value);
   }
   function safeLink(href, label, title) {
-    const a = el('a', { href: href, target: '_blank', rel: 'noopener', class: 'emp-link', title: title }, label);
-    return a;
+    return el('a', { href: href, target: '_blank', rel: 'noopener', class: 'emp-link', title: title }, label);
   }
 
+  // ── TOAST helper ──
+  function showToast(msg) {
+    const t = document.getElementById('crm-toast');
+    const m = document.getElementById('crm-toast-msg');
+    if (!t || !m) { console.error('[CRM]', msg); return; }
+    m.textContent = msg;
+    t.style.display = 'flex';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function() { t.style.display = 'none'; }, 6000);
+  }
+
+  // ── PRIORITY DROPDOWN ──
+  // Resolved lazily because the #prio-dropdown element is declared after this script block
+  function _dd() { return document.getElementById('prio-dropdown'); }
+  let _prioAnchorBtn = null;
+
+  function closePrioDropdown() {
+    const dd = _dd();
+    if (!dd) return;
+    dd.classList.remove('open');
+    dd.replaceChildren();
+    _prioAnchorBtn = null;
+  }
+
+  document.addEventListener('click', function(ev) {
+    const dd = _dd();
+    if (!dd) return;
+    if (!dd.contains(ev.target) && ev.target !== _prioAnchorBtn) {
+      closePrioDropdown();
+    }
+  });
+
+  function openPrioDropdown(anchorBtn, empresa) {
+    const dd = _dd();
+    if (!dd) { console.error('[CRM] prio-dropdown not found in DOM'); return; }
+    if (_prioAnchorBtn === anchorBtn) { closePrioDropdown(); return; }
+    closePrioDropdown();
+    _prioAnchorBtn = anchorBtn;
+
+    const opts = ['Alta', 'Média', 'Baixa'];
+    opts.forEach(function(opt) {
+      const btn = document.createElement('button');
+      btn.className = 'prio-dropdown-item pill ' + pillClass(opt, 'prioridade');
+      if (opt === empresa.prioridade) btn.classList.add('selected');
+      btn.textContent = opt;
+      btn.addEventListener('click', function(ev) {
+        ev.stopPropagation();
+        closePrioDropdown();
+        updatePrioridade(anchorBtn, empresa, opt);
+      });
+      dd.appendChild(btn);
+    });
+
+    if (empresa.prioridade) {
+      const sep = document.createElement('div');
+      sep.className = 'prio-dropdown-sep';
+      dd.appendChild(sep);
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'prio-dropdown-clear';
+      clearBtn.textContent = 'Remover prioridade';
+      clearBtn.addEventListener('click', function(ev) {
+        ev.stopPropagation();
+        closePrioDropdown();
+        updatePrioridade(anchorBtn, empresa, '');
+      });
+      dd.appendChild(clearBtn);
+    }
+
+    const rect = anchorBtn.getBoundingClientRect();
+    dd.style.top  = (rect.bottom + 6) + 'px';
+    dd.style.left = rect.left + 'px';
+    dd.classList.add('open');
+  }
+
+  async function updatePrioridade(anchorBtn, empresa, novaPrio) {
+    if (novaPrio === empresa.prioridade) return;
+    const oldPrio = empresa.prioridade;
+    console.log('[CRM] updatePrioridade', { page_id: empresa.page_id, de: oldPrio, para: novaPrio });
+    if (!empresa.page_id) {
+      showToast('page_id ausente — recarregue a página e tente novamente');
+      return;
+    }
+    anchorBtn.classList.add('saving');
+
+    // Optimistic update
+    empresa.prioridade = novaPrio || null;
+    refreshAnchorBtn(anchorBtn, empresa);
+    updateEmpSummary();
+
+    try {
+      const res = await fetch('/api/update_empresa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ page_id: empresa.page_id, prioridade: novaPrio }),
+      });
+      console.log('[CRM] update_empresa status:', res.status);
+      if (!res.ok) {
+        let errMsg = res.statusText;
+        try { const err = await res.json(); errMsg = err.error || errMsg; } catch(_) {}
+        throw new Error('HTTP ' + res.status + ': ' + errMsg);
+      }
+    } catch (e) {
+      // Revert
+      console.error('[CRM] updatePrioridade failed:', e);
+      empresa.prioridade = oldPrio;
+      refreshAnchorBtn(anchorBtn, empresa);
+      updateEmpSummary();
+      showToast('Erro ao atualizar prioridade: ' + (e.message || e));
+    } finally {
+      anchorBtn.classList.remove('saving');
+    }
+  }
+
+  function refreshAnchorBtn(btn, empresa) {
+    btn.className = 'pill prio-edit-btn ' + pillClass(empresa.prioridade, 'prioridade');
+    btn.replaceChildren();
+    const txt = document.createTextNode(empresa.prioridade || '—');
+    btn.appendChild(txt);
+    const chevron = document.createElement('span');
+    chevron.className = 'prio-chevron';
+    chevron.textContent = '▾';
+    btn.appendChild(chevron);
+  }
+
+  function updateEmpSummary() {
+    if (!_empData) return;
+    const all = _empData.empresas || [];
+    const altaCount = all.filter(function(e) { return e.prioridade === 'Alta'; }).length;
+    document.getElementById('emp-alta').textContent = altaCount;
+    // Rebuild por_prioridade in summary
+    const pp = {};
+    all.forEach(function(e) {
+      const p = e.prioridade || '—';
+      pp[p] = (pp[p] || 0) + 1;
+    });
+    if (_empData.summary) _empData.summary.por_prioridade = pp;
+  }
+
+  // ── FILTER LOGIC ──
+  function applyFilters() {
+    if (!_empData) return;
+    let list = _empData.empresas || [];
+    if (_filterPrio)   list = list.filter(function(e) { return e.prioridade === _filterPrio; });
+    if (_filterSeg)    list = list.filter(function(e) { return e.segmento === _filterSeg; });
+    if (_filterStatus) list = list.filter(function(e) { return e.status === _filterStatus; });
+
+    const countEl = document.getElementById('emp-filter-count');
+    const total = (_empData.empresas || []).length;
+    countEl.textContent = list.length < total ? list.length + ' de ' + total + ' empresas' : total + ' empresas';
+
+    renderEmpresasTable(list);
+  }
+
+  function populateSegSelect() {
+    if (!_empData) return;
+    const sel = document.getElementById('filter-select-seg');
+    if (!sel) return;
+    const segs = Array.from(
+      new Set((_empData.empresas || []).map(function(e) { return e.segmento; }).filter(Boolean))
+    ).sort();
+    // Keep first "Todos" option, rebuild the rest
+    while (sel.options.length > 1) sel.remove(1);
+    segs.forEach(function(s) {
+      const opt = document.createElement('option');
+      opt.value = s; opt.textContent = s;
+      sel.appendChild(opt);
+    });
+  }
+
+  // Prioridade select
+  document.getElementById('filter-select-prio').addEventListener('change', function() {
+    _filterPrio = this.value;
+    applyFilters();
+  });
+
+  // Segmento select
+  document.getElementById('filter-select-seg').addEventListener('change', function() {
+    _filterSeg = this.value;
+    applyFilters();
+  });
+
+  // Status chips
+  document.getElementById('emp-filters').addEventListener('click', function(ev) {
+    const chip = ev.target.closest('[data-filter-status]');
+    if (!chip) return;
+    _filterStatus = chip.getAttribute('data-filter-status');
+    chip.closest('.emp-filter-group').querySelectorAll('.emp-chip').forEach(function(c) { c.classList.remove('active'); });
+    chip.classList.add('active');
+    applyFilters();
+  });
+
   function renderEmpresas(data) {
-    const empresas = data.empresas || [];
+    _empData = data;
     const s = data.summary || {};
 
     document.getElementById('emp-total').textContent = s.total || 0;
@@ -2954,15 +4192,21 @@
         'Atualizado ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
     }
 
+    document.getElementById('emp-filters').style.display = 'flex';
+    populateSegSelect();
+    applyFilters();
+  }
+
+  function renderEmpresasTable(empresas) {
     const tbody = document.getElementById('emp-tbody');
     tbody.replaceChildren();
     if (!empresas.length) {
       const tr = el('tr');
-      tr.appendChild(el('td', { colSpan: 7, className: 'emp-empty' }, 'Nenhuma empresa cadastrada.'));
+      tr.appendChild(el('td', { colSpan: 7, className: 'emp-empty' }, 'Nenhum resultado para os filtros selecionados.'));
       tbody.appendChild(tr);
       return;
     }
-    empresas.forEach(e => {
+    empresas.forEach(function(e) {
       const tr = el('tr');
       // Empresa
       const tdEmp = el('td');
@@ -2979,13 +4223,24 @@
       const tdTal = el('td');
       tdTal.appendChild(el('span', { className: 'emp-talentos' }, e.talentos_est != null ? e.talentos_est : '—'));
       tr.appendChild(tdTal);
-      // Prioridade
-      const tdPrio = el('td'); tdPrio.appendChild(pill(e.prioridade, 'prioridade')); tr.appendChild(tdPrio);
+      // Prioridade — editable button
+      const tdPrio = el('td');
+      const prioBtn = document.createElement('button');
+      prioBtn.className = 'pill prio-edit-btn ' + pillClass(e.prioridade, 'prioridade');
+      const txt = document.createTextNode(e.prioridade || '—');
+      prioBtn.appendChild(txt);
+      const chevron = document.createElement('span');
+      chevron.className = 'prio-chevron';
+      chevron.textContent = '▾';
+      prioBtn.appendChild(chevron);
+      prioBtn.addEventListener('click', function(ev) { ev.stopPropagation(); openPrioDropdown(prioBtn, e); });
+      tdPrio.appendChild(prioBtn);
+      tr.appendChild(tdPrio);
       // Status
       const tdStat = el('td'); tdStat.appendChild(pill(e.status, 'status')); tr.appendChild(tdStat);
       // Links
       const tdLinks = el('td');
-      if (e.linkedin) tdLinks.appendChild(safeLink(e.linkedin, 'in', 'LinkedIn'));
+      if (e.linkedin) tdLinks.appendChild(safeLink(e.linkedin, '↗', 'LinkedIn'));
       if (e.site)     tdLinks.appendChild(safeLink(e.site, '↗', 'Site'));
       if (!e.linkedin && !e.site) {
         const dash = el('span', null, '—');
@@ -2997,6 +4252,717 @@
       tbody.appendChild(tr);
     });
   }
+
+  // ── TALENTOS VIEW ──────────────────────────────────────────────────────
+  let talentosLoaded = false;
+  let _talData = null;
+  let _talFilterClass  = '';
+  let _talFilterStatus = '';
+  let _talFilterSeg    = '';
+  let _talFilterPerfil = '';
+
+  async function loadTalentos() {
+    if (talentosLoaded) return;
+    talentosLoaded = true;
+    try {
+      const r = await fetch('/api/talentos');
+      const data = await r.json();
+      renderTalentos(data);
+    } catch (e) {
+      const tbody = document.getElementById('tal-tbody');
+      tbody.replaceChildren();
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 9; td.className = 'emp-empty';
+      td.textContent = 'Erro ao carregar talentos: ' + (e.message || e);
+      tr.appendChild(td); tbody.appendChild(tr);
+    }
+  }
+
+  function talStatusClass(s) {
+    const m = {
+      'Mapeado':'pill-gray','Qualificado':'pill-blue',
+      'Aprovado para contato':'pill-green','Contato enviado':'pill-green',
+      'Conexão aceita':'pill-blue','Aguardando resposta':'pill-yellow',
+      'Respondeu':'pill-green','Reunião marcada':'pill-purple',
+      'Entrevistado':'pill-purple','Aprovado':'pill-green','Contratado':'pill-green',
+      'Não retornou':'pill-gray','Não aceitou':'pill-red',
+      'Sem interesse':'pill-red','Descartado':'pill-red','Nutrição futura':'pill-orange',
+    };
+    return m[s] || 'pill-gray';
+  }
+
+  function talClassClass(c) {
+    return {'A+':'pill-green','A':'pill-blue','B':'pill-yellow','C':'pill-red'}[c] || 'pill-gray';
+  }
+
+  function applyTalFilters() {
+    if (!_talData) return;
+    let list = _talData.talentos || [];
+    if (_talFilterClass)  list = list.filter(function(t){ return t.classificacao === _talFilterClass; });
+    if (_talFilterStatus) list = list.filter(function(t){ return t.status === _talFilterStatus; });
+    if (_talFilterSeg)    list = list.filter(function(t){ return t.segmento === _talFilterSeg; });
+    if (_talFilterPerfil) list = list.filter(function(t){ return t.perfil === _talFilterPerfil; });
+    const total = (_talData.talentos || []).length;
+    const cntEl = document.getElementById('tal-filter-count');
+    if (cntEl) cntEl.textContent = list.length < total ? list.length + ' de ' + total + ' talentos' : total + ' talentos';
+    renderTalentosTable(list);
+  }
+
+  function renderTalentos(data) {
+    _talData = data;
+    const s = data.summary || {};
+    const pc = s.por_classificacao || {};
+    document.getElementById('tal-total').textContent       = s.total || 0;
+    document.getElementById('tal-ativos').textContent      = s.ativos || 0;
+    document.getElementById('tal-score-medio').textContent = s.score_medio != null ? s.score_medio : '—';
+    document.getElementById('tal-prontos').textContent     = s.prontos_automacao || 0;
+    if (data.updated_at) {
+      const d = new Date(data.updated_at * 1000);
+      document.getElementById('tal-updated').textContent =
+        'Atualizado ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+    }
+    // Update class chips
+    ['A+','A','B','C'].forEach(function(c) {
+      const btn = document.querySelector('[data-tal-class="' + c + '"]');
+      if (btn) btn.textContent = c + ' · ' + (pc[c] || 0);
+    });
+    // Populate segmento select
+    const segSel = document.getElementById('tal-filter-seg');
+    if (segSel) {
+      const segs = Object.keys(s.por_segmento || {}).filter(function(x){ return x !== '—'; }).sort();
+      while (segSel.options.length > 1) segSel.remove(1);
+      segs.forEach(function(sg) {
+        const opt = document.createElement('option');
+        opt.value = sg; opt.textContent = sg; segSel.appendChild(opt);
+      });
+    }
+    document.getElementById('tal-class-bar').style.display = 'flex';
+    document.getElementById('tal-filters').style.display   = 'flex';
+    applyTalFilters();
+  }
+
+  // Classification chips
+  document.getElementById('tal-class-bar').addEventListener('click', function(ev) {
+    const chip = ev.target.closest('[data-tal-class]');
+    if (!chip) return;
+    _talFilterClass = chip.getAttribute('data-tal-class');
+    this.querySelectorAll('[data-tal-class]').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+    applyTalFilters();
+  });
+
+  document.getElementById('tal-filter-status').addEventListener('change', function(){ _talFilterStatus = this.value; applyTalFilters(); });
+  document.getElementById('tal-filter-seg').addEventListener('change',    function(){ _talFilterSeg    = this.value; applyTalFilters(); });
+  document.getElementById('tal-filter-perfil').addEventListener('change', function(){ _talFilterPerfil = this.value; applyTalFilters(); });
+
+  function renderTalentosTable(talentos) {
+    const tbody = document.getElementById('tal-tbody');
+    tbody.replaceChildren();
+    if (!talentos.length) {
+      const tr = el('tr');
+      tr.appendChild(el('td', { colSpan: 9, className: 'emp-empty' }, 'Nenhum resultado para os filtros selecionados.'));
+      tbody.appendChild(tr);
+      return;
+    }
+    const maxScore = Math.max.apply(null, talentos.map(function(t){ return t.score || 0; })) || 1;
+    talentos.forEach(function(t) {
+      const tr = el('tr');
+      // Nome
+      const tdNome = el('td');
+      tdNome.appendChild(el('div', { className: 'tal-nome' }, t.nome || '—'));
+      tr.appendChild(tdNome);
+      // Cargo
+      const tdCargo = el('td');
+      tdCargo.appendChild(el('div', { className: 'tal-cargo' }, t.cargo || '—'));
+      tr.appendChild(tdCargo);
+      // Empresa
+      const tdEmpresa = el('td');
+      tdEmpresa.appendChild(el('div', { className: 'tal-empresa' }, t.empresa || '—'));
+      tr.appendChild(tdEmpresa);
+      // Segmento
+      const tdSeg = el('td'); tdSeg.appendChild(pill(t.segmento, 'segmento')); tr.appendChild(tdSeg);
+      // Localização
+      const loc = [t.cidade, t.estado].filter(Boolean).join(' / ');
+      const tdLoc = el('td'); tdLoc.appendChild(el('span', { className: 'emp-loc' }, loc || '—')); tr.appendChild(tdLoc);
+      // Score
+      const tdScore = el('td');
+      if (t.score != null) {
+        const wrap = el('div', { className: 'tal-score-wrap' });
+        wrap.appendChild(el('span', { className: 'tal-score-val' }, t.score));
+        const bar = el('div', { className: 'tal-score-bar' });
+        const fill = el('div', { className: 'tal-score-fill' });
+        fill.style.width = Math.round((t.score / maxScore) * 100) + '%';
+        bar.appendChild(fill); wrap.appendChild(bar);
+        tdScore.appendChild(wrap);
+      } else {
+        tdScore.appendChild(el('span', { className: 'emp-loc' }, '—'));
+      }
+      tr.appendChild(tdScore);
+      // Classificação
+      const tdClass = el('td');
+      if (t.classificacao) {
+        tdClass.appendChild(el('span', { className: 'pill ' + talClassClass(t.classificacao) }, t.classificacao));
+      } else {
+        tdClass.appendChild(el('span', { className: 'emp-loc' }, '—'));
+      }
+      tr.appendChild(tdClass);
+      // Status
+      const tdStat = el('td');
+      if (t.status) {
+        tdStat.appendChild(el('span', { className: 'pill ' + talStatusClass(t.status) }, t.status));
+      } else {
+        tdStat.appendChild(el('span', { className: 'emp-loc' }, '—'));
+      }
+      tr.appendChild(tdStat);
+      // LinkedIn
+      const tdLink = el('td');
+      if (t.linkedin) {
+        tdLink.appendChild(safeLink(t.linkedin, '↗', 'LinkedIn'));
+      } else {
+        const dash = el('span', null, '—'); dash.style.color = 'var(--color-steel-muted)';
+        tdLink.appendChild(dash);
+      }
+      tr.appendChild(tdLink);
+      tbody.appendChild(tr);
+    });
+  }
+
+})();
+
+/* ════════════════════════════════════════════════════════════════
+   KANBAN — Pipeline interativo (drag-and-drop com persistência Notion)
+   ════════════════════════════════════════════════════════════════ */
+window.loadKanban = (function() {
+
+  const STAGES = [
+    { id: 'prospect',  title: 'Prospecção',   accent: '#6e7178', primary: 'Mapeado',               members: ['Mapeado', 'Qualificado'] },
+    { id: 'approved',  title: 'Aprovado',     accent: '#479dec', primary: 'Aprovado para contato', members: ['Aprovado para contato'] },
+    { id: 'contact',   title: 'Contato',      accent: '#22d3ee', primary: 'Contato enviado',       members: ['Contato enviado', 'Conexão aceita'] },
+    { id: 'engage',    title: 'Engajamento',  accent: '#ecCF06', primary: 'Aguardando resposta',   members: ['Aguardando resposta', 'Respondeu'] },
+    { id: 'close',     title: 'Fechamento',   accent: '#a8ff53', primary: 'Reunião marcada',       members: ['Reunião marcada', 'Entrevistado', 'Aprovado'] },
+    { id: 'hired',     title: 'Contratado',   accent: '#10b981', primary: 'Contratado',            members: ['Contratado'] },
+    { id: 'lost',      title: 'Descartado',   accent: '#f43f5e', primary: 'Descartado',            members: ['Descartado', 'Não retornou', 'Sem interesse', 'Nutrição futura', 'Não aceitou'] },
+  ];
+
+  const STATUS_TO_STAGE = (function() {
+    const m = {};
+    STAGES.forEach(s => s.members.forEach(st => { m[st] = s.id; }));
+    return m;
+  })();
+
+  let _loaded = false;
+  let _items = [];
+  let _filters = { search: '', cls: '', seg: '' };
+  let _dragging = null;
+
+  function el(tag, attrs, ...children) {
+    const node = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(k => {
+      if (k === 'className') node.className = attrs[k];
+      else if (k === 'dataset') Object.assign(node.dataset, attrs[k]);
+      else if (k === 'style') node.style.cssText = attrs[k];
+      else if (k.startsWith('on')) node.addEventListener(k.slice(2).toLowerCase(), attrs[k]);
+      else node.setAttribute(k, attrs[k]);
+    });
+    children.flat().forEach(c => {
+      if (c == null || c === false) return;
+      node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return node;
+  }
+
+  function classPill(c) {
+    if (!c) return null;
+    const cls = { 'A+': 'pill-green', 'A': 'pill-blue', 'B': 'pill-yellow', 'C': 'pill-red' }[c] || 'pill-gray';
+    return el('span', { className: 'pill ' + cls }, c);
+  }
+
+  function toast(msg, isError) {
+    const t = document.getElementById('kanban-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.toggle('error', !!isError);
+    t.classList.add('show');
+    clearTimeout(t._tm);
+    t._tm = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  function showBoardMessage(text, color) {
+    const board = document.getElementById('kanban-board');
+    board.replaceChildren();
+    const msg = el('div', { className: 'kanban-loading' }, text);
+    if (color) msg.style.color = color;
+    board.appendChild(msg);
+  }
+
+  let _dirty = false;   // true se um update local não foi propagado ao cache do servidor
+
+  async function loadKanban(opts) {
+    const force = !!(opts && opts.force);
+    if (_loaded && !force) { render(); return; }
+
+    const btn = document.getElementById('kanban-refresh');
+    if (btn) { btn.disabled = true; btn.classList.add('spinning'); }
+    if (!_loaded) showBoardMessage('Carregando pipeline…');
+
+    try {
+      const url = '/api/talentos' + (force || _dirty ? '?fresh=1' : '');
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      _items = data.talentos || [];
+      _loaded = true;
+      _dirty = false;
+      populateSegFilter();
+      attachFilterEvents();
+      attachRefreshButton();
+      render();
+      updateTimestamp(data);
+      if (force) toast('Pipeline atualizado');
+    } catch (e) {
+      showBoardMessage('Erro ao carregar: ' + (e.message || e), 'var(--color-action-red)');
+    } finally {
+      if (btn) { btn.disabled = false; btn.classList.remove('spinning'); }
+    }
+  }
+
+  function attachRefreshButton() {
+    const btn = document.getElementById('kanban-refresh');
+    if (!btn || btn._wired) return;
+    btn._wired = true;
+    btn.addEventListener('click', () => loadKanban({ force: true }));
+  }
+
+  function updateTimestamp(data) {
+    const updated = document.getElementById('kanban-updated');
+    if (!updated) return;
+    const ts = data && data.updated_at;
+    const d = ts ? new Date(ts < 1e12 ? ts * 1000 : ts) : new Date();
+    updated.textContent = 'Atualizado ' + d.toLocaleString('pt-BR').replace(', ', ' | ');
+  }
+
+  function populateSegFilter() {
+    const sel = document.getElementById('kanban-filter-seg');
+    if (!sel || sel.children.length > 1) return;
+    const segs = Array.from(new Set(_items.map(t => t.segmento).filter(Boolean))).sort();
+    segs.forEach(s => sel.appendChild(el('option', { value: s }, s)));
+  }
+
+  function attachFilterEvents() {
+    if (attachFilterEvents._done) return;
+    attachFilterEvents._done = true;
+    const search = document.getElementById('kanban-search');
+    const fCls   = document.getElementById('kanban-filter-class');
+    const fSeg   = document.getElementById('kanban-filter-seg');
+    search && search.addEventListener('input', e => { _filters.search = e.target.value.toLowerCase(); render(); });
+    fCls   && fCls.addEventListener('change',  e => { _filters.cls = e.target.value; render(); });
+    fSeg   && fSeg.addEventListener('change',  e => { _filters.seg = e.target.value; render(); });
+  }
+
+  function filtered() {
+    return _items.filter(t => {
+      if (_filters.cls && t.classificacao !== _filters.cls) return false;
+      if (_filters.seg && t.segmento !== _filters.seg) return false;
+      if (_filters.search) {
+        const hay = ((t.nome||'') + ' ' + (t.cargo||'') + ' ' + (t.empresa||'')).toLowerCase();
+        if (!hay.includes(_filters.search)) return false;
+      }
+      return true;
+    });
+  }
+
+  function setText(id, v) { const n = document.getElementById(id); if (n) n.textContent = v; }
+
+  function render() {
+    const board = document.getElementById('kanban-board');
+    const items = filtered();
+    board.replaceChildren();
+    const filters = document.getElementById('kanban-filters');
+    if (filters) filters.style.display = 'flex';
+
+    const buckets = {};
+    STAGES.forEach(s => buckets[s.id] = []);
+    let unmapped = 0;
+    items.forEach(t => {
+      const stage = STATUS_TO_STAGE[t.status];
+      if (stage) buckets[stage].push(t);
+      else unmapped++;
+    });
+
+    const total = items.length;
+    const fechados = buckets.close.length;
+    const lost = buckets.lost.length;
+    const conversa = buckets.contact.length + buckets.engage.length + buckets.interview.length;
+    const ativos = total - lost - unmapped;
+    setText('kanban-total', total);
+    setText('kanban-ativos', ativos);
+    setText('kanban-conversa', conversa);
+    setText('kanban-fechados', fechados);
+
+    const fc = document.getElementById('kanban-filter-count');
+    if (fc) fc.textContent = total + ' talento' + (total !== 1 ? 's' : '');
+
+    STAGES.forEach(stage => {
+      const col = el('div', {
+        className: 'kanban-col',
+        dataset: { stage: stage.id },
+        style: '--col-accent: ' + stage.accent + ';',
+      });
+      col.addEventListener('dragover', onDragOver);
+      col.addEventListener('dragleave', onDragLeave);
+      col.addEventListener('drop', onDrop);
+
+      const header = el('div', { className: 'kanban-col-header' });
+      header.appendChild(el('div', { className: 'kanban-col-title' },
+        el('span', { className: 'kanban-col-dot' }),
+        stage.title
+      ));
+      header.appendChild(el('span', { className: 'kanban-col-count' }, String(buckets[stage.id].length)));
+      col.appendChild(header);
+
+      const body = el('div', { className: 'kanban-col-body' });
+      const list = buckets[stage.id];
+
+      if (list.length === 0) {
+        body.appendChild(el('div', { className: 'kanban-col-empty' }, 'Solte cards aqui'));
+      } else {
+        list
+          .sort((a, b) => (b.score || 0) - (a.score || 0))
+          .forEach(t => body.appendChild(buildCard(t, stage)));
+      }
+      col.appendChild(body);
+      board.appendChild(col);
+    });
+  }
+
+  function buildCard(t, stage) {
+    const card = el('div', {
+      className: 'kanban-card',
+      draggable: 'true',
+      dataset: { pageId: t.page_id, status: t.status || '' },
+      style: '--col-accent: ' + stage.accent + ';',
+    });
+    card.addEventListener('dragstart', onDragStart);
+    card.addEventListener('dragend', onDragEnd);
+
+    const top = el('div', { className: 'kanban-card-top' });
+    top.appendChild(el('div', { className: 'kanban-card-name' }, t.nome || '—'));
+    const cp = classPill(t.classificacao);
+    if (cp) top.appendChild(el('div', { className: 'kanban-card-class' }, cp));
+    card.appendChild(top);
+
+    if (t.cargo)   card.appendChild(el('div', { className: 'kanban-card-role' }, t.cargo));
+    if (t.empresa) card.appendChild(el('div', { className: 'kanban-card-company' }, t.empresa));
+
+    const footer = el('div', { className: 'kanban-card-footer' });
+    const score = el('div', { className: 'kanban-card-score' });
+    if (t.score != null) {
+      score.appendChild(document.createTextNode('Score '));
+      score.appendChild(el('span', { className: 'kanban-card-score-val' }, String(t.score)));
+    } else {
+      score.textContent = '—';
+    }
+    footer.appendChild(score);
+
+    const meta = el('div', { className: 'kanban-card-meta' });
+    if (t.status && t.status !== stage.primary) {
+      meta.appendChild(el('span', { className: 'kanban-card-status', title: t.status }, t.status));
+    }
+    // Ícone de histórico (relógio + documento) — primeiro
+    const histBtn = document.createElement('button');
+    histBtn.className = 'kanban-card-hist';
+    histBtn.title = 'Ver histórico de interações';
+    histBtn.addEventListener('click', e => { e.stopPropagation(); openHistModal(t); });
+    histBtn.addEventListener('dragstart', e => e.stopPropagation());
+    histBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="4" width="13" height="18" rx="2"/><line x1="12" y1="12" x2="17" y2="12"/><line x1="12" y1="16" x2="17" y2="16"/><circle cx="8" cy="7" r="4" fill="var(--color-charcoal-raised)"/><polyline points="8 5.5 8 7 9.5 7"/></svg>';
+    meta.appendChild(histBtn);
+
+    // Seta LinkedIn — no canto direito
+    if (t.linkedin) {
+      const link = el('a', {
+        className: 'kanban-card-link',
+        href: t.linkedin,
+        target: '_blank',
+        rel: 'noopener',
+        title: 'Abrir no LinkedIn',
+        onclick: e => e.stopPropagation(),
+        ondragstart: e => e.stopPropagation(),
+      }, '↗');
+      meta.appendChild(link);
+    }
+
+    footer.appendChild(meta);
+    card.appendChild(footer);
+
+    return card;
+  }
+
+  function onDragStart(e) {
+    const card = e.currentTarget;
+    _dragging = { pageId: card.dataset.pageId, fromStatus: card.dataset.status, el: card };
+    card.classList.add('dragging');
+    try { e.dataTransfer.setData('text/plain', card.dataset.pageId); } catch(_) {}
+    e.dataTransfer.effectAllowed = 'move';
+  }
+  function onDragEnd(e) {
+    e.currentTarget.classList.remove('dragging');
+    document.querySelectorAll('.kanban-col.drag-over').forEach(c => c.classList.remove('drag-over'));
+    _dragging = null;
+  }
+  function onDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('drag-over');
+  }
+  function onDragLeave(e) {
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    e.currentTarget.classList.remove('drag-over');
+  }
+  async function onDrop(e) {
+    e.preventDefault();
+    const col = e.currentTarget;
+    col.classList.remove('drag-over');
+    if (!_dragging) return;
+
+    const stageId = col.dataset.stage;
+    const stage   = STAGES.find(s => s.id === stageId);
+    if (!stage) return;
+
+    if (stage.members.includes(_dragging.fromStatus)) return;
+
+    const newStatus = stage.primary;
+    const item = _items.find(t => t.page_id === _dragging.pageId);
+    if (!item) return;
+
+    const oldStatus = item.status;
+    item.status = newStatus;
+    render();
+
+    try {
+      const r = await fetch('/api/update_talento', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ page_id: item.page_id, status: newStatus }),
+      });
+      if (!r.ok) {
+        const er = await r.json().catch(() => ({}));
+        throw new Error(er.error || ('HTTP ' + r.status));
+      }
+      _dirty = true;
+      toast(item.nome + ' → ' + newStatus);
+    } catch (err) {
+      item.status = oldStatus;
+      render();
+      toast('Falha ao salvar: ' + (err.message || err), true);
+    }
+  }
+
+  /* ── Modal de histórico ── */
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    try {
+      const d = new Date(iso);
+      return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+    } catch(_) { return iso; }
+  }
+
+  function openHistModal(talento) {
+    const overlay = document.getElementById('hist-overlay');
+    const title   = document.getElementById('hist-modal-title');
+    const body    = document.getElementById('hist-body');
+    const summary = document.getElementById('hist-summary');
+    const info    = document.getElementById('hist-talent-info');
+    if (!overlay) return;
+
+    // Título + subtítulo (cargo · empresa)
+    title.textContent = talento.nome || 'Histórico';
+    const subtitle = document.getElementById('hist-modal-subtitle');
+    if (subtitle) {
+      const parts = [talento.cargo, talento.empresa].filter(Boolean);
+      subtitle.textContent = parts.join(' · ');
+    }
+
+    // Info do talento
+    info.replaceChildren();
+    if (talento.canal) {
+      const tag = el('span', { className: 'hist-talent-tag' },
+        'Canal: ', el('strong', null, talento.canal)
+      );
+      info.appendChild(tag);
+    }
+    if (talento.proxima_acao) {
+      const tag = el('span', { className: 'hist-talent-tag' },
+        'Próxima ação: ', el('strong', null, talento.proxima_acao)
+      );
+      info.appendChild(tag);
+    }
+    if (talento.proximo_followup) {
+      const tag = el('span', { className: 'hist-talent-tag' },
+        'Follow-up: ', el('strong', null, fmtDate(talento.proximo_followup))
+      );
+      info.appendChild(tag);
+    }
+
+    // Estado inicial do body
+    summary.replaceChildren();
+    body.replaceChildren(el('div', { className: 'hist-loading' }, 'Carregando interações…'));
+
+    // Editor de notas finais — popula com o que já está em Notion (motivo_descarte ou observações)
+    setupNotesEditor(talento);
+
+    // Abre o overlay
+    overlay.classList.add('open');
+
+    // Fecha ao clicar fora do modal
+    overlay.onclick = e => { if (e.target === overlay) closeHistModal(); };
+
+    // Fecha com Esc
+    overlay._escHandler = e => { if (e.key === 'Escape') closeHistModal(); };
+    document.addEventListener('keydown', overlay._escHandler);
+
+    // Busca interações — passa nome + page_id (nome é o key real no Notion)
+    const params = new URLSearchParams({
+      nome: talento.nome || '',
+      page_id: talento.page_id || '',
+    });
+    fetch('/api/interacoes?' + params.toString(), { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
+      .then(data => renderHistModal(data, summary, body))
+      .catch(err => {
+        body.replaceChildren(el('div', { className: 'hist-empty' },
+          'Erro ao carregar: ' + (err.message || err)
+        ));
+      });
+  }
+
+  function closeHistModal() {
+    const overlay = document.getElementById('hist-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    if (overlay._escHandler) {
+      document.removeEventListener('keydown', overlay._escHandler);
+      overlay._escHandler = null;
+    }
+  }
+
+  function renderHistModal(data, summary, body) {
+    // Summary bar
+    summary.replaceChildren();
+    const stats = [
+      { val: data.total,    lbl: 'Total' },
+      { val: data.linkedin, lbl: 'LinkedIn' },
+      { val: data.email,    lbl: 'E-mail' },
+    ];
+    stats.forEach((s, i) => {
+      if (i > 0) summary.appendChild(el('div', { className: 'hist-divider' }));
+      const stat = el('div', { className: 'hist-stat' },
+        el('div', { className: 'hist-stat-val' }, String(s.val)),
+        el('div', { className: 'hist-stat-lbl' }, s.lbl)
+      );
+      summary.appendChild(stat);
+    });
+
+    // Items
+    body.replaceChildren();
+    const items = data.interacoes || [];
+    if (!items.length) {
+      body.appendChild(el('div', { className: 'hist-empty' },
+        'Nenhuma interação registrada para este candidato.'
+      ));
+      return;
+    }
+
+    items.forEach(item => {
+      const canalKey = (item.canal || '').toLowerCase();
+      const dot = el('div', { className: 'hist-item-dot canal-' + canalKey });
+      const meta = el('div', { className: 'hist-item-meta' },
+        el('span', { className: 'hist-badge-canal canal-' + canalKey }, item.canal || '—'),
+        item.tipo   ? el('span', { className: 'hist-badge-tipo' }, item.tipo) : null,
+        item.status ? el('span', { className: 'hist-badge-tipo' }, item.status) : null,
+        el('span', { className: 'hist-date' }, fmtDate(item.data))
+      );
+      const content = el('div', { className: 'hist-item-content' }, meta);
+      if (item.mensagem) {
+        content.appendChild(el('div', { className: 'hist-mensagem' }, item.mensagem));
+      }
+      if (item.resposta) {
+        content.appendChild(el('div', { className: 'hist-resposta' }, item.resposta));
+      }
+      if (!item.mensagem && !item.resposta && item.observacoes) {
+        content.appendChild(el('div', { className: 'hist-mensagem' }, item.observacoes));
+      }
+      body.appendChild(el('div', { className: 'hist-item' }, dot, content));
+    });
+  }
+
+  /* ── Editor de Motivo de descarte / Notas finais ── */
+  const DISCARD_STATUSES = new Set([
+    'Descartado', 'Não retornou', 'Sem interesse', 'Não aceitou', 'Nutrição futura'
+  ]);
+
+  function setupNotesEditor(talento) {
+    const wrap   = document.getElementById('hist-notes');
+    const input  = document.getElementById('hist-notes-input');
+    const status = document.getElementById('hist-notes-status');
+    const btn    = document.getElementById('hist-notes-save');
+    const label  = document.getElementById('hist-notes-label');
+    if (!wrap || !input || !btn) return;
+
+    // Pre-popula com o que já está no Notion
+    const isDiscarded = DISCARD_STATUSES.has(talento.status);
+    wrap.classList.toggle('is-discarded', isDiscarded);
+    label.textContent = isDiscarded
+      ? 'Motivo de descarte / Última etapa'
+      : 'Observações / Última etapa do processo';
+    input.value = (isDiscarded && talento.motivo_descarte)
+      ? talento.motivo_descarte
+      : (talento.observacoes || '');
+    status.textContent = '';
+    status.className = 'hist-notes-status';
+    btn.disabled = false;
+
+    // Substitui handler pra evitar acúmulo
+    btn.onclick = async function() {
+      const text = input.value.trim();
+      btn.disabled = true;
+      status.textContent = 'Salvando…';
+      status.className = 'hist-notes-status';
+      const field = isDiscarded ? 'motivo_descarte' : 'observacoes';
+      try {
+        const body = { page_id: talento.page_id };
+        body[field] = text;
+        const r = await fetch('/api/update_talento', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        if (!data.ok) throw new Error(data.error || 'falha');
+        status.textContent = 'Salvo';
+        status.className = 'hist-notes-status success';
+        // Atualiza o talento em memória pra refletir nas próximas aberturas
+        if (isDiscarded) talento.motivo_descarte = text;
+        else             talento.observacoes = text;
+        // Marca cache dirty pra próximo refresh trazer dados frescos
+        try { window._dirtyKanban = true; } catch(_) {}
+      } catch (err) {
+        status.textContent = 'Erro: ' + (err.message || err);
+        status.className = 'hist-notes-status error';
+      } finally {
+        btn.disabled = false;
+        setTimeout(() => { if (status.className.includes('success')) status.textContent = ''; }, 2500);
+      }
+    };
+  }
+
+  // Wire close button — #hist-close já está no DOM ao executar o script
+  const _histCloseBtn = document.getElementById('hist-close');
+  if (_histCloseBtn) _histCloseBtn.addEventListener('click', closeHistModal);
+
+  return loadKanban;
 })();
 
 // SOREN Dashboard — Auto-update via dashboard_server.py
@@ -3451,5 +5417,26 @@ if (chatSuggs) {
   });
 }
 </script>
+
+<!-- ══ GLOBAL OVERLAYS (fora de qualquer overflow) ══════════════════════ -->
+<div id="prio-dropdown" class="prio-dropdown"></div>
+<div id="crm-toast" style="
+  position:fixed; bottom:28px; right:28px; z-index:10000;
+  background:#1c1e21; border:1px solid #f43f5e; border-radius:6px;
+  padding:12px 18px; display:none; align-items:center; gap:10px;
+  font-family:'Inter',sans-serif; font-size:13px; color:#f87171;
+  box-shadow:0 8px 24px rgba(0,0,0,0.6); max-width:360px;
+  animation: toastIn 200ms ease;
+">
+  <span id="crm-toast-msg"></span>
+  <button onclick="document.getElementById('crm-toast').style.display='none'" style="
+    background:none; border:none; color:#6e7178; cursor:pointer;
+    font-size:16px; line-height:1; padding:0 0 0 6px;
+  ">×</button>
+</div>
+<style>
+@keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+</style>
+
 </body>
 </html>

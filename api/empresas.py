@@ -77,6 +77,7 @@ def build_empresas():
     empresas = []
     for p in pages:
         empresas.append({
+            "page_id":       p["id"],
             "empresa":       _title(p, "Empresa"),
             "segmento":      _select(p, "Segmento"),
             "cidade":        _text(p, "Cidade"),
