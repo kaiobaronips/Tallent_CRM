@@ -138,7 +138,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 32px;
+    padding: 8px 24px;
     background: rgba(18,19,23,0.85);
     backdrop-filter: saturate(140%) blur(10px);
     -webkit-backdrop-filter: saturate(140%) blur(10px);
@@ -146,7 +146,30 @@
     position: sticky;
     top: 0;
     z-index: 100;
+    height: var(--topbar-h);
   }
+
+  .sidebar-toggle {
+    background: transparent;
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    color: var(--color-steel-accent);
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+    margin-right: 14px;
+    flex-shrink: 0;
+  }
+  .sidebar-toggle:hover {
+    color: var(--color-spring-green);
+    border-color: rgba(168,255,83,0.4);
+    background: rgba(168,255,83,0.06);
+  }
+  .topbar-left { display: flex; align-items: center; }
 
   .logo {
     display: flex;
@@ -232,7 +255,7 @@
   }
 
   /* ── LAYOUT ── */
-  :root { --topbar-h: 118px; --sidebar-w: 220px; }
+  :root { --topbar-h: 64px; --sidebar-w: 220px; --sidebar-w-collapsed: 56px; }
 
   .app-body {
     display: flex;
@@ -246,13 +269,62 @@
     flex-shrink: 0;
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     background: var(--color-charcoal-surface);
     border-right: 1px solid var(--color-ash-gray);
     display: flex;
     flex-direction: column;
-    padding: 20px 0 0;
+    padding: 16px 0 0;
     scrollbar-width: thin;
+    transition: width 240ms cubic-bezier(.4,0,.2,1);
   }
+  .sidebar.collapsed { width: var(--sidebar-w-collapsed); }
+
+  /* Collapsed state: hide text, center icons */
+  .sidebar.collapsed .sidebar-label,
+  .sidebar.collapsed .nav-arrow,
+  .sidebar.collapsed .nav-sub {
+    display: none !important;
+  }
+  .sidebar.collapsed .nav-item,
+  .sidebar.collapsed .nav-sub-item {
+    font-size: 0;
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    gap: 0;
+    position: relative;
+  }
+  .sidebar.collapsed .nav-item svg,
+  .sidebar.collapsed .nav-sub-item svg {
+    margin: 0;
+  }
+  .sidebar.collapsed .sidebar-divider { margin: 8px 12px; }
+
+  /* Tooltip on hover when collapsed */
+  .sidebar.collapsed .nav-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-gray);
+    color: var(--color-whisper-white);
+    font-family: var(--font-body);
+    font-size: var(--fs-utility);
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.3px;
+    padding: 5px 10px;
+    border-radius: var(--radius-md);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--t-fast);
+    z-index: 200;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .sidebar.collapsed .nav-item:hover::after { opacity: 1; }
 
   .sidebar-section {
     margin-bottom: 4px;
@@ -1562,9 +1634,14 @@
 
 <!-- ══ TOP BAR ══════════════════════════════════════════════════════════ -->
 <header class="topbar">
-  <div class="logo" style="display:flex; align-items:center; gap:12px;">
-    <img src="/assets/rtx.png" alt="Grupo RTX" style="height:90px; width:auto; display:block;">
-    <span style="color:#fff; font-size:13px; font-family:var(--font-body); letter-spacing:0.04em; opacity:0.7; white-space:nowrap;">| Talent Intelligence CRM</span>
+  <div class="topbar-left">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Alternar menu lateral">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </button>
+    <div class="logo" style="display:flex; align-items:center; gap:12px;">
+      <img src="/assets/rtx.png" alt="Grupo RTX" style="height:44px; width:auto; display:block;">
+      <span style="color:#fff; font-size:13px; font-family:var(--font-body); letter-spacing:0.04em; opacity:0.7; white-space:nowrap;">| Talent Intelligence CRM</span>
+    </div>
   </div>
   <div class="topbar-right">
     <div class="status-pill" id="status-pill">
@@ -1583,7 +1660,7 @@
 
   <div class="sidebar-section">
     <span class="sidebar-label">Visão Geral</span>
-    <div class="nav-item active" data-view="dashboard">
+    <div class="nav-item active" data-view="dashboard" data-tooltip="Dashboard">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>
       Dashboard
     </div>
@@ -1591,22 +1668,22 @@
 
   <div class="sidebar-section">
     <span class="sidebar-label">CRM</span>
-    <div class="nav-item" data-view="empresas">
+    <div class="nav-item" data-view="empresas" data-tooltip="Empresas-alvo">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 2h11v11H2V2zm1 1v9h9V3H3zm2 2h5v1H5V5zm0 2h5v1H5V7zm0 2h3v1H5V9z" fill="currentColor"/></svg>
       Empresas-alvo
     </div>
-    <div class="nav-item" data-view="talentos">
+    <div class="nav-item" data-view="talentos" data-tooltip="Talentos">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="4.5" r="2.5" fill="currentColor"/><path d="M2.5 12.5c0-2.761 2.239-5 5-5s5 2.239 5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
       Talentos
     </div>
-    <div class="nav-item" data-view="pipeline">
+    <div class="nav-item" data-view="pipeline" data-tooltip="Pipeline">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M1 3h13M3 7h9M5 11h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Pipeline
     </div>
   </div>
 
   <div class="sidebar-section">
-    <div class="nav-item" data-view="interacoes" id="nav-interacoes">
+    <div class="nav-item" data-view="interacoes" id="nav-interacoes" data-tooltip="Interações">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M12.5 2.5h-10a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h3l2 2 2-2h3a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="1.2"/></svg>
       Interações
       <span class="nav-arrow">›</span>
@@ -1625,11 +1702,11 @@
 
   <div class="sidebar-section">
     <span class="sidebar-label">Automação</span>
-    <div class="nav-item" data-view="workflows">
+    <div class="nav-item" data-view="workflows" data-tooltip="Workflows">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="3" cy="7.5" r="1.5" fill="currentColor"/><circle cx="12" cy="3" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M4.5 7.5h3L10.5 3M7.5 7.5l3 4.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
       Workflows
     </div>
-    <div class="nav-item" data-view="agentes">
+    <div class="nav-item" data-view="agentes" data-tooltip="Agentes n8n">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="2" y="4" width="11" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 4V3a2.5 2.5 0 0 1 5 0v1" stroke="currentColor" stroke-width="1.2"/><circle cx="5.5" cy="8" r="1" fill="currentColor"/><circle cx="9.5" cy="8" r="1" fill="currentColor"/></svg>
       Agentes n8n
     </div>
@@ -1638,7 +1715,7 @@
   <div class="sidebar-divider"></div>
 
   <div class="sidebar-footer">
-    <div class="nav-item" data-view="manual">
+    <div class="nav-item" data-view="manual" data-tooltip="Manual">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="2" y="1" width="11" height="13" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h5M5 7.5h5M5 10h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
       Manual
     </div>
@@ -2446,13 +2523,31 @@
 <script>
 // ── 0. SIDEBAR NAVIGATION ────────────────────────────────────────────────
 (function() {
+  const sidebar     = document.getElementById('sidebar');
+  const toggleBtn   = document.getElementById('sidebar-toggle');
   const navItems    = document.querySelectorAll('.nav-item[data-view]');
   const subItems    = document.querySelectorAll('.nav-sub-item[data-view]');
   const interacoesToggle = document.getElementById('nav-interacoes');
   const subMenu     = document.getElementById('sub-interacoes');
 
+  // Restore collapsed state from localStorage
+  if (localStorage.getItem('sidebarCollapsed') === '1') {
+    sidebar.classList.add('collapsed');
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    const isCollapsed = sidebar.classList.toggle('collapsed');
+    localStorage.setItem('sidebarCollapsed', isCollapsed ? '1' : '0');
+    // Close accordion when collapsing
+    if (isCollapsed) {
+      subMenu.classList.remove('open');
+      interacoesToggle.classList.remove('open');
+    }
+  });
+
   // Accordion toggle for Interações
   interacoesToggle.addEventListener('click', () => {
+    if (sidebar.classList.contains('collapsed')) return;
     const isOpen = subMenu.classList.toggle('open');
     interacoesToggle.classList.toggle('open', isOpen);
   });
