@@ -26,13 +26,15 @@ PIPELINE_STAGES = [
 ]
 
 
-def _notion_query(db_id):
+def _notion_query(db_id, filter_body=None):
     results = []
     cursor = None
     while True:
         body = {"page_size": 100}
         if cursor:
             body["start_cursor"] = cursor
+        if filter_body:
+            body["filter"] = filter_body
         req = urllib.request.Request(
             f"{NOTION_API}/databases/{db_id}/query",
             data=json.dumps(body).encode(),
@@ -63,7 +65,10 @@ def _select(page, name):
 
 def build_data():
     talentos = _notion_query(DB_TALENTOS)
-    li_pages = _notion_query(DB_LINKEDIN)
+    li_pages = _notion_query(DB_LINKEDIN, filter_body={
+        "property": "Status",
+        "select": {"is_not_empty": True},
+    })
     em_pages = _notion_query(DB_EMAIL)
 
     status_counts = {}
