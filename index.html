@@ -1053,6 +1053,8 @@
     border-radius: var(--radius-md);
     padding: 14px 16px;
     position: relative;
+    display: flex;
+    flex-direction: column;
     transition: border-color var(--t-fast), transform var(--t-fast);
   }
   .insight-tile:hover {
@@ -1078,8 +1080,10 @@
     color: var(--color-steel-accent);
     line-height: 1.5;
     margin-bottom: 10px;
+    flex: 1;
   }
   .insight-action {
+    margin-top: auto;
     font-family: var(--font-utility);
     font-size: 10px;
     font-weight: var(--fw-medium);
