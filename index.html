@@ -4591,9 +4591,10 @@ window.loadKanban = (function() {
     });
 
     const total = items.length;
-    const fechados = buckets.close.length;
-    const lost = buckets.lost.length;
-    const conversa = buckets.contact.length + buckets.engage.length + buckets.interview.length;
+    const bucketLen = id => (buckets[id] || []).length;
+    const fechados = bucketLen('close') + bucketLen('hired');
+    const lost = bucketLen('lost');
+    const conversa = bucketLen('contact') + bucketLen('engage');
     const ativos = total - lost - unmapped;
     setText('kanban-total', total);
     setText('kanban-ativos', ativos);
