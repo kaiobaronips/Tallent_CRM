@@ -2490,8 +2490,10 @@
     position: relative;
     z-index: 1;
   }
-  .hist-item-dot.canal-linkedin { background: #0a66c2; }
-  .hist-item-dot.canal-email    { background: var(--color-spring-green); }
+  .hist-item-dot.canal-linkedin    { background: #0a66c2; }
+  .hist-item-dot.canal-email       { background: var(--color-spring-green); }
+  .hist-item-dot.canal-observação  { background: #f59e0b; }
+  .hist-item-dot.canal-observacao  { background: #f59e0b; }
   .hist-item-content {
     background: var(--color-midnight-surface);
     border: 1px solid var(--color-ash-gray);
@@ -2516,8 +2518,10 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
-  .hist-badge-canal.canal-linkedin { background: rgba(10,102,194,0.18); color: #60a5fa; }
-  .hist-badge-canal.canal-email    { background: rgba(16,185,129,0.12); color: var(--color-spring-green); }
+  .hist-badge-canal.canal-linkedin    { background: rgba(10,102,194,0.18); color: #60a5fa; }
+  .hist-badge-canal.canal-email       { background: rgba(16,185,129,0.12); color: var(--color-spring-green); }
+  .hist-badge-canal.canal-observação,
+  .hist-badge-canal.canal-observacao  { background: rgba(245,158,11,0.18); color: #fbbf24; }
   .hist-badge-tipo {
     font-family: var(--font-body);
     font-size: 9px;
@@ -3740,11 +3744,11 @@
       </div>
       <div class="hist-notes" id="hist-notes">
         <div class="hist-notes-header">
-          <span class="hist-notes-label" id="hist-notes-label">Motivo / Notas finais</span>
+          <span class="hist-notes-label" id="hist-notes-label">Observações</span>
           <span class="hist-notes-status" id="hist-notes-status"></span>
         </div>
         <textarea class="hist-notes-input" id="hist-notes-input"
-          placeholder="Descreva a última etapa do candidato — ex: motivo de descarte, decisão pós-reunião, observação final"></textarea>
+          placeholder="Adicione uma observação — ex: detalhe da última etapa, motivo de descarte, decisão pós-reunião"></textarea>
         <div class="hist-notes-actions">
           <button class="hist-notes-save" id="hist-notes-save">Salvar</button>
         </div>
@@ -4830,7 +4834,7 @@ window.loadKanban = (function() {
     });
     fetch('/api/interacoes?' + params.toString(), { cache: 'no-store' })
       .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
-      .then(data => renderHistModal(data, summary, body))
+      .then(data => renderHistModal(data, summary, body, talento))
       .catch(err => {
         body.replaceChildren(el('div', { className: 'hist-empty' },
           'Erro ao carregar: ' + (err.message || err)
@@ -4848,13 +4852,70 @@ window.loadKanban = (function() {
     }
   }
 
-  function renderHistModal(data, summary, body) {
+  /* Parse do campo Observações em entries (formato "[YYYY-MM-DD HH:MM] texto") */
+  function parseObservacoesAsEntries(raw) {
+    if (!raw) return [];
+    const pattern = /\[(\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2})\]\s*([\s\S]*?)(?=\n\n\[\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}\]|$)/g;
+    const out = [];
+    let match;
+    while ((match = pattern.exec(raw)) !== null) {
+      const isoDate = match[1].replace(' ', 'T') + ':00-03:00';
+      out.push({
+        canal: 'Observação',
+        tipo:  'Manual',
+        status: null,
+        data: isoDate,
+        mensagem: (match[2] || '').trim(),
+        resposta: '',
+        observacoes: '',
+      });
+    }
+    if (!out.length && raw.trim()) {
+      out.push({
+        canal: 'Observação', tipo: 'Manual', status: null,
+        data: null, mensagem: raw.trim(), resposta: '', observacoes: '',
+      });
+    }
+    return out;
+  }
+
+  function mergeAndSortItems(data, talento) {
+    const items = (data.interacoes || []).slice();
+    const obs = parseObservacoesAsEntries(talento && talento.observacoes);
+    return items.concat(obs).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  }
+
+  function buildHistItem(item) {
+    const canalKey = (item.canal || '').toLowerCase();
+    const dot = el('div', { className: 'hist-item-dot canal-' + canalKey });
+    const meta = el('div', { className: 'hist-item-meta' },
+      el('span', { className: 'hist-badge-canal canal-' + canalKey }, item.canal || '—'),
+      item.tipo   ? el('span', { className: 'hist-badge-tipo' }, item.tipo) : null,
+      item.status ? el('span', { className: 'hist-badge-tipo' }, item.status) : null,
+      el('span', { className: 'hist-date' }, fmtDate(item.data))
+    );
+    const content = el('div', { className: 'hist-item-content' }, meta);
+    if (item.mensagem) {
+      content.appendChild(el('div', { className: 'hist-mensagem' }, item.mensagem));
+    }
+    if (item.resposta) {
+      content.appendChild(el('div', { className: 'hist-resposta' }, item.resposta));
+    }
+    if (!item.mensagem && !item.resposta && item.observacoes) {
+      content.appendChild(el('div', { className: 'hist-mensagem' }, item.observacoes));
+    }
+    return el('div', { className: 'hist-item' }, dot, content);
+  }
+
+  function renderHistModal(data, summary, body, talento) {
     // Summary bar
     summary.replaceChildren();
+    const obsCount = parseObservacoesAsEntries(talento && talento.observacoes).length;
     const stats = [
-      { val: data.total,    lbl: 'Total' },
-      { val: data.linkedin, lbl: 'LinkedIn' },
-      { val: data.email,    lbl: 'E-mail' },
+      { val: (data.total || 0) + obsCount, lbl: 'Total' },
+      { val: data.linkedin || 0,           lbl: 'LinkedIn' },
+      { val: data.email || 0,              lbl: 'E-mail' },
+      { val: obsCount,                     lbl: 'Observações' },
     ];
     stats.forEach((s, i) => {
       if (i > 0) summary.appendChild(el('div', { className: 'hist-divider' }));
@@ -4865,96 +4926,107 @@ window.loadKanban = (function() {
       summary.appendChild(stat);
     });
 
-    // Items
     body.replaceChildren();
-    const items = data.interacoes || [];
+    const items = mergeAndSortItems(data, talento);
     if (!items.length) {
       body.appendChild(el('div', { className: 'hist-empty' },
         'Nenhuma interação registrada para este candidato.'
       ));
       return;
     }
-
-    items.forEach(item => {
-      const canalKey = (item.canal || '').toLowerCase();
-      const dot = el('div', { className: 'hist-item-dot canal-' + canalKey });
-      const meta = el('div', { className: 'hist-item-meta' },
-        el('span', { className: 'hist-badge-canal canal-' + canalKey }, item.canal || '—'),
-        item.tipo   ? el('span', { className: 'hist-badge-tipo' }, item.tipo) : null,
-        item.status ? el('span', { className: 'hist-badge-tipo' }, item.status) : null,
-        el('span', { className: 'hist-date' }, fmtDate(item.data))
-      );
-      const content = el('div', { className: 'hist-item-content' }, meta);
-      if (item.mensagem) {
-        content.appendChild(el('div', { className: 'hist-mensagem' }, item.mensagem));
-      }
-      if (item.resposta) {
-        content.appendChild(el('div', { className: 'hist-resposta' }, item.resposta));
-      }
-      if (!item.mensagem && !item.resposta && item.observacoes) {
-        content.appendChild(el('div', { className: 'hist-mensagem' }, item.observacoes));
-      }
-      body.appendChild(el('div', { className: 'hist-item' }, dot, content));
-    });
+    items.forEach(item => body.appendChild(buildHistItem(item)));
   }
 
-  /* ── Editor de Motivo de descarte / Notas finais ── */
+  /* ── Editor de Observações (append + clear + insert na timeline) ── */
   const DISCARD_STATUSES = new Set([
     'Descartado', 'Não retornou', 'Sem interesse', 'Não aceitou', 'Nutrição futura'
   ]);
 
   function setupNotesEditor(talento) {
-    const wrap   = document.getElementById('hist-notes');
-    const input  = document.getElementById('hist-notes-input');
-    const status = document.getElementById('hist-notes-status');
-    const btn    = document.getElementById('hist-notes-save');
-    const label  = document.getElementById('hist-notes-label');
+    const wrap    = document.getElementById('hist-notes');
+    const input   = document.getElementById('hist-notes-input');
+    const status  = document.getElementById('hist-notes-status');
+    const btn     = document.getElementById('hist-notes-save');
+    const label   = document.getElementById('hist-notes-label');
+    const body    = document.getElementById('hist-body');
+    const summary = document.getElementById('hist-summary');
     if (!wrap || !input || !btn) return;
 
-    // Pre-popula com o que já está no Notion
     const isDiscarded = DISCARD_STATUSES.has(talento.status);
     wrap.classList.toggle('is-discarded', isDiscarded);
-    label.textContent = isDiscarded
-      ? 'Motivo de descarte / Última etapa'
-      : 'Observações / Última etapa do processo';
-    input.value = (isDiscarded && talento.motivo_descarte)
-      ? talento.motivo_descarte
-      : (talento.observacoes || '');
+    label.textContent = 'Observações';
+    input.value = '';
     status.textContent = '';
     status.className = 'hist-notes-status';
     btn.disabled = false;
 
-    // Substitui handler pra evitar acúmulo
     btn.onclick = async function() {
       const text = input.value.trim();
+      if (!text) {
+        status.textContent = 'Digite algo antes de salvar';
+        status.className = 'hist-notes-status error';
+        return;
+      }
       btn.disabled = true;
       status.textContent = 'Salvando…';
       status.className = 'hist-notes-status';
-      const field = isDiscarded ? 'motivo_descarte' : 'observacoes';
       try {
-        const body = { page_id: talento.page_id };
-        body[field] = text;
         const r = await fetch('/api/update_talento', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
+          body: JSON.stringify({
+            page_id: talento.page_id,
+            append_observacao: text,
+          }),
         });
         if (!r.ok) throw new Error('HTTP ' + r.status);
-        const data = await r.json();
-        if (!data.ok) throw new Error(data.error || 'falha');
-        status.textContent = 'Salvo';
+        const resp = await r.json();
+        if (!resp.ok) throw new Error(resp.error || 'falha');
+
+        // Atualiza o objeto talento em memória: prepend com timestamp BRT
+        const now = new Date(Date.now() - 3 * 3600 * 1000); // shift para BRT
+        const pad = n => String(n).padStart(2, '0');
+        const ts = `${now.getUTCFullYear()}-${pad(now.getUTCMonth()+1)}-${pad(now.getUTCDate())} ${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}`;
+        const novoBloco = `[${ts}] ${text}`;
+        talento.observacoes = novoBloco + (talento.observacoes ? '\n\n' + talento.observacoes : '');
+
+        // Insere a nova entry no topo da timeline
+        const novoItem = {
+          canal: 'Observação',
+          tipo:  'Manual',
+          status: null,
+          data: `${ts.replace(' ', 'T')}:00-03:00`,
+          mensagem: text,
+          resposta: '',
+          observacoes: '',
+        };
+        // Remove placeholder de empty se existir
+        const empty = body.querySelector('.hist-empty');
+        if (empty) empty.remove();
+        body.insertBefore(buildHistItem(novoItem), body.firstChild);
+
+        // Atualiza contagem de Observações no summary
+        const obsCount = parseObservacoesAsEntries(talento.observacoes).length;
+        const stats = summary.querySelectorAll('.hist-stat-val');
+        if (stats.length >= 4) {
+          const liCount = parseInt(stats[1].textContent) || 0;
+          const emCount = parseInt(stats[2].textContent) || 0;
+          stats[0].textContent = String(liCount + emCount + obsCount);
+          stats[3].textContent = String(obsCount);
+        }
+
+        input.value = '';
+        status.textContent = 'Observação adicionada';
         status.className = 'hist-notes-status success';
-        // Atualiza o talento em memória pra refletir nas próximas aberturas
-        if (isDiscarded) talento.motivo_descarte = text;
-        else             talento.observacoes = text;
-        // Marca cache dirty pra próximo refresh trazer dados frescos
         try { window._dirtyKanban = true; } catch(_) {}
       } catch (err) {
         status.textContent = 'Erro: ' + (err.message || err);
         status.className = 'hist-notes-status error';
       } finally {
         btn.disabled = false;
-        setTimeout(() => { if (status.className.includes('success')) status.textContent = ''; }, 2500);
+        setTimeout(() => {
+          if (status.className.includes('success')) status.textContent = '';
+        }, 2500);
       }
     };
   }
