@@ -2633,6 +2633,264 @@
   }
   .hist-notes.is-discarded .hist-notes-label { color: #fda4af; }
 
+  /* ══════════════════════════════════════════════════════
+     INTERAÇÕES (LinkedIn + E-mail) — tabela + chips + drawer
+     ══════════════════════════════════════════════════════ */
+
+  .int-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -12px 0 18px;
+  }
+  .int-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-gray);
+    font-family: var(--font-utility);
+    font-size: 10px;
+    color: var(--color-cloud-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .int-chip-count {
+    font-family: var(--font-data);
+    font-size: 11px;
+    color: var(--color-whisper-white);
+    font-weight: 600;
+  }
+  .int-chip.tipo-inicial      { border-color: rgba(96,165,250,0.45); }
+  .int-chip.tipo-followup     { border-color: rgba(245,158,11,0.45); }
+  .int-chip.tipo-resposta     { border-color: rgba(16,185,129,0.45); }
+  .int-chip.tipo-encerramento { border-color: rgba(244,63,94,0.45); }
+  .int-chip.tipo-preparacao   { border-color: rgba(217,70,239,0.45); }
+  .int-chip.tipo-enfileirado  { border-color: rgba(156,154,242,0.45); }
+  .int-chip.tipo-cadastro     { border-color: var(--color-ash-gray); }
+
+  .int-table-wrap {
+    overflow-x: auto;
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+  }
+  .int-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-body);
+    font-size: 12px;
+  }
+  .int-table thead th {
+    text-align: left;
+    padding: 12px 14px;
+    background: var(--color-midnight-surface);
+    color: var(--color-cloud-gray);
+    font-family: var(--font-utility);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-ash-gray);
+    white-space: nowrap;
+  }
+  .int-table tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--color-ash-gray);
+    color: var(--color-whisper-white);
+    vertical-align: top;
+  }
+  .int-table tbody tr {
+    cursor: pointer;
+    transition: background 120ms;
+  }
+  .int-table tbody tr:hover { background: var(--color-midnight-surface); }
+  .int-table tbody tr:last-child td { border-bottom: none; }
+  .int-loading, .int-empty {
+    text-align: center;
+    color: var(--color-cloud-gray);
+    padding: 24px;
+    font-style: italic;
+  }
+  .int-cell-name {
+    font-weight: 500;
+    white-space: nowrap;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .int-cell-msg {
+    color: var(--color-cloud-gray);
+    max-width: 380px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.4;
+  }
+  .int-cell-date {
+    font-family: var(--font-data);
+    color: var(--color-cloud-gray);
+    white-space: nowrap;
+  }
+  .int-row-action {
+    color: var(--color-cloud-gray);
+    text-align: center;
+    font-size: 14px;
+  }
+  .int-table tbody tr:hover .int-row-action { color: var(--color-spring-green); }
+
+  /* Badges de tipo / status reutilizando padrão do popup */
+  .int-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-family: var(--font-utility);
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .int-badge.tipo-inicial      { background: rgba(96,165,250,0.18); color: #60a5fa; }
+  .int-badge.tipo-followup     { background: rgba(245,158,11,0.18); color: #fbbf24; }
+  .int-badge.tipo-resposta     { background: rgba(16,185,129,0.18); color: var(--color-spring-green); }
+  .int-badge.tipo-encerramento { background: rgba(244,63,94,0.18); color: #fda4af; }
+  .int-badge.tipo-preparacao,
+  .int-badge.tipo-prepara,
+  .int-badge.tipo-enfileirado  { background: rgba(156,154,242,0.18); color: #c4b5fd; }
+  .int-badge.tipo-cadastro     { background: var(--color-midnight-surface); color: var(--color-cloud-gray); }
+  .int-badge.status-enviado    { background: rgba(96,165,250,0.18); color: #60a5fa; }
+  .int-badge.status-aguardando { background: rgba(245,158,11,0.18); color: #fbbf24; }
+  .int-badge.status-respondido { background: rgba(16,185,129,0.18); color: var(--color-spring-green); }
+  .int-badge.status-encerrado  { background: rgba(244,63,94,0.18); color: #fda4af; }
+  .int-badge.status-preparado  { background: rgba(156,154,242,0.18); color: #c4b5fd; }
+  .int-badge.status-sem-retorno{ background: var(--color-midnight-surface); color: var(--color-cloud-gray); }
+
+  /* ── Drawer lateral ── */
+  .int-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1900;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease;
+  }
+  .int-drawer-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .int-drawer {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: min(520px, 92vw);
+    background: var(--color-charcoal-raised);
+    border-left: 1px solid var(--color-ash-gray);
+    box-shadow: -24px 0 64px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 280ms cubic-bezier(.4,0,.2,1);
+  }
+  .int-drawer-overlay.open .int-drawer { transform: translateX(0); }
+  .int-drawer-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--color-ash-gray);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .int-drawer-badges {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .int-drawer-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-whisper-white);
+    margin: 0;
+  }
+  .int-drawer-subtitle {
+    font-family: var(--font-data);
+    font-size: 11px;
+    color: var(--color-cloud-gray);
+    margin-top: 4px;
+  }
+  .int-drawer-body {
+    overflow-y: auto;
+    padding: 20px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .int-drawer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .int-drawer-label {
+    font-family: var(--font-utility);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-cloud-gray);
+    font-weight: 600;
+  }
+  .int-drawer-text {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-whisper-white);
+    line-height: 1.6;
+    background: var(--color-midnight-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .int-drawer-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .int-drawer-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .int-drawer-meta-val {
+    font-family: var(--font-data);
+    font-size: 12px;
+    color: var(--color-whisper-white);
+  }
+  .int-drawer-cta {
+    margin-top: auto;
+    padding: 12px 14px;
+    background: transparent;
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-sm);
+    color: var(--color-spring-green);
+    font-family: var(--font-utility);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    transition: background 150ms, border-color 150ms;
+  }
+  .int-drawer-cta:hover {
+    background: rgba(168,255,83,0.08);
+    border-color: var(--color-spring-green);
+  }
+
   /* ── Info do talento no topo do modal ── */
   .hist-talent-info {
     display: flex;
@@ -3758,19 +4016,114 @@
   </div>
 
   <div class="view" id="view-linkedin">
-    <div class="view-placeholder">
-      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><path d="M12.5 2.5h-10a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h3l2 2 2-2h3a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="1.2"/></svg></div>
-      <h2>Interações LinkedIn</h2>
-      <p>Timeline de mensagens, follow-ups e respostas via Expandi.</p>
+    <div class="view-header">
+      <div>
+        <div class="view-title">Interações LinkedIn</div>
+        <div class="view-subtitle">Mensagens, follow-ups e respostas via Expandi (campanha 794950)</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="int-updated" data-canal="linkedin" style="font-family:var(--font-data);font-size:var(--fs-data);color:var(--color-steel-muted);">—</span>
+        <button class="kanban-refresh-btn int-refresh" data-canal="linkedin" title="Buscar dados atualizados do Notion">
+          <svg width="13" height="13" viewBox="0 0 15 15" fill="none"><path d="M11.5 7.5a4 4 0 1 1-1.2-2.85M11.5 3v3.5h-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Atualizar</span>
+        </button>
+      </div>
+    </div>
+    <div class="emp-summary int-summary" data-canal="linkedin">
+      <div class="emp-stat"><div class="emp-stat-label">Total</div><div class="emp-stat-value" data-stat="total">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Enviados</div><div class="emp-stat-value" data-stat="enviados">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Aguardando</div><div class="emp-stat-value" data-stat="aguardando">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Respondidos</div><div class="emp-stat-value green" data-stat="respondidos">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Taxa de resposta</div><div class="emp-stat-value" data-stat="taxa">—</div></div>
+    </div>
+    <div class="int-chips" data-canal="linkedin"></div>
+    <div class="emp-filters int-filters" data-canal="linkedin">
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Busca</span>
+        <input class="emp-filter-select int-search" type="text" placeholder="nome, mensagem…" style="min-width:200px;">
+      </div>
+      <div class="emp-filter-divider"></div>
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Tipo</span>
+        <select class="emp-filter-select int-filter-tipo"><option value="">Todos</option></select>
+      </div>
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Status</span>
+        <select class="emp-filter-select int-filter-status"><option value="">Todos</option></select>
+      </div>
+      <span class="emp-filter-count int-count"></span>
+    </div>
+    <div class="int-table-wrap">
+      <table class="int-table" data-canal="linkedin">
+        <thead><tr>
+          <th>Candidato</th><th>Tipo</th><th>Status</th><th>Data</th><th>Mensagem</th><th style="width:40px;"></th>
+        </tr></thead>
+        <tbody><tr><td colspan="6" class="int-loading">Carregando interações…</td></tr></tbody>
+      </table>
     </div>
   </div>
 
   <div class="view" id="view-email">
-    <div class="view-placeholder">
-      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="3" width="12" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l5.5 4L13 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-      <h2>Interações E-mail</h2>
-      <p>Timeline de envios e respostas via Gmail API.</p>
+    <div class="view-header">
+      <div>
+        <div class="view-title">Interações E-mail</div>
+        <div class="view-subtitle">Envios e respostas via Gmail (contato@soreninvestimentos.com.br)</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="int-updated" data-canal="email" style="font-family:var(--font-data);font-size:var(--fs-data);color:var(--color-steel-muted);">—</span>
+        <button class="kanban-refresh-btn int-refresh" data-canal="email" title="Buscar dados atualizados do Notion">
+          <svg width="13" height="13" viewBox="0 0 15 15" fill="none"><path d="M11.5 7.5a4 4 0 1 1-1.2-2.85M11.5 3v3.5h-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Atualizar</span>
+        </button>
+      </div>
     </div>
+    <div class="emp-summary int-summary" data-canal="email">
+      <div class="emp-stat"><div class="emp-stat-label">Total</div><div class="emp-stat-value" data-stat="total">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Enviados</div><div class="emp-stat-value" data-stat="enviados">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Aguardando</div><div class="emp-stat-value" data-stat="aguardando">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Respondidos</div><div class="emp-stat-value green" data-stat="respondidos">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Taxa de resposta</div><div class="emp-stat-value" data-stat="taxa">—</div></div>
+    </div>
+    <div class="int-chips" data-canal="email"></div>
+    <div class="emp-filters int-filters" data-canal="email">
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Busca</span>
+        <input class="emp-filter-select int-search" type="text" placeholder="nome, mensagem…" style="min-width:200px;">
+      </div>
+      <div class="emp-filter-divider"></div>
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Tipo</span>
+        <select class="emp-filter-select int-filter-tipo"><option value="">Todos</option></select>
+      </div>
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Status</span>
+        <select class="emp-filter-select int-filter-status"><option value="">Todos</option></select>
+      </div>
+      <span class="emp-filter-count int-count"></span>
+    </div>
+    <div class="int-table-wrap">
+      <table class="int-table" data-canal="email">
+        <thead><tr>
+          <th>Candidato</th><th>Tipo</th><th>Status</th><th>Data</th><th>Mensagem</th><th style="width:40px;"></th>
+        </tr></thead>
+        <tbody><tr><td colspan="6" class="int-loading">Carregando interações…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Drawer lateral de detalhe da interação ── -->
+  <div class="int-drawer-overlay" id="int-drawer-overlay">
+    <aside class="int-drawer" id="int-drawer" role="dialog" aria-modal="true">
+      <div class="int-drawer-header">
+        <div>
+          <div class="int-drawer-badges" id="int-drawer-badges"></div>
+          <h3 class="int-drawer-title" id="int-drawer-title">—</h3>
+          <div class="int-drawer-subtitle" id="int-drawer-subtitle"></div>
+        </div>
+        <button class="hist-close" id="int-drawer-close" title="Fechar">✕</button>
+      </div>
+      <div class="int-drawer-body" id="int-drawer-body"></div>
+    </aside>
   </div>
 
   <div class="view" id="view-workflows">
@@ -3895,6 +4248,8 @@
     if (viewId === 'empresas') loadEmpresas();
   if (viewId === 'talentos') loadTalentos();
   if (viewId === 'pipeline') loadKanban();
+  if (viewId === 'linkedin') loadInteracoes('linkedin');
+  if (viewId === 'email')    loadInteracoes('email');
   }
 
   navItems.forEach(item => {
@@ -4433,6 +4788,325 @@
     });
   }
 
+})();
+
+/* ════════════════════════════════════════════════════════════════
+   INTERAÇÕES — LinkedIn + E-mail (tabela + chips + drawer lateral)
+   ════════════════════════════════════════════════════════════════ */
+window.loadInteracoes = (function() {
+
+  const state = { linkedin: null, email: null, dirty: {linkedin:false, email:false} };
+
+  function el(tag, attrs, ...children) {
+    const node = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(k => {
+      if (k === 'className') node.className = attrs[k];
+      else if (k === 'dataset') Object.assign(node.dataset, attrs[k]);
+      else if (k === 'style') node.style.cssText = attrs[k];
+      else if (k.startsWith('on')) node.addEventListener(k.slice(2).toLowerCase(), attrs[k]);
+      else node.setAttribute(k, attrs[k]);
+    });
+    children.flat().forEach(c => {
+      if (c == null || c === false) return;
+      node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return node;
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    try {
+      const d = new Date(iso);
+      return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'2-digit' });
+    } catch(_) { return iso; }
+  }
+
+  function fmtDateTime(iso) {
+    if (!iso) return '—';
+    try {
+      const d = new Date(iso);
+      return d.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    } catch(_) { return iso; }
+  }
+
+  function normKey(s) {
+    return String(s || '').toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  async function loadInteracoes(canal, opts) {
+    const force = !!(opts && opts.force);
+    const cached = state[canal];
+    if (cached && !force && !state.dirty[canal]) {
+      render(canal, cached);
+      return;
+    }
+    const btn = document.querySelector(`.int-refresh[data-canal="${canal}"]`);
+    if (btn) { btn.disabled = true; btn.classList.add('spinning'); }
+    try {
+      const url = '/api/' + canal + (force || state.dirty[canal] ? '?fresh=1' : '');
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      state[canal] = data;
+      state.dirty[canal] = false;
+      render(canal, data);
+      if (force) toast('Interações atualizadas');
+    } catch (e) {
+      const tbody = document.querySelector(`.int-table[data-canal="${canal}"] tbody`);
+      if (tbody) tbody.replaceChildren(el('tr', null,
+        el('td', { colspan: '6', className: 'int-empty' }, 'Erro ao carregar: ' + (e.message || e))
+      ));
+    } finally {
+      if (btn) { btn.disabled = false; btn.classList.remove('spinning'); }
+    }
+  }
+
+  function render(canal, data) {
+    renderSummary(canal, data.summary);
+    renderChips(canal, data.summary);
+    populateFilters(canal, data);
+    renderTable(canal);
+    updateTimestamp(canal, data);
+    wireFilters(canal);
+    wireRefresh(canal);
+  }
+
+  function renderSummary(canal, s) {
+    const root = document.querySelector(`.int-summary[data-canal="${canal}"]`);
+    if (!root) return;
+    const map = {
+      total: s.total, enviados: s.enviados, aguardando: s.aguardando,
+      respondidos: s.respondidos, taxa: s.taxa_resposta + '%',
+    };
+    Object.entries(map).forEach(([k, v]) => {
+      const n = root.querySelector(`[data-stat="${k}"]`);
+      if (n) n.textContent = String(v);
+    });
+  }
+
+  const TIPO_SHORT = {
+    'Inicial':'inicial','Follow-up':'followup','Resposta':'resposta',
+    'Encerramento':'encerramento','Preparação':'preparacao','Preparacao':'preparacao',
+    'Enfileirado':'enfileirado','Enfileiramento':'enfileirado','Cadastro CRM':'cadastro',
+  };
+
+  function tipoKey(t) { return TIPO_SHORT[t] || normKey(t); }
+
+  function renderChips(canal, s) {
+    const root = document.querySelector(`.int-chips[data-canal="${canal}"]`);
+    if (!root) return;
+    root.replaceChildren();
+    const tipos = Object.entries(s.por_tipo || {}).sort((a,b) => b[1] - a[1]);
+    tipos.forEach(([tipo, count]) => {
+      if (!tipo || tipo === '—') return;
+      const chip = el('span', { className: 'int-chip tipo-' + tipoKey(tipo) },
+        tipo + ' ',
+        el('span', { className: 'int-chip-count' }, String(count))
+      );
+      root.appendChild(chip);
+    });
+  }
+
+  function populateFilters(canal, data) {
+    const root = document.querySelector(`.int-filters[data-canal="${canal}"]`);
+    if (!root || root._populated) return;
+    root._populated = true;
+    const tiposSel = root.querySelector('.int-filter-tipo');
+    const statusSel = root.querySelector('.int-filter-status');
+    Object.keys(data.summary.por_tipo || {}).sort().forEach(t => {
+      if (t && t !== '—') tiposSel.appendChild(el('option', { value: t }, t));
+    });
+    Object.keys(data.summary.por_status || {}).sort().forEach(s => {
+      if (s && s !== '—') statusSel.appendChild(el('option', { value: s }, s));
+    });
+  }
+
+  function getFilters(canal) {
+    const root = document.querySelector(`.int-filters[data-canal="${canal}"]`);
+    if (!root) return { search: '', tipo: '', status: '' };
+    return {
+      search: (root.querySelector('.int-search')?.value || '').toLowerCase(),
+      tipo:   root.querySelector('.int-filter-tipo')?.value || '',
+      status: root.querySelector('.int-filter-status')?.value || '',
+    };
+  }
+
+  function filterItems(items, f) {
+    return items.filter(it => {
+      if (f.tipo && it.tipo !== f.tipo) return false;
+      if (f.status && it.status !== f.status) return false;
+      if (f.search) {
+        const hay = ((it.candidato||'') + ' ' + (it.mensagem||'') + ' ' + (it.resposta||'') + ' ' + (it.observacoes||'')).toLowerCase();
+        if (!hay.includes(f.search)) return false;
+      }
+      return true;
+    });
+  }
+
+  function renderTable(canal) {
+    const data = state[canal];
+    if (!data) return;
+    const tbody = document.querySelector(`.int-table[data-canal="${canal}"] tbody`);
+    if (!tbody) return;
+    const items = filterItems(data.items || [], getFilters(canal));
+    tbody.replaceChildren();
+    const countN = document.querySelector(`.int-filters[data-canal="${canal}"] .int-count`);
+    if (countN) countN.textContent = items.length + ' registro' + (items.length !== 1 ? 's' : '');
+    if (!items.length) {
+      tbody.appendChild(el('tr', null,
+        el('td', { colspan: '6', className: 'int-empty' }, 'Nenhuma interação corresponde aos filtros.')
+      ));
+      return;
+    }
+    items.forEach(it => {
+      const tipoCls = it.tipo ? 'tipo-' + tipoKey(it.tipo) : '';
+      const statusCls = it.status ? 'status-' + normKey(it.status) : '';
+      const tr = el('tr', { onclick: () => openDrawer(canal, it) },
+        el('td', { className: 'int-cell-name' }, it.candidato || '—'),
+        el('td', null, it.tipo ? el('span', { className: 'int-badge ' + tipoCls }, it.tipo) : '—'),
+        el('td', null, it.status ? el('span', { className: 'int-badge ' + statusCls }, it.status) : '—'),
+        el('td', { className: 'int-cell-date' }, fmtDate(it.data)),
+        el('td', { className: 'int-cell-msg' }, it.mensagem || it.resposta || it.observacoes || '—'),
+        el('td', { className: 'int-row-action' }, '›')
+      );
+      tbody.appendChild(tr);
+    });
+  }
+
+  function wireFilters(canal) {
+    const root = document.querySelector(`.int-filters[data-canal="${canal}"]`);
+    if (!root || root._wired) return;
+    root._wired = true;
+    ['.int-search','.int-filter-tipo','.int-filter-status'].forEach(sel => {
+      const node = root.querySelector(sel);
+      if (node) {
+        const evt = sel === '.int-search' ? 'input' : 'change';
+        node.addEventListener(evt, () => renderTable(canal));
+      }
+    });
+  }
+
+  function wireRefresh(canal) {
+    const btn = document.querySelector(`.int-refresh[data-canal="${canal}"]`);
+    if (!btn || btn._wired) return;
+    btn._wired = true;
+    btn.addEventListener('click', () => loadInteracoes(canal, { force: true }));
+  }
+
+  function updateTimestamp(canal, data) {
+    const node = document.querySelector(`.int-updated[data-canal="${canal}"]`);
+    if (!node) return;
+    const ts = data && data.updated_at;
+    const d = ts ? new Date(ts < 1e12 ? ts * 1000 : ts) : new Date();
+    node.textContent = 'Atualizado ' + d.toLocaleString('pt-BR').replace(', ', ' | ');
+  }
+
+  function toast(msg, isError) {
+    const t = document.getElementById('kanban-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.toggle('error', !!isError);
+    t.classList.add('show');
+    clearTimeout(t._tm);
+    t._tm = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  /* ── Drawer ── */
+  function openDrawer(canal, item) {
+    const overlay = document.getElementById('int-drawer-overlay');
+    if (!overlay) return;
+    const title = document.getElementById('int-drawer-title');
+    const sub = document.getElementById('int-drawer-subtitle');
+    const badges = document.getElementById('int-drawer-badges');
+    const body = document.getElementById('int-drawer-body');
+
+    title.textContent = item.candidato || '—';
+    sub.textContent = (item.canal || canal.toUpperCase()) + ' · ' + fmtDateTime(item.data);
+
+    badges.replaceChildren();
+    if (item.tipo)   badges.appendChild(el('span', { className: 'int-badge tipo-' + tipoKey(item.tipo) }, item.tipo));
+    if (item.status) badges.appendChild(el('span', { className: 'int-badge status-' + normKey(item.status) }, item.status));
+
+    body.replaceChildren();
+
+    // Mensagem enviada
+    if (item.mensagem) {
+      body.appendChild(el('div', { className: 'int-drawer-section' },
+        el('div', { className: 'int-drawer-label' }, 'Mensagem enviada'),
+        el('div', { className: 'int-drawer-text' }, item.mensagem)
+      ));
+    }
+    // Resposta recebida
+    if (item.resposta) {
+      body.appendChild(el('div', { className: 'int-drawer-section' },
+        el('div', { className: 'int-drawer-label' }, 'Resposta recebida'),
+        el('div', { className: 'int-drawer-text' }, item.resposta)
+      ));
+    }
+    // Observações
+    if (item.observacoes) {
+      body.appendChild(el('div', { className: 'int-drawer-section' },
+        el('div', { className: 'int-drawer-label' }, 'Observações'),
+        el('div', { className: 'int-drawer-text' }, item.observacoes)
+      ));
+    }
+    // Meta grid (próxima ação + próximo follow-up)
+    if (item.proxima_acao || item.proximo_followup || item.registro_interno) {
+      const meta = el('div', { className: 'int-drawer-meta' });
+      if (item.proxima_acao) {
+        meta.appendChild(el('div', { className: 'int-drawer-meta-item' },
+          el('div', { className: 'int-drawer-label' }, 'Próxima ação'),
+          el('div', { className: 'int-drawer-meta-val' }, item.proxima_acao)
+        ));
+      }
+      if (item.proximo_followup) {
+        meta.appendChild(el('div', { className: 'int-drawer-meta-item' },
+          el('div', { className: 'int-drawer-label' }, 'Próximo follow-up'),
+          el('div', { className: 'int-drawer-meta-val' }, fmtDateTime(item.proximo_followup))
+        ));
+      }
+      body.appendChild(el('div', { className: 'int-drawer-section' }, meta));
+    }
+    if (item.registro_interno) {
+      body.appendChild(el('div', { className: 'int-drawer-section' },
+        el('div', { className: 'int-drawer-label' }, 'Registro interno (Notion)'),
+        el('div', { className: 'int-drawer-text' }, item.registro_interno)
+      ));
+    }
+
+    // CTA: abre histórico completo do candidato (popup já existente)
+    if (item.candidato) {
+      const cta = el('button', { className: 'int-drawer-cta',
+        onclick: () => {
+          closeDrawer();
+          if (typeof window.openHistFromInteracoes === 'function') {
+            window.openHistFromInteracoes(item.candidato);
+          }
+        }
+      }, '📋 Ver histórico completo do candidato →');
+      body.appendChild(cta);
+    }
+
+    overlay.classList.add('open');
+    overlay.onclick = e => { if (e.target === overlay) closeDrawer(); };
+    overlay._esc = e => { if (e.key === 'Escape') closeDrawer(); };
+    document.addEventListener('keydown', overlay._esc);
+  }
+
+  function closeDrawer() {
+    const overlay = document.getElementById('int-drawer-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    if (overlay._esc) { document.removeEventListener('keydown', overlay._esc); overlay._esc = null; }
+  }
+
+  // Wire close button
+  const _close = document.getElementById('int-drawer-close');
+  if (_close) _close.addEventListener('click', closeDrawer);
+
+  return loadInteracoes;
 })();
 
 /* ════════════════════════════════════════════════════════════════
@@ -5036,6 +5710,23 @@ window.loadKanban = (function() {
   // Wire close button — #hist-close já está no DOM ao executar o script
   const _histCloseBtn = document.getElementById('hist-close');
   if (_histCloseBtn) _histCloseBtn.addEventListener('click', closeHistModal);
+
+  // Ponte para o drawer de interações: abre o popup a partir de um nome
+  // (carrega o Kanban se necessário pra ter o objeto talento completo)
+  window.openHistFromInteracoes = async function(nome) {
+    if (!nome) return;
+    if (!_items || !_items.length) {
+      try {
+        const r = await fetch('/api/talentos', { cache: 'no-store' });
+        const d = await r.json();
+        _items = d.talentos || [];
+      } catch(_) {}
+    }
+    const t = _items.find(x => (x.nome || '').toLowerCase() === nome.toLowerCase())
+           || _items.find(x => (x.nome || '').toLowerCase().includes(nome.toLowerCase().split(' ')[0]))
+           || { nome: nome, page_id: '' };
+    openHistModal(t);
+  };
 
   return loadKanban;
 })();

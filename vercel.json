@@ -9,6 +9,8 @@
     { "src": "api/talentos.py",       "use": "@vercel/python" },
     { "src": "api/update_talento.py", "use": "@vercel/python" },
     { "src": "api/interacoes.py",     "use": "@vercel/python" },
+    { "src": "api/linkedin.py",       "use": "@vercel/python" },
+    { "src": "api/email.py",          "use": "@vercel/python" },
     { "src": "index.html",      "use": "@vercel/static" },
     { "src": "assets/**",       "use": "@vercel/static" }
   ],
@@ -21,6 +23,8 @@
     { "src": "/api/talentos",       "dest": "/api/talentos.py" },
     { "src": "/api/update_talento", "dest": "/api/update_talento.py" },
     { "src": "/api/interacoes",    "dest": "/api/interacoes.py" },
+    { "src": "/api/linkedin",      "dest": "/api/linkedin.py" },
+    { "src": "/api/email",         "dest": "/api/email.py" },
     { "src": "/assets/(.*)",    "dest": "/assets/$1" },
     { "src": "/(.*)",           "dest": "/index.html" }
   ]

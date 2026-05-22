@@ -32,11 +32,13 @@ def _headers():
     }
 
 
-def _query(db_id, filter_body):
+def _query(db_id, filter_body=None):
     results = []
     cursor = None
     while True:
-        body = {"page_size": 100, "filter": filter_body}
+        body = {"page_size": 100}
+        if filter_body:
+            body["filter"] = filter_body
         if cursor:
             body["start_cursor"] = cursor
         req = urllib.request.Request(
@@ -150,6 +152,7 @@ def _normalize(page):
     props = page.get("properties", {})
 
     canal = _select(props.get("Canal"))
+    candidato = _text(props.get("Candidato"))
     mensagem = _text(props.get("Mensagem enviada"))
     resposta = _text(props.get("Resposta"))
     tipo = _select(props.get("Tipo de contato")) or _select(props.get("Interação"))
@@ -160,9 +163,13 @@ def _normalize(page):
     observacoes = _text(props.get("Observações"))
     notas = _text(props.get("Notas"))
     proximo = _date(props.get("Próximo follow-up"))
+    proxima_acao = _select(props.get("Próxima ação"))
+    registro_interno = _text(props.get("Registro interno"))
 
     return {
+        "page_id":          page.get("id"),
         "canal":            canal,
+        "candidato":        candidato,
         "data":             data,
         "tipo":             tipo,
         "status":           status,
@@ -170,7 +177,9 @@ def _normalize(page):
         "resposta":         resposta,
         "observacoes":      observacoes,
         "notas":            notas,
+        "proxima_acao":     proxima_acao,
         "proximo_followup": proximo,
+        "registro_interno": registro_interno,
     }
 
 
