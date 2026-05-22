@@ -2785,7 +2785,6 @@
       <div class="kpi-value" id="kpi-talentos">—</div>
       <div class="kpi-sub">
         <span class="kpi-badge badge-gold">Base Ativa</span>
-        <span id="kpi-talentos-sub">carregando…</span>
       </div>
       <div class="kpi-drill" aria-hidden="true">↗</div>
     </div>
@@ -2796,7 +2795,6 @@
       <div class="kpi-value" id="kpi-linkedin">—</div>
       <div class="kpi-sub">
         <span class="kpi-badge badge-blue" id="kpi-linkedin-pct">—</span>
-        <span>Via WF12 / Expandi</span>
       </div>
       <div class="kpi-drill" aria-hidden="true">↗</div>
     </div>
@@ -2807,7 +2805,6 @@
       <div class="kpi-value" id="kpi-email">—</div>
       <div class="kpi-sub">
         <span class="kpi-badge badge-green">Gmail API</span>
-        <span>Full automático</span>
       </div>
       <div class="kpi-drill" aria-hidden="true">↗</div>
     </div>
@@ -2818,7 +2815,6 @@
       <div class="kpi-value">20</div>
       <div class="kpi-sub">
         <span class="kpi-badge badge-green">Ativos</span>
-        <span>2 inativos preservados</span>
       </div>
       <div class="kpi-drill" aria-hidden="true">↗</div>
     </div>
@@ -5091,7 +5087,6 @@ function applyData(d) {
 
   const liPct = total > 0 ? Math.round((d.linkedin / total) * 100) : 0;
   setText('kpi-linkedin-pct', liPct + '% da base');
-  setText('kpi-talentos-sub', 'Bloqueadores: 0');
 
   const donutBig = document.querySelector('.donut-center .big');
   if (donutBig) donutBig.textContent = String(total);
