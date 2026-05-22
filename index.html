@@ -474,13 +474,15 @@
 
   /* ── KPI CARDS ── */
   .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: nowrap;
     gap: 16px;
     margin-bottom: 8px;
   }
 
   .kpi-card {
+    flex: 1 1 0;
+    min-width: 0;
     background: var(--color-charcoal-surface);
     border: 1px solid var(--color-ash-gray);
     border-radius: var(--radius-md);
