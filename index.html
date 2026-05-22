@@ -3689,7 +3689,8 @@
       <div class="emp-stat"><div class="emp-stat-label">Total no funil</div><div class="emp-stat-value" id="kanban-total">—</div></div>
       <div class="emp-stat"><div class="emp-stat-label">Ativos</div><div class="emp-stat-value green" id="kanban-ativos">—</div></div>
       <div class="emp-stat"><div class="emp-stat-label">Em conversa</div><div class="emp-stat-value" id="kanban-conversa">—</div></div>
-      <div class="emp-stat"><div class="emp-stat-label">Fechados</div><div class="emp-stat-value" id="kanban-fechados">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Contratados</div><div class="emp-stat-value" id="kanban-contratados">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Descartados</div><div class="emp-stat-value" id="kanban-descartados">—</div></div>
     </div>
 
     <!-- Filtros do Kanban -->
@@ -4596,14 +4597,15 @@ window.loadKanban = (function() {
 
     const total = items.length;
     const bucketLen = id => (buckets[id] || []).length;
-    const fechados = bucketLen('close') + bucketLen('hired');
-    const lost = bucketLen('lost');
+    const contratados = bucketLen('hired');
+    const descartados = bucketLen('lost');
     const conversa = bucketLen('contact') + bucketLen('engage');
-    const ativos = total - lost - unmapped;
+    const ativos = total - descartados - contratados - unmapped;
     setText('kanban-total', total);
     setText('kanban-ativos', ativos);
     setText('kanban-conversa', conversa);
-    setText('kanban-fechados', fechados);
+    setText('kanban-contratados', contratados);
+    setText('kanban-descartados', descartados);
 
     const fc = document.getElementById('kanban-filter-count');
     if (fc) fc.textContent = total + ' talento' + (total !== 1 ? 's' : '');
