@@ -11,6 +11,7 @@
     { "src": "api/interacoes.py",     "use": "@vercel/python" },
     { "src": "api/linkedin.py",       "use": "@vercel/python" },
     { "src": "api/email.py",          "use": "@vercel/python" },
+    { "src": "api/workflows.py",      "use": "@vercel/python" },
     { "src": "index.html",      "use": "@vercel/static" },
     { "src": "assets/**",       "use": "@vercel/static" }
   ],
@@ -25,6 +26,7 @@
     { "src": "/api/interacoes",    "dest": "/api/interacoes.py" },
     { "src": "/api/linkedin",      "dest": "/api/linkedin.py" },
     { "src": "/api/email",         "dest": "/api/email.py" },
+    { "src": "/api/workflows",     "dest": "/api/workflows.py" },
     { "src": "/assets/(.*)",    "dest": "/assets/$1" },
     { "src": "/(.*)",           "dest": "/index.html" }
   ]

@@ -2891,6 +2891,171 @@
     border-color: var(--color-spring-green);
   }
 
+  /* ══════════════════════════════════════════════════════
+     WORKFLOWS & AGENTES n8n
+     ══════════════════════════════════════════════════════ */
+
+  /* Badge de status de execução */
+  .wf-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-family: var(--font-utility);
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .wf-badge.s-active    { background: rgba(168,255,83,0.16); color: var(--color-spring-green); }
+  .wf-badge.s-inactive  { background: var(--color-midnight-surface); color: var(--color-cloud-gray); }
+  .wf-badge.s-archived  { background: rgba(244,63,94,0.16); color: #fda4af; }
+  .wf-badge.exec-success  { background: rgba(168,255,83,0.16); color: var(--color-spring-green); }
+  .wf-badge.exec-error    { background: rgba(244,63,94,0.18); color: #fda4af; }
+  .wf-badge.exec-running  { background: rgba(96,165,250,0.18); color: #60a5fa; }
+  .wf-badge.exec-waiting  { background: rgba(245,158,11,0.16); color: #fbbf24; }
+  .wf-badge.exec-canceled,
+  .wf-badge.exec-crashed  { background: rgba(244,63,94,0.18); color: #fda4af; }
+  .wf-badge.exec-unknown  { background: var(--color-midnight-surface); color: var(--color-cloud-gray); }
+  .wf-badge.t-schedule  { background: rgba(156,154,242,0.18); color: #c4b5fd; }
+  .wf-badge.t-webhook   { background: rgba(34,211,238,0.16); color: #67e8f9; }
+  .wf-badge.t-manual    { background: var(--color-midnight-surface); color: var(--color-cloud-gray); }
+  .wf-badge.t-subworkflow { background: rgba(245,158,11,0.16); color: #fbbf24; }
+
+  .wf-trigger-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .wf-cell-name {
+    font-weight: 500;
+    max-width: 360px;
+  }
+  .wf-cell-name-sub {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--color-cloud-gray);
+    margin-top: 2px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+  .wf-cell-exec-meta {
+    font-family: var(--font-data);
+    font-size: 10px;
+    color: var(--color-cloud-gray);
+    margin-top: 2px;
+  }
+  .wf-cell-name-id {
+    font-family: var(--font-data);
+    font-size: 10px;
+    color: var(--color-steel-muted);
+    margin-top: 2px;
+  }
+
+  /* ── Cards de Agente ── */
+  .agentes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+  .agente-card {
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-gray);
+    border-left: 3px solid var(--color-spring-green);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 180ms, transform 180ms;
+    cursor: pointer;
+  }
+  .agente-card:hover {
+    border-color: var(--color-spring-green);
+    transform: translateY(-1px);
+  }
+  .agente-card.status-error  { border-left-color: var(--color-action-red); }
+  .agente-card.status-waiting { border-left-color: #fbbf24; }
+  .agente-card.status-unknown { border-left-color: var(--color-steel-muted); }
+
+  .agente-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .agente-card-name {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-whisper-white);
+    line-height: 1.3;
+  }
+  .agente-card-id {
+    font-family: var(--font-data);
+    font-size: 9px;
+    color: var(--color-steel-muted);
+    margin-top: 2px;
+  }
+  .agente-card-status {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .agente-card-desc {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--color-cloud-gray);
+    line-height: 1.5;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .agente-card-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--color-ash-gray);
+  }
+  .agente-card-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .agente-card-meta-label {
+    font-family: var(--font-utility);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--color-cloud-gray);
+  }
+  .agente-card-meta-val {
+    font-family: var(--font-data);
+    font-size: 11px;
+    color: var(--color-whisper-white);
+  }
+  .agente-card-execrow {
+    display: flex;
+    gap: 3px;
+    margin-top: 4px;
+  }
+  .agente-card-execdot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+  .agente-card-execdot.s-success { background: var(--color-spring-green); }
+  .agente-card-execdot.s-error,
+  .agente-card-execdot.s-crashed { background: var(--color-action-red); }
+  .agente-card-execdot.s-running { background: #60a5fa; }
+  .agente-card-execdot.s-waiting { background: #fbbf24; }
+  .agente-card-execdot.s-canceled { background: var(--color-cloud-gray); }
+  .agente-card-execdot.s-unknown { background: var(--color-midnight-surface); border:1px solid var(--color-ash-gray); }
+
   /* ── Info do talento no topo do modal ── */
   .hist-talent-info {
     display: flex;
@@ -4127,19 +4292,94 @@
   </div>
 
   <div class="view" id="view-workflows">
-    <div class="view-placeholder">
-      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><circle cx="3" cy="7.5" r="1.5" fill="currentColor"/><circle cx="12" cy="3" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M4.5 7.5h3L10.5 3M7.5 7.5l3 4.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>
-      <h2>Workflows n8n</h2>
-      <p>Status e execuções recentes de cada workflow.</p>
+    <div class="view-header">
+      <div>
+        <div class="view-title">Workflows n8n</div>
+        <div class="view-subtitle">Lista completa de workflows do n8n cloud SOREN</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="wf-updated" style="font-family:var(--font-data);font-size:var(--fs-data);color:var(--color-steel-muted);">—</span>
+        <button class="kanban-refresh-btn wf-refresh" title="Buscar dados atualizados do n8n">
+          <svg width="13" height="13" viewBox="0 0 15 15" fill="none"><path d="M11.5 7.5a4 4 0 1 1-1.2-2.85M11.5 3v3.5h-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Atualizar</span>
+        </button>
+      </div>
+    </div>
+    <div class="emp-summary wf-summary">
+      <div class="emp-stat"><div class="emp-stat-label">Total</div><div class="emp-stat-value" data-wfstat="total">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Ativos</div><div class="emp-stat-value green" data-wfstat="ativos">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Inativos</div><div class="emp-stat-value" data-wfstat="inativos">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Com schedule</div><div class="emp-stat-value" data-wfstat="com_schedule_ativos">—</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Erro recente</div><div class="emp-stat-value" data-wfstat="com_erro_recente">—</div></div>
+    </div>
+    <div class="emp-filters wf-filters">
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Busca</span>
+        <input class="emp-filter-select wf-search" type="text" placeholder="nome ou descrição…" style="min-width:220px;">
+      </div>
+      <div class="emp-filter-divider"></div>
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Status</span>
+        <select class="emp-filter-select wf-filter-status">
+          <option value="">Todos</option>
+          <option value="active">Ativos</option>
+          <option value="inactive">Inativos</option>
+          <option value="error">Com erro recente</option>
+        </select>
+      </div>
+      <div class="emp-filter-group">
+        <span class="emp-filter-label">Trigger</span>
+        <select class="emp-filter-select wf-filter-trigger">
+          <option value="">Todos</option>
+          <option value="schedule">Schedule</option>
+          <option value="webhook">Webhook</option>
+          <option value="manual">Manual</option>
+        </select>
+      </div>
+      <span class="emp-filter-count wf-count"></span>
+    </div>
+    <div class="int-table-wrap">
+      <table class="int-table wf-table">
+        <thead><tr>
+          <th>Nome</th><th>Trigger</th><th>Última exec</th><th>Status</th><th style="width:40px;"></th>
+        </tr></thead>
+        <tbody><tr><td colspan="5" class="int-loading">Carregando workflows…</td></tr></tbody>
+      </table>
     </div>
   </div>
 
   <div class="view" id="view-agentes">
-    <div class="view-placeholder">
-      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><rect x="2" y="4" width="11" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 4V3a2.5 2.5 0 0 1 5 0v1" stroke="currentColor" stroke-width="1.2"/><circle cx="5.5" cy="8" r="1" fill="currentColor"/><circle cx="9.5" cy="8" r="1" fill="currentColor"/></svg></div>
-      <h2>Agentes n8n</h2>
-      <p>Os 8 agentes ativos com métricas detalhadas de execução.</p>
+    <div class="view-header">
+      <div>
+        <div class="view-title">Agentes n8n</div>
+        <div class="view-subtitle">Workflows ativos com schedule — atuam autonomamente sem trigger humano</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="ag-updated" style="font-family:var(--font-data);font-size:var(--fs-data);color:var(--color-steel-muted);">—</span>
+        <button class="kanban-refresh-btn ag-refresh" title="Buscar dados atualizados do n8n">
+          <svg width="13" height="13" viewBox="0 0 15 15" fill="none"><path d="M11.5 7.5a4 4 0 1 1-1.2-2.85M11.5 3v3.5h-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Atualizar</span>
+        </button>
+      </div>
     </div>
+    <div class="agentes-grid" id="agentes-grid">
+      <div class="int-loading">Carregando agentes…</div>
+    </div>
+  </div>
+
+  <!-- Drawer reutilizado: workflow details -->
+  <div class="int-drawer-overlay" id="wf-drawer-overlay">
+    <aside class="int-drawer" role="dialog" aria-modal="true">
+      <div class="int-drawer-header">
+        <div>
+          <div class="int-drawer-badges" id="wf-drawer-badges"></div>
+          <h3 class="int-drawer-title" id="wf-drawer-title">—</h3>
+          <div class="int-drawer-subtitle" id="wf-drawer-subtitle"></div>
+        </div>
+        <button class="hist-close" id="wf-drawer-close" title="Fechar">✕</button>
+      </div>
+      <div class="int-drawer-body" id="wf-drawer-body"></div>
+    </aside>
   </div>
 
   <div class="view" id="view-manual">
@@ -4250,6 +4490,8 @@
   if (viewId === 'pipeline') loadKanban();
   if (viewId === 'linkedin') loadInteracoes('linkedin');
   if (viewId === 'email')    loadInteracoes('email');
+  if (viewId === 'workflows') loadWorkflows();
+  if (viewId === 'agentes')   loadAgentes();
   }
 
   navItems.forEach(item => {
@@ -4789,6 +5031,363 @@
   }
 
 })();
+
+/* ════════════════════════════════════════════════════════════════
+   WORKFLOWS + AGENTES n8n (tabela + cards de agente + drawer)
+   ════════════════════════════════════════════════════════════════ */
+const wfMod = (function() {
+  let cached = null;
+
+  function el(tag, attrs, ...children) {
+    const node = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(k => {
+      if (k === 'className') node.className = attrs[k];
+      else if (k === 'dataset') Object.assign(node.dataset, attrs[k]);
+      else if (k === 'style') node.style.cssText = attrs[k];
+      else if (k.startsWith('on')) node.addEventListener(k.slice(2).toLowerCase(), attrs[k]);
+      else node.setAttribute(k, attrs[k]);
+    });
+    children.flat().forEach(c => {
+      if (c == null || c === false) return;
+      node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return node;
+  }
+
+  function fmtDateTime(iso) {
+    if (!iso) return '—';
+    try {
+      const d = new Date(iso);
+      return d.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' });
+    } catch(_) { return iso; }
+  }
+  function fmtAgo(iso) {
+    if (!iso) return '—';
+    const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (diff < 60)        return Math.round(diff) + 's';
+    if (diff < 3600)      return Math.round(diff/60) + 'min';
+    if (diff < 86400)     return Math.round(diff/3600) + 'h';
+    return Math.round(diff/86400) + 'd';
+  }
+
+  async function load(opts) {
+    const force = !!(opts && opts.force);
+    if (cached && !force) return cached;
+    // Loading state
+    const btns = document.querySelectorAll('.wf-refresh, .ag-refresh');
+    btns.forEach(b => { b.disabled = true; b.classList.add('spinning'); });
+    try {
+      const url = '/api/workflows' + (force ? '?fresh=1' : '');
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      if (data.error) throw new Error(data.error);
+      cached = data;
+      return data;
+    } finally {
+      btns.forEach(b => { b.disabled = false; b.classList.remove('spinning'); });
+    }
+  }
+
+  /* ── Workflows (tabela) ── */
+  async function showWorkflows(opts) {
+    let data;
+    try { data = await load(opts); } catch(e) {
+      const tbody = document.querySelector('.wf-table tbody');
+      if (tbody) tbody.replaceChildren(el('tr', null,
+        el('td', { colspan: '5', className: 'int-empty' }, 'Erro: ' + e.message)
+      ));
+      return;
+    }
+    renderSummary(data);
+    renderTable();
+    wireFilters();
+    wireRefresh();
+    updateTimestamps(data);
+  }
+
+  function renderSummary(data) {
+    const root = document.querySelector('.wf-summary');
+    if (!root) return;
+    Object.entries(data.summary || {}).forEach(([k, v]) => {
+      const n = root.querySelector(`[data-wfstat="${k}"]`);
+      if (n) n.textContent = String(v);
+    });
+  }
+
+  function getFilters() {
+    const root = document.querySelector('.wf-filters');
+    if (!root) return { search:'', status:'', trigger:'' };
+    return {
+      search:  (root.querySelector('.wf-search')?.value || '').toLowerCase(),
+      status:  root.querySelector('.wf-filter-status')?.value || '',
+      trigger: root.querySelector('.wf-filter-trigger')?.value || '',
+    };
+  }
+
+  function filterWfs(wfs, f) {
+    return wfs.filter(w => {
+      if (f.status === 'active'   && !w.active) return false;
+      if (f.status === 'inactive' &&  w.active) return false;
+      if (f.status === 'error'    && !(w.last_execution && w.last_execution.status === 'error')) return false;
+      if (f.trigger && !w.trigger_types.includes(f.trigger)) return false;
+      if (f.search) {
+        const hay = ((w.name||'') + ' ' + (w.description||'') + ' ' + w.id).toLowerCase();
+        if (!hay.includes(f.search)) return false;
+      }
+      return true;
+    });
+  }
+
+  function renderTable() {
+    if (!cached) return;
+    const tbody = document.querySelector('.wf-table tbody');
+    if (!tbody) return;
+    const wfs = filterWfs(cached.workflows || [], getFilters());
+    tbody.replaceChildren();
+    const countN = document.querySelector('.wf-count');
+    if (countN) countN.textContent = wfs.length + ' workflow' + (wfs.length !== 1 ? 's' : '');
+    if (!wfs.length) {
+      tbody.appendChild(el('tr', null, el('td', { colspan: '5', className: 'int-empty' }, 'Nenhum workflow corresponde aos filtros.')));
+      return;
+    }
+    wfs.forEach(w => {
+      const statusCls = w.active ? 's-active' : (w.is_archived ? 's-archived' : 's-inactive');
+      const statusTxt = w.active ? 'Ativo' : (w.is_archived ? 'Archived' : 'Inativo');
+      const triggers = el('div', { className: 'wf-trigger-list' });
+      (w.triggers || []).forEach(t => {
+        triggers.appendChild(el('span', { className: 'wf-badge t-' + t.type, title: t.descr }, t.descr));
+      });
+      if (!w.triggers || !w.triggers.length) triggers.textContent = '—';
+
+      const le = w.last_execution;
+      const leBadge = le ? el('span', { className: 'wf-badge exec-' + (le.status||'unknown') }, (le.status||'unknown').toUpperCase()) : el('span', { className: 'wf-badge exec-unknown' }, '—');
+      const leMeta = le ? el('div', { className: 'wf-cell-exec-meta' }, fmtAgo(le.started_at) + ' atrás · modo ' + (le.mode||'?')) : null;
+
+      const name = el('div', null,
+        el('div', { className: 'wf-cell-name' }, w.name),
+        w.description ? el('div', { className: 'wf-cell-name-sub' }, w.description) : null,
+        el('div', { className: 'wf-cell-name-id' }, w.id)
+      );
+
+      const tr = el('tr', { onclick: () => openWfDrawer(w) },
+        el('td', null, name),
+        el('td', null, triggers),
+        el('td', null, leMeta || el('span', { className: 'int-cell-date' }, '—')),
+        el('td', null,
+          el('div', null,
+            el('span', { className: 'wf-badge ' + statusCls }, statusTxt),
+            ' ',
+            leBadge
+          )
+        ),
+        el('td', { className: 'int-row-action' }, '›')
+      );
+      tbody.appendChild(tr);
+    });
+  }
+
+  function wireFilters() {
+    const root = document.querySelector('.wf-filters');
+    if (!root || root._wired) return;
+    root._wired = true;
+    ['.wf-search','.wf-filter-status','.wf-filter-trigger'].forEach(sel => {
+      const node = root.querySelector(sel);
+      if (!node) return;
+      const evt = sel === '.wf-search' ? 'input' : 'change';
+      node.addEventListener(evt, () => renderTable());
+    });
+  }
+  function wireRefresh() {
+    document.querySelectorAll('.wf-refresh, .ag-refresh').forEach(btn => {
+      if (btn._wired) return;
+      btn._wired = true;
+      btn.addEventListener('click', async () => {
+        cached = null;
+        if (document.getElementById('view-workflows').classList.contains('active')) await showWorkflows({force:true});
+        else if (document.getElementById('view-agentes').classList.contains('active')) await showAgentes({force:true});
+      });
+    });
+  }
+  function updateTimestamps(data) {
+    const ts = data && data.updated_at;
+    const d = ts ? new Date(ts < 1e12 ? ts * 1000 : ts) : new Date();
+    const txt = 'Atualizado ' + d.toLocaleString('pt-BR').replace(', ', ' | ');
+    document.querySelectorAll('.wf-updated, .ag-updated').forEach(n => { n.textContent = txt; });
+  }
+
+  /* ── Agentes (cards) ── */
+  async function showAgentes(opts) {
+    let data;
+    try { data = await load(opts); } catch(e) {
+      const grid = document.getElementById('agentes-grid');
+      if (grid) grid.replaceChildren(el('div', { className: 'int-empty' }, 'Erro: ' + e.message));
+      return;
+    }
+    const grid = document.getElementById('agentes-grid');
+    if (!grid) return;
+    grid.replaceChildren();
+    const agentes = (data.workflows || []).filter(w => w.active && w.has_schedule);
+    if (!agentes.length) {
+      grid.appendChild(el('div', { className: 'int-empty' }, 'Nenhum workflow ativo com schedule.'));
+      updateTimestamps(data);
+      wireRefresh();
+      return;
+    }
+    agentes.forEach(w => grid.appendChild(buildAgenteCard(w)));
+    updateTimestamps(data);
+    wireRefresh();
+  }
+
+  function buildAgenteCard(w) {
+    const le = w.last_execution;
+    const statusKey = le ? (le.status === 'success' ? 'ok' : (le.status === 'error' ? 'error' : le.status)) : 'unknown';
+    const cardCls = 'agente-card status-' + (statusKey === 'ok' ? '' : statusKey);
+    const statusIcon = statusKey === 'ok' ? '✅' : statusKey === 'error' ? '🔴' : statusKey === 'waiting' ? '⏳' : statusKey === 'running' ? '🔄' : '⚪';
+
+    const sched = (w.triggers || []).filter(t => t.type === 'schedule').map(t => t.descr).join(' · ') || '—';
+
+    const head = el('div', { className: 'agente-card-head' },
+      el('div', null,
+        el('div', { className: 'agente-card-name' }, w.name),
+        el('div', { className: 'agente-card-id' }, w.id)
+      ),
+      el('div', { className: 'agente-card-status', title: le?.status || 'sem execução' }, statusIcon)
+    );
+
+    const desc = w.description
+      ? el('div', { className: 'agente-card-desc' }, w.description)
+      : null;
+
+    const execRow = el('div', { className: 'agente-card-execrow', title: 'Últimas execuções (mais recente → mais antiga)' });
+    (w.recent_status || []).slice(0, 5).forEach(s => {
+      execRow.appendChild(el('div', { className: 'agente-card-execdot s-' + (s || 'unknown') }));
+    });
+
+    const meta = el('div', { className: 'agente-card-meta' },
+      el('div', { className: 'agente-card-meta-item' },
+        el('div', { className: 'agente-card-meta-label' }, 'Schedule'),
+        el('div', { className: 'agente-card-meta-val' }, sched)
+      ),
+      el('div', { className: 'agente-card-meta-item' },
+        el('div', { className: 'agente-card-meta-label' }, 'Última exec'),
+        el('div', { className: 'agente-card-meta-val' }, le ? fmtAgo(le.started_at) + ' atrás' : '—')
+      ),
+      el('div', { className: 'agente-card-meta-item' },
+        el('div', { className: 'agente-card-meta-label' }, 'Modo'),
+        el('div', { className: 'agente-card-meta-val' }, le?.mode || '—')
+      ),
+      el('div', { className: 'agente-card-meta-item' },
+        el('div', { className: 'agente-card-meta-label' }, 'Recentes'),
+        execRow
+      )
+    );
+
+    return el('div', { className: cardCls, onclick: () => openWfDrawer(w) },
+      head, desc, meta
+    );
+  }
+
+  /* ── Drawer detalhe workflow ── */
+  function openWfDrawer(w) {
+    const overlay = document.getElementById('wf-drawer-overlay');
+    if (!overlay) return;
+    const title = document.getElementById('wf-drawer-title');
+    const sub   = document.getElementById('wf-drawer-subtitle');
+    const badges= document.getElementById('wf-drawer-badges');
+    const body  = document.getElementById('wf-drawer-body');
+
+    title.textContent = w.name;
+    sub.textContent = w.id;
+
+    badges.replaceChildren();
+    badges.appendChild(el('span', { className: 'wf-badge ' + (w.active ? 's-active' : 's-inactive') }, w.active ? 'Ativo' : 'Inativo'));
+    (w.triggers || []).forEach(t => {
+      badges.appendChild(el('span', { className: 'wf-badge t-' + t.type }, t.descr));
+    });
+
+    body.replaceChildren();
+
+    if (w.description) {
+      body.appendChild(el('div', { className: 'int-drawer-section' },
+        el('div', { className: 'int-drawer-label' }, 'Descrição'),
+        el('div', { className: 'int-drawer-text' }, w.description)
+      ));
+    }
+
+    const le = w.last_execution;
+    if (le) {
+      const lines = [
+        'Status: ' + (le.status || '—').toUpperCase(),
+        'Modo: ' + (le.mode || '—'),
+        'Início: ' + fmtDateTime(le.started_at),
+        'Fim: ' + fmtDateTime(le.stopped_at),
+        'ID: ' + le.id,
+      ].join('\n');
+      body.appendChild(el('div', { className: 'int-drawer-section' },
+        el('div', { className: 'int-drawer-label' }, 'Última execução'),
+        el('div', { className: 'int-drawer-text' }, lines)
+      ));
+    }
+
+    const meta = el('div', { className: 'int-drawer-meta' },
+      el('div', { className: 'int-drawer-meta-item' },
+        el('div', { className: 'int-drawer-label' }, 'Nós'),
+        el('div', { className: 'int-drawer-meta-val' }, String(w.nodes_count || 0))
+      ),
+      el('div', { className: 'int-drawer-meta-item' },
+        el('div', { className: 'int-drawer-label' }, 'Triggers'),
+        el('div', { className: 'int-drawer-meta-val' }, String((w.triggers||[]).length))
+      ),
+      el('div', { className: 'int-drawer-meta-item' },
+        el('div', { className: 'int-drawer-label' }, 'Criado'),
+        el('div', { className: 'int-drawer-meta-val' }, fmtDateTime(w.created_at))
+      ),
+      el('div', { className: 'int-drawer-meta-item' },
+        el('div', { className: 'int-drawer-label' }, 'Atualizado'),
+        el('div', { className: 'int-drawer-meta-val' }, fmtDateTime(w.updated_at))
+      )
+    );
+    body.appendChild(el('div', { className: 'int-drawer-section' }, meta));
+
+    if (w.recent_status && w.recent_status.length) {
+      const recent = el('div', { className: 'int-drawer-text' });
+      recent.textContent = w.recent_status.map((s, i) => `[${i+1}] ${(s||'?').toUpperCase()}`).join('  ');
+      body.appendChild(el('div', { className: 'int-drawer-section' },
+        el('div', { className: 'int-drawer-label' }, 'Últimas 5 execuções (mais recente → mais antiga)'),
+        recent
+      ));
+    }
+
+    const cta = el('a', {
+      className: 'int-drawer-cta',
+      href: w.n8n_url,
+      target: '_blank',
+      rel: 'noopener',
+      style: 'display:block;text-align:center;text-decoration:none;',
+    }, '↗ Abrir no n8n cloud');
+    body.appendChild(cta);
+
+    overlay.classList.add('open');
+    overlay.onclick = e => { if (e.target === overlay) closeWfDrawer(); };
+    overlay._esc = e => { if (e.key === 'Escape') closeWfDrawer(); };
+    document.addEventListener('keydown', overlay._esc);
+  }
+
+  function closeWfDrawer() {
+    const overlay = document.getElementById('wf-drawer-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    if (overlay._esc) { document.removeEventListener('keydown', overlay._esc); overlay._esc = null; }
+  }
+  const _wfCloseBtn = document.getElementById('wf-drawer-close');
+  if (_wfCloseBtn) _wfCloseBtn.addEventListener('click', closeWfDrawer);
+
+  return { showWorkflows, showAgentes };
+})();
+window.loadWorkflows = wfMod.showWorkflows;
+window.loadAgentes   = wfMod.showAgentes;
+
 
 /* ════════════════════════════════════════════════════════════════
    INTERAÇÕES — LinkedIn + E-mail (tabela + chips + drawer lateral)
