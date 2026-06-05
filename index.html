@@ -2671,6 +2671,90 @@
   .int-chip.tipo-enfileirado  { border-color: rgba(156,154,242,0.45); }
   .int-chip.tipo-cadastro     { border-color: var(--color-ash-gray); }
 
+  /* ── Candidate Board (Interações refatorado) ── */
+  .cand-board-wrap {
+    overflow-x: auto;
+    background: var(--color-charcoal-raised);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+  }
+  .cand-board { min-width: 920px; display: flex; flex-direction: column; }
+  .cand-board-loading, .cand-board-empty {
+    padding: 28px; text-align: center; color: var(--color-steel-muted);
+    font-family: var(--font-body); font-size: 13px;
+  }
+  .cand-row {
+    display: grid;
+    grid-template-columns: minmax(200px, 1.2fr) 110px minmax(540px, 2.6fr);
+    align-items: center; gap: 16px;
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .cand-row:not(.cand-header) { cursor: pointer; transition: background .14s ease, transform .14s ease; }
+  .cand-row:not(.cand-header):hover {
+    background: rgba(34,211,238,0.06);
+    box-shadow: inset 3px 0 0 var(--color-steel-accent, #22d3ee);
+  }
+  .cand-header {
+    position: sticky; top: 0; z-index: 2;
+    background: var(--color-charcoal-base, #14161a);
+    border-bottom: 1px solid var(--color-ash-gray);
+    font-family: var(--font-data); font-size: 10px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--color-steel-muted);
+  }
+  .cand-col-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .cand-name { font-family: var(--font-body); font-size: 13.5px; font-weight: 600; color: #e8eaed;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cand-sub { font-size: 11px; color: var(--color-steel-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cand-col-date { font-family: var(--font-data); font-size: 12px; color: #b6bcc4; }
+  .cand-col-track { display: flex; gap: 6px; flex-wrap: nowrap; }
+  .cand-hd-step {
+    flex: 1; min-width: 84px; text-align: center;
+    font-size: 9.5px; letter-spacing: .1em; color: var(--color-steel-muted); white-space: nowrap;
+  }
+  .cand-badge {
+    flex: 1; min-width: 84px;
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 24px; padding: 0 8px; border-radius: 6px;
+    font-family: var(--font-data); font-size: 9.5px; font-weight: 700;
+    letter-spacing: .05em; text-transform: uppercase; white-space: nowrap;
+    border: 1px solid transparent; transition: all .12s ease;
+  }
+  .cand-badge.off { background: rgba(255,255,255,0.03); color: #4b5159; border-color: rgba(255,255,255,0.05); }
+  .cand-badge.on.st-aprovado   { background: rgba(71,157,236,0.18);  color:#7cc0ff; border-color: rgba(71,157,236,0.4); }
+  .cand-badge.on.st-enviado    { background: rgba(34,211,238,0.18);  color:#5fe6f5; border-color: rgba(34,211,238,0.4); }
+  .cand-badge.on.st-validado   { background: rgba(236,207,6,0.18);   color:#f1d94e; border-color: rgba(236,207,6,0.4); }
+  .cand-badge.on.st-fechamento { background: rgba(168,255,83,0.16);  color:#bdf86f; border-color: rgba(168,255,83,0.38); }
+  .cand-badge.on.st-descartado { background: rgba(244,63,94,0.18);   color:#fb7185; border-color: rgba(244,63,94,0.42); }
+  .cand-badge.on.st-contratado { background: rgba(16,185,129,0.2);   color:#34d399; border-color: rgba(16,185,129,0.45); }
+  /* Drawer: timeline de mensagens */
+  .msg-timeline { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .msg-loading, .msg-empty { color: var(--color-steel-muted); font-size: 12px; padding: 8px 0; }
+  .msg-bubble { border-radius: 10px; padding: 10px 12px; max-width: 92%; }
+  .msg-bubble.msg-out { background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.18); align-self: flex-start; }
+  .msg-bubble.msg-in  { background: rgba(16,185,129,0.1);  border: 1px solid rgba(16,185,129,0.22); align-self: flex-end; }
+  .msg-bubble.msg-note { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.28); border-left: 3px solid #f59e0b; align-self: stretch; max-width: 100%; }
+  .msg-bubble.msg-note .msg-meta { color: #fbbf24; }
+  .msg-meta { font-family: var(--font-data); font-size: 10px; color: var(--color-steel-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing:.05em; }
+  .msg-text { font-family: var(--font-body); font-size: 13px; color: #dfe3e8; white-space: pre-wrap; line-height: 1.5; }
+  /* Drawer: observações editável */
+  .drawer-obs-input {
+    width: 100%; min-height: 90px; resize: vertical; margin-top: 6px;
+    background: var(--color-charcoal-base, #14161a); border: 1px solid var(--color-ash-gray);
+    border-radius: 8px; padding: 10px 12px; color: #e8eaed;
+    font-family: var(--font-body); font-size: 13px; line-height: 1.5;
+  }
+  .drawer-obs-input:focus { outline: none; border-color: var(--color-steel-accent, #22d3ee); }
+  .drawer-obs-actions { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .drawer-obs-save {
+    background: #10b981; color: #07261c; border: none; border-radius: 7px;
+    padding: 7px 16px; font-family: var(--font-body); font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .drawer-obs-save:hover { background: #34d399; }
+  .drawer-obs-save:disabled { opacity: .5; cursor: wait; }
+  .drawer-obs-status { font-size: 11px; color: var(--color-steel-muted); }
+
   .int-table-wrap {
     overflow-x: auto;
     background: var(--color-charcoal-raised);
@@ -2768,6 +2852,35 @@
   .int-badge.status-encerrado  { background: rgba(244,63,94,0.18); color: #fda4af; }
   .int-badge.status-preparado  { background: rgba(156,154,242,0.18); color: #c4b5fd; }
   .int-badge.status-sem-retorno{ background: var(--color-midnight-surface); color: var(--color-cloud-gray); }
+
+  /* ── Agrupamento por candidato ── */
+  .int-group-toggle {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: var(--radius-full);
+    border: 1px solid var(--color-ash-gray);
+    background: var(--color-midnight-surface);
+    color: var(--color-cloud-gray);
+    font-family: var(--font-utility); font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    cursor: pointer; transition: all 120ms; white-space: nowrap;
+  }
+  .int-group-toggle:hover { border-color: rgba(96,165,250,0.4); color: var(--color-whisper-white); }
+  .int-group-toggle.active { border-color: rgba(96,165,250,0.6); color: #60a5fa; background: rgba(96,165,250,0.1); }
+
+  tr.int-group-header { cursor: pointer; background: var(--color-midnight-surface); }
+  tr.int-group-header:hover { background: rgba(255,255,255,0.04); }
+  tr.int-group-header td { padding: 10px 14px; border-bottom: 1px solid var(--color-ash-gray); }
+  .int-group-meta { display: flex; align-items: center; gap: 8px; }
+  .int-group-name { font-family: var(--font-display); font-size: 12px; font-weight: 600; color: var(--color-whisper-white); }
+  .int-group-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 20px; height: 18px; padding: 0 6px;
+    border-radius: 10px; background: rgba(96,165,250,0.18);
+    color: #60a5fa; font-family: var(--font-data); font-size: 10px; font-weight: 700;
+  }
+  .int-group-arrow { color: var(--color-cloud-gray); font-size: 14px; transition: transform 180ms; display: inline-block; }
+  tr.int-group-child td:first-child { padding-left: 28px; }
+  tr.int-group-child.int-collapsed { display: none; }
 
   /* ── Drawer lateral ── */
   .int-drawer-overlay {
@@ -3055,6 +3168,32 @@
   .agente-card-execdot.s-waiting { background: #fbbf24; }
   .agente-card-execdot.s-canceled { background: var(--color-cloud-gray); }
   .agente-card-execdot.s-unknown { background: var(--color-midnight-surface); border:1px solid var(--color-ash-gray); }
+  .agente-card-errormsg {
+    background: rgba(244,63,94,0.08);
+    border: 1px solid rgba(244,63,94,0.28);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: var(--font-data);
+    font-size: 10px;
+    color: #fda4af;
+    line-height: 1.45;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .wf-drawer-errormsg {
+    background: rgba(244,63,94,0.08);
+    border: 1px solid rgba(244,63,94,0.28);
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-family: var(--font-data);
+    font-size: 11px;
+    color: #fda4af;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
 
   /* ── Info do talento no topo do modal ── */
   .hist-talent-info {
@@ -3077,6 +3216,318 @@
   .hist-talent-tag strong {
     color: var(--color-whisper-white);
     font-weight: 500;
+  }
+
+  /* ── Manual ────────────────────────────────── */
+  .man-kpi-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .man-kpi {
+    flex: 1 1 120px;
+    background: var(--color-midnight-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .man-kpi-value {
+    font-family: var(--font-data);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-spring-green);
+    line-height: 1;
+  }
+  .man-kpi-label {
+    font-family: var(--font-utility);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--color-cloud-gray);
+  }
+  .man-section {
+    margin-bottom: 32px;
+  }
+  .man-section-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--color-spring-green);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-ash-gray);
+  }
+  .man-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .man-card {
+    background: var(--color-midnight-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    padding: 16px;
+  }
+  .man-card-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .man-card-title {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-whisper-white);
+    margin-bottom: 6px;
+  }
+  .man-card-body {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--color-cloud-gray);
+    line-height: 1.55;
+  }
+  .man-stack-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .man-stack-chip {
+    font-family: var(--font-utility);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    background: rgba(96,165,250,0.12);
+    color: #60a5fa;
+    border: 1px solid rgba(96,165,250,0.25);
+  }
+  .man-pipeline {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .man-pipe-step {
+    flex: 1 1 110px;
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+  .man-pipe-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -10px;
+    top: 14px;
+    color: var(--color-ash-gray);
+    font-size: 14px;
+    z-index: 1;
+  }
+  .man-pipe-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--color-spring-green);
+    color: var(--color-deep-night);
+    font-family: var(--font-data);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-bottom: 8px;
+  }
+  .man-pipe-label {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-whisper-white);
+    margin-bottom: 4px;
+  }
+  .man-pipe-desc {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--color-cloud-gray);
+    line-height: 1.4;
+    padding: 0 4px;
+  }
+  .man-wf-id {
+    font-family: var(--font-data);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-spring-green);
+    white-space: nowrap;
+  }
+  .man-sops {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .man-sop {
+    background: var(--color-midnight-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .man-sop summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+  }
+  .man-sop summary::-webkit-details-marker { display: none; }
+  .man-sop[open] summary { border-bottom: 1px solid var(--color-ash-gray); }
+  .man-sop-num {
+    font-family: var(--font-data);
+    font-size: 10px;
+    font-weight: 700;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(96,165,250,0.15);
+    color: #60a5fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .man-sop-title {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-whisper-white);
+    flex: 1;
+  }
+  .man-sop-tag {
+    font-family: var(--font-utility);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+    border: 1px solid rgba(16,185,129,0.25);
+  }
+  .man-sop-arrow {
+    font-size: 12px;
+    color: var(--color-cloud-gray);
+    transition: transform 180ms;
+  }
+  .man-sop[open] .man-sop-arrow { transform: rotate(180deg); }
+  .man-sop-body {
+    padding: 14px 16px;
+  }
+  .man-sop-list {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .man-sop-list li {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--color-cloud-gray);
+    line-height: 1.6;
+    margin-bottom: 4px;
+  }
+  .man-sop-list li strong {
+    color: var(--color-whisper-white);
+  }
+  .man-sop-note {
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: rgba(250,204,21,0.06);
+    border-left: 3px solid rgba(250,204,21,0.4);
+    border-radius: 0 4px 4px 0;
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: #fde68a;
+    line-height: 1.5;
+  }
+  .man-score-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .man-score-table th {
+    font-family: var(--font-utility);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--color-cloud-gray);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-ash-gray);
+  }
+  .man-score-table td {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--color-cloud-gray);
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .man-score-table td:first-child {
+    color: var(--color-whisper-white);
+    font-weight: 500;
+  }
+  .man-score-table td:last-child {
+    font-family: var(--font-data);
+    font-weight: 700;
+    color: var(--color-spring-green);
+    text-align: right;
+  }
+  .man-integ-card {
+    background: var(--color-midnight-surface);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+  }
+  .man-integ-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .man-integ-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .man-integ-head strong {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-whisper-white);
+  }
+  .man-integ-detail {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--color-cloud-gray);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .man-integ-cred {
+    font-family: var(--font-data);
+    font-size: 10px;
+    color: var(--color-ash-gray);
+  }
+  .man-integ-cred code {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--color-ash-gray);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: #a5b4fc;
   }
 
 </style>
@@ -4201,30 +4652,29 @@
       <div class="emp-stat"><div class="emp-stat-label">Respondidos</div><div class="emp-stat-value green" data-stat="respondidos">—</div></div>
       <div class="emp-stat"><div class="emp-stat-label">Taxa de resposta</div><div class="emp-stat-value" data-stat="taxa">—</div></div>
     </div>
-    <div class="int-chips" data-canal="linkedin"></div>
     <div class="emp-filters int-filters" data-canal="linkedin">
       <div class="emp-filter-group">
         <span class="emp-filter-label">Busca</span>
-        <input class="emp-filter-select int-search" type="text" placeholder="nome, mensagem…" style="min-width:200px;">
-      </div>
-      <div class="emp-filter-divider"></div>
-      <div class="emp-filter-group">
-        <span class="emp-filter-label">Tipo</span>
-        <select class="emp-filter-select int-filter-tipo"><option value="">Todos</option></select>
+        <input class="emp-filter-select int-search" type="text" placeholder="nome do candidato…" style="min-width:220px;">
       </div>
       <div class="emp-filter-group">
-        <span class="emp-filter-label">Status</span>
-        <select class="emp-filter-select int-filter-status"><option value="">Todos</option></select>
+        <span class="emp-filter-label">Etapa</span>
+        <select class="emp-filter-select int-filter-stage">
+          <option value="">Todas</option>
+          <option value="s01">Aprovado</option>
+          <option value="s02">Enviado</option>
+          <option value="s03">Validado</option>
+          <option value="s04">Fechamento</option>
+          <option value="s05">Descartado</option>
+          <option value="s06">Contratado</option>
+        </select>
       </div>
       <span class="emp-filter-count int-count"></span>
     </div>
-    <div class="int-table-wrap">
-      <table class="int-table" data-canal="linkedin">
-        <thead><tr>
-          <th>Candidato</th><th>Tipo</th><th>Status</th><th>Data</th><th>Mensagem</th><th style="width:40px;"></th>
-        </tr></thead>
-        <tbody><tr><td colspan="6" class="int-loading">Carregando interações…</td></tr></tbody>
-      </table>
+    <div class="cand-board-wrap">
+      <div class="cand-board" data-canal="linkedin">
+        <div class="cand-board-loading">Carregando candidatos…</div>
+      </div>
     </div>
   </div>
 
@@ -4249,30 +4699,29 @@
       <div class="emp-stat"><div class="emp-stat-label">Respondidos</div><div class="emp-stat-value green" data-stat="respondidos">—</div></div>
       <div class="emp-stat"><div class="emp-stat-label">Taxa de resposta</div><div class="emp-stat-value" data-stat="taxa">—</div></div>
     </div>
-    <div class="int-chips" data-canal="email"></div>
     <div class="emp-filters int-filters" data-canal="email">
       <div class="emp-filter-group">
         <span class="emp-filter-label">Busca</span>
-        <input class="emp-filter-select int-search" type="text" placeholder="nome, mensagem…" style="min-width:200px;">
-      </div>
-      <div class="emp-filter-divider"></div>
-      <div class="emp-filter-group">
-        <span class="emp-filter-label">Tipo</span>
-        <select class="emp-filter-select int-filter-tipo"><option value="">Todos</option></select>
+        <input class="emp-filter-select int-search" type="text" placeholder="nome do candidato…" style="min-width:220px;">
       </div>
       <div class="emp-filter-group">
-        <span class="emp-filter-label">Status</span>
-        <select class="emp-filter-select int-filter-status"><option value="">Todos</option></select>
+        <span class="emp-filter-label">Etapa</span>
+        <select class="emp-filter-select int-filter-stage">
+          <option value="">Todas</option>
+          <option value="s01">Aprovado</option>
+          <option value="s02">Enviado</option>
+          <option value="s03">Validado</option>
+          <option value="s04">Fechamento</option>
+          <option value="s05">Descartado</option>
+          <option value="s06">Contratado</option>
+        </select>
       </div>
       <span class="emp-filter-count int-count"></span>
     </div>
-    <div class="int-table-wrap">
-      <table class="int-table" data-canal="email">
-        <thead><tr>
-          <th>Candidato</th><th>Tipo</th><th>Status</th><th>Data</th><th>Mensagem</th><th style="width:40px;"></th>
-        </tr></thead>
-        <tbody><tr><td colspan="6" class="int-loading">Carregando interações…</td></tr></tbody>
-      </table>
+    <div class="cand-board-wrap">
+      <div class="cand-board" data-canal="email">
+        <div class="cand-board-loading">Carregando candidatos…</div>
+      </div>
     </div>
   </div>
 
@@ -4383,11 +4832,295 @@
   </div>
 
   <div class="view" id="view-manual">
-    <div class="view-placeholder">
-      <div class="view-placeholder-icon"><svg width="22" height="22" viewBox="0 0 15 15" fill="none"><rect x="2" y="1" width="11" height="13" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h5M5 7.5h5M5 10h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>
-      <h2>Manual</h2>
-      <p>Documentação operacional, glossário de workflows e SOPs.</p>
+    <div class="view-header">
+      <div>
+        <div class="view-title">Manual Operacional</div>
+        <div class="view-subtitle">Documentação interna do sistema SOREN · Tallent Intelligence CRM</div>
+      </div>
+      <span style="font-family:var(--font-data);font-size:11px;color:var(--color-cloud-gray)">v2.1 · Mai 2026</span>
     </div>
+
+    <!-- KPI bar -->
+    <div class="emp-summary" style="margin-bottom:28px">
+      <div class="emp-stat"><div class="emp-stat-label">Agentes ativos</div><div class="emp-stat-value">8</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Workflows n8n</div><div class="emp-stat-value">13+</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Candidatos/dia</div><div class="emp-stat-value">15</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Canais</div><div class="emp-stat-value green">LinkedIn + E-mail</div></div>
+      <div class="emp-stat"><div class="emp-stat-label">Banco de dados</div><div class="emp-stat-value">Notion API</div></div>
+    </div>
+
+    <!-- ── Seção 1: O que é o SOREN ── -->
+    <div class="man-section">
+      <div class="man-section-title">
+        <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M7.5 4.5v4M7.5 10.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        O que é o SOREN
+      </div>
+      <div class="man-grid-3">
+        <div class="man-card">
+          <div class="man-card-icon">🎯</div>
+          <div class="man-card-title">Objetivo</div>
+          <div class="man-card-body">Sistema autônomo de prospecção e recrutamento de assessores de investimentos para a SOREN Investimentos. Identifica, qualifica e contata candidatos com mínima intervenção humana.</div>
+        </div>
+        <div class="man-card">
+          <div class="man-card-icon">⚙️</div>
+          <div class="man-card-title">Como funciona</div>
+          <div class="man-card-body">8 agentes de IA orquestrados por n8n (VPS Hostinger) rodam em cadência diária (09h–17h). Cada agente tem responsabilidade única: buscar, enriquecer, pontuar, escrever, contatar, acompanhar, reportar.</div>
+        </div>
+        <div class="man-card">
+          <div class="man-card-icon">📐</div>
+          <div class="man-card-title">Stack tecnológica</div>
+          <div class="man-card-body">
+            <div class="man-stack-list">
+              <span class="man-stack-chip">n8n (VPS)</span>
+              <span class="man-stack-chip">Notion API</span>
+              <span class="man-stack-chip">Gmail API</span>
+              <span class="man-stack-chip">Expandi / Liaufa</span>
+              <span class="man-stack-chip">ZeroBounce</span>
+              <span class="man-stack-chip">Hunter.io</span>
+              <span class="man-stack-chip">Google Calendar</span>
+              <span class="man-stack-chip">OpenAI GPT-4</span>
+              <span class="man-stack-chip">Vercel</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Seção 2: Fluxo do Pipeline ── -->
+    <div class="man-section">
+      <div class="man-section-title">
+        <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Jornada do Candidato
+      </div>
+      <div class="man-pipeline">
+        <div class="man-pipe-step">
+          <div class="man-pipe-num" style="background:rgba(96,165,250,0.2);color:#60a5fa">1</div>
+          <div class="man-pipe-label">Captação</div>
+          <div class="man-pipe-desc">Hunter busca perfis no LinkedIn/Google por cidade e segmento</div>
+        </div>
+        <div class="man-pipe-arrow">›</div>
+        <div class="man-pipe-step">
+          <div class="man-pipe-num" style="background:rgba(251,191,36,0.2);color:#fbbf24">2</div>
+          <div class="man-pipe-label">Enriquecimento</div>
+          <div class="man-pipe-desc">Email validado (ZeroBounce), certificações e carteira estimada</div>
+        </div>
+        <div class="man-pipe-arrow">›</div>
+        <div class="man-pipe-step">
+          <div class="man-pipe-num" style="background:rgba(217,70,239,0.2);color:#e879f9">3</div>
+          <div class="man-pipe-label">Pontuação</div>
+          <div class="man-pipe-desc">Score 0–100, classificação A+/A/B/C, recomendação de ação</div>
+        </div>
+        <div class="man-pipe-arrow">›</div>
+        <div class="man-pipe-step">
+          <div class="man-pipe-num" style="background:rgba(16,185,129,0.2);color:#10b981">4</div>
+          <div class="man-pipe-label">Contato</div>
+          <div class="man-pipe-desc">E-mail personalizado + conexão LinkedIn via Expandi (15/dia)</div>
+        </div>
+        <div class="man-pipe-arrow">›</div>
+        <div class="man-pipe-step">
+          <div class="man-pipe-num" style="background:rgba(245,158,11,0.2);color:#f59e0b">5</div>
+          <div class="man-pipe-label">Follow-up</div>
+          <div class="man-pipe-desc">Cadência automatizada, detecção de respostas, atualização CRM</div>
+        </div>
+        <div class="man-pipe-arrow">›</div>
+        <div class="man-pipe-step">
+          <div class="man-pipe-num" style="background:rgba(244,63,94,0.2);color:#f43f5e">6</div>
+          <div class="man-pipe-label">Reunião</div>
+          <div class="man-pipe-desc">WF18 detecta aceite → cria evento Calendar + notifica candidato</div>
+        </div>
+        <div class="man-pipe-arrow">›</div>
+        <div class="man-pipe-step">
+          <div class="man-pipe-num" style="background:rgba(156,154,242,0.2);color:#a78bfa">7</div>
+          <div class="man-pipe-label">Decisão</div>
+          <div class="man-pipe-desc">Contratado, Nutrição futura ou Descartado (com motivo registrado)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Seção 3: Glossário de Workflows ── -->
+    <div class="man-section">
+      <div class="man-section-title">
+        <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="2.5" width="12" height="10" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M5 6h5M5 8.5h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+        Glossário de Workflows (n8n)
+      </div>
+      <div class="int-table-wrap">
+        <table class="int-table">
+          <thead><tr>
+            <th style="width:90px">ID</th>
+            <th>Nome</th>
+            <th>Trigger</th>
+            <th>Responsabilidade</th>
+            <th style="width:80px">Status</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="man-wf-id">WF01</td><td>Envio E-mail Inicial</td><td><span class="int-badge tipo-cadastro">Schedule 15h</span></td><td>Envia e-mail de contato dia 0 via Gmail (contato@soreninvestimentos.com.br)</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF02</td><td>Follow-up E-mail</td><td><span class="int-badge tipo-cadastro">Schedule 16h</span></td><td>Cadência de follow-ups (dia 3, 7, 14) por status do candidato no CRM</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF03</td><td>Classificador de Respostas</td><td><span class="int-badge tipo-cadastro">Schedule</span></td><td>Lê Gmail, classifica resposta (interesse/rejeição/neutro) e atualiza Notion</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF04</td><td>Hunter Regional</td><td><span class="int-badge tipo-cadastro">Schedule 09h</span></td><td>Busca novos perfis no LinkedIn e Google por cidade, segmento e cargo-alvo</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF05</td><td>Enriquecimento E-mail</td><td><span class="int-badge tipo-cadastro">Schedule 10h</span></td><td>Valida e-mails via ZeroBounce · Busca e-mails faltantes via Hunter.io</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF06</td><td>Enriquecedor de Perfil</td><td><span class="int-badge tipo-cadastro">Schedule 11h</span></td><td>Complementa histórico profissional, certificações (CPA-20/CEA/CFP) e carteira</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF07</td><td>Scorer de Candidatos</td><td><span class="int-badge tipo-cadastro">Schedule 12h</span></td><td>Atribui score 0–100 e classificação A+/A/B/C com recomendação de próxima ação</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF08</td><td>Copywriter Institucional</td><td><span class="int-badge tipo-cadastro">Schedule 14h</span></td><td>Gera 4 mensagens personalizadas por perfil: conexão, principal, follow-up, encerramento</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF11</td><td>Preparação LinkedIn</td><td><span class="int-badge tipo-preparacao">Schedule</span></td><td>Seleciona 15 candidatos/dia aprovados para campanha Expandi · Cria registro DB_LINKEDIN</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF12</td><td>Envio LinkedIn (Expandi)</td><td><span class="int-badge tipo-preparacao">Schedule</span></td><td>Enfileira 15 conexões/dia na campanha 794950 via Liaufa/Expandi · Atualiza CRM</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF18</td><td>Agendamento de Reunião</td><td><span class="int-badge tipo-inicial">Webhook Gmail</span></td><td>Detecta resposta de aceite → cria evento Google Calendar → notifica candidato e SOREN</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF19</td><td>Registro Operacional Master</td><td><span class="int-badge tipo-inicial">Subworkflow</span></td><td>Append-only na página master do Notion (366e2f84…) · Fonte de verdade do LOG operacional</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+            <tr><td class="man-wf-id">WF Monitor</td><td>Monitor de Erros + Auto-Retry</td><td><span class="int-badge tipo-preparacao">Schedule 1h</span></td><td>Detecta workflows com erro nas últimas 2h · Tenta re-execução automática · Envia relatório</td><td><span class="int-badge tipo-resposta">Ativo</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Seção 4: SOPs ── -->
+    <div class="man-section">
+      <div class="man-section-title">
+        <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M3 3h9M3 6h6M3 9h7M3 12h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        SOPs — Procedimentos Operacionais
+      </div>
+      <div class="man-sops">
+
+        <details class="man-sop">
+          <summary class="man-sop-head">
+            <span class="man-sop-num">SOP 01</span>
+            <span class="man-sop-title">Agendar reunião com candidato</span>
+            <span class="man-sop-tag">WF18</span>
+            <span class="man-sop-arrow">›</span>
+          </summary>
+          <div class="man-sop-body">
+            <ol class="man-sop-list">
+              <li>Candidato responde ao e-mail de contato indicando disponibilidade.</li>
+              <li>WF18 detecta a resposta via Gmail webhook (assunto contém "reunião" ou "conversa").</li>
+              <li>Sistema cria evento no Google Calendar com link de vídeo.</li>
+              <li>E-mail de confirmação é enviado ao candidato e à equipe SOREN.</li>
+              <li>Registro é criado no Notion CRM com data/hora e link do evento.</li>
+              <li>Status do candidato no Pipeline é atualizado automaticamente para <strong>Entrevista</strong>.</li>
+            </ol>
+            <div class="man-sop-note">⚠️ Sempre use <strong>contato@soreninvestimentos.com.br</strong> — nunca kaiopirolo@gmail.com para comunicações SOREN.</div>
+          </div>
+        </details>
+
+        <details class="man-sop">
+          <summary class="man-sop-head">
+            <span class="man-sop-num">SOP 02</span>
+            <span class="man-sop-title">Descartar um candidato</span>
+            <span class="man-sop-tag">Pipeline</span>
+            <span class="man-sop-arrow">›</span>
+          </summary>
+          <div class="man-sop-body">
+            <ol class="man-sop-list">
+              <li>Acesse a aba <strong>Pipeline</strong> no dashboard.</li>
+              <li>Arraste o card do candidato para a coluna <strong>Descartados</strong> — ou clique no ícone de edição.</li>
+              <li>Selecione o <strong>Motivo do descarte</strong> no campo obrigatório (Score baixo / Sem interesse / Sem resposta / Outro).</li>
+              <li>O sistema atualiza o status no Notion e para os workflows de follow-up automaticamente.</li>
+              <li>Candidatos descartados ficam visíveis no filtro "Descartados" — nunca são deletados.</li>
+            </ol>
+            <div class="man-sop-note">ℹ️ Candidatos com classificação C (&lt;55pts) são candidatos automáticos ao descarte — revise antes de confirmar.</div>
+          </div>
+        </details>
+
+        <details class="man-sop">
+          <summary class="man-sop-head">
+            <span class="man-sop-num">SOP 03</span>
+            <span class="man-sop-title">Interpretar o score e classificação</span>
+            <span class="man-sop-tag">WF07</span>
+            <span class="man-sop-arrow">›</span>
+          </summary>
+          <div class="man-sop-body">
+            <table class="man-score-table">
+              <thead><tr><th>Faixa</th><th>Pontos</th><th>Ação recomendada</th></tr></thead>
+              <tbody>
+                <tr><td><strong style="color:#10b981">A+</strong></td><td>90–100</td><td>Contato imediato · Prioridade máxima · Personalização alta</td></tr>
+                <tr><td><strong style="color:#60a5fa">A</strong></td><td>75–89</td><td>Contato na mesma semana · Mensagem diferenciada</td></tr>
+                <tr><td><strong style="color:#fbbf24">B</strong></td><td>55–74</td><td>Cadência padrão · Monitorar resposta · Follow-up em 7 dias</td></tr>
+                <tr><td><strong style="color:var(--color-cloud-gray)">C</strong></td><td>&lt;55</td><td>Nutrição futura ou descarte · Não entrar em cadência ativa</td></tr>
+              </tbody>
+            </table>
+            <div class="man-sop-note">Os 100 pontos distribuem-se em: Exp. comercial (20) · Mercado financeiro (20) · Potencial de carteira (20) · Fit com assessoria (15) · Geografia (10) · Senioridade (10) · Mobilidade (5).</div>
+          </div>
+        </details>
+
+        <details class="man-sop">
+          <summary class="man-sop-head">
+            <span class="man-sop-num">SOP 04</span>
+            <span class="man-sop-title">O que fazer quando um workflow falha</span>
+            <span class="man-sop-tag">Monitor</span>
+            <span class="man-sop-arrow">›</span>
+          </summary>
+          <div class="man-sop-body">
+            <ol class="man-sop-list">
+              <li>O <strong>WF Monitor</strong> detecta o erro em até 1 hora e tenta re-executar automaticamente.</li>
+              <li>Você receberá um e-mail em <strong>contato@soreninvestimentos.com.br</strong> com o diagnóstico.</li>
+              <li>Se o retry foi ✅ verde no e-mail: nenhuma ação necessária, o sistema se auto-corrigiu.</li>
+              <li>Se o retry foi ❌ vermelho: acesse <strong>Agentes n8n</strong> no dashboard, clique no card vermelho e leia a mensagem de erro.</li>
+              <li>Acesse <a href="https://soreninvest.app.n8n.cloud" target="_blank" style="color:var(--color-spring-green)">soreninvest.app.n8n.cloud</a> → workflow específico → aba Executions para detalhes completos.</li>
+              <li>Erros de credencial (OAuth expirado): re-autentique a credencial no n8n e re-ative o workflow.</li>
+            </ol>
+            <div class="man-sop-note">⚠️ Em caso de erro persistente em WF01/WF12 (envio de mensagens), pause o workflow manualmente para evitar envios duplicados.</div>
+          </div>
+        </details>
+
+        <details class="man-sop">
+          <summary class="man-sop-head">
+            <span class="man-sop-num">SOP 05</span>
+            <span class="man-sop-title">Adicionar novo candidato manualmente</span>
+            <span class="man-sop-tag">Notion</span>
+            <span class="man-sop-arrow">›</span>
+          </summary>
+          <div class="man-sop-body">
+            <ol class="man-sop-list">
+              <li>Acesse o banco <strong>Talentos</strong> no Notion CRM.</li>
+              <li>Crie nova entrada com: Nome completo · LinkedIn URL · Cargo atual · Empresa · Cidade.</li>
+              <li>Deixe o campo <strong>Pronto para automação</strong> como <em>false</em> até enriquecer manualmente.</li>
+              <li>Preencha e-mail (se disponível) e score estimado.</li>
+              <li>O WF05 validará o e-mail e o WF07 recalculará o score na próxima execução.</li>
+              <li>Candidate aparecerá no dashboard na aba <strong>Talentos</strong> em até 3 minutos (TTL do cache).</li>
+            </ol>
+          </div>
+        </details>
+
+      </div>
+    </div>
+
+    <!-- ── Seção 5: Integrações ── -->
+    <div class="man-section">
+      <div class="man-section-title">
+        <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><circle cx="4" cy="7.5" r="2" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="3.5" r="2" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="11.5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M6 6.8l3-2.5M6 8.2l3 2.5" stroke="currentColor" stroke-width="1.1"/></svg>
+        Integrações e Credenciais
+      </div>
+      <div class="man-grid-3">
+        <div class="man-integ-card">
+          <div class="man-integ-head"><span class="man-integ-dot" style="background:#10b981"></span><strong>Notion API</strong></div>
+          <div class="man-integ-detail">OAuth2 ativo · 4 bancos de dados: Talentos, DB_LINKEDIN, DB_EMAIL, Empresas</div>
+          <div class="man-integ-cred">Cred: <code>qexula3N9bs8nVlj</code></div>
+        </div>
+        <div class="man-integ-card">
+          <div class="man-integ-head"><span class="man-integ-dot" style="background:#10b981"></span><strong>Gmail API</strong></div>
+          <div class="man-integ-detail">OAuth2 ativo · conta contato@soreninvestimentos.com.br · envio + leitura</div>
+          <div class="man-integ-cred">Cred: <code>cupNFSlUqhczktgH</code></div>
+        </div>
+        <div class="man-integ-card">
+          <div class="man-integ-head"><span class="man-integ-dot" style="background:#10b981"></span><strong>Google Calendar</strong></div>
+          <div class="man-integ-detail">OAuth2 ativo · conta contato@soreninvestimentos.com.br · WF18 agendamentos</div>
+          <div class="man-integ-cred">Cred: <code>YxEGuea9aS9h74ZV</code></div>
+        </div>
+        <div class="man-integ-card">
+          <div class="man-integ-head"><span class="man-integ-dot" style="background:#60a5fa"></span><strong>Expandi / Liaufa</strong></div>
+          <div class="man-integ-detail">Campanha LinkedIn #794950 · limite 15 conexões/dia · WF11 + WF12</div>
+          <div class="man-integ-cred">Cred: <code>e4a9d281 / 3e532b05</code></div>
+        </div>
+        <div class="man-integ-card">
+          <div class="man-integ-head"><span class="man-integ-dot" style="background:#10b981"></span><strong>ZeroBounce</strong></div>
+          <div class="man-integ-detail">Validação de e-mails · Query Auth · WF05 enriquecimento</div>
+          <div class="man-integ-cred">Cred: <code>2AnxO3gN6LTA6BbQ</code></div>
+        </div>
+        <div class="man-integ-card">
+          <div class="man-integ-head"><span class="man-integ-dot" style="background:#10b981"></span><strong>Hunter.io</strong></div>
+          <div class="man-integ-detail">Busca de e-mails por empresa/nome · Query Auth · WF05 enriquecimento</div>
+          <div class="man-integ-cred">Cred: <code>yyTphFfVJgif11Wi</code></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </main>
@@ -5283,8 +6016,12 @@ const wfMod = (function() {
       )
     );
 
+    const errBlock = (le && le.error_message)
+      ? el('div', { className: 'agente-card-errormsg' }, '⚠ ' + le.error_message)
+      : null;
+
     return el('div', { className: cardCls, onclick: () => openWfDrawer(w) },
-      head, desc, meta
+      head, desc, errBlock, meta
     );
   }
 
@@ -5324,10 +6061,16 @@ const wfMod = (function() {
         'Fim: ' + fmtDateTime(le.stopped_at),
         'ID: ' + le.id,
       ].join('\n');
-      body.appendChild(el('div', { className: 'int-drawer-section' },
+      const execSection = el('div', { className: 'int-drawer-section' },
         el('div', { className: 'int-drawer-label' }, 'Última execução'),
         el('div', { className: 'int-drawer-text' }, lines)
-      ));
+      );
+      if (le.error_message) {
+        execSection.appendChild(el('div', { className: 'wf-drawer-errormsg', style: 'margin-top:10px' },
+          le.error_message
+        ));
+      }
+      body.appendChild(execSection);
     }
 
     const meta = el('div', { className: 'int-drawer-meta' },
@@ -5394,7 +6137,35 @@ window.loadAgentes   = wfMod.showAgentes;
    ════════════════════════════════════════════════════════════════ */
 window.loadInteracoes = (function() {
 
-  const state = { linkedin: null, email: null, dirty: {linkedin:false, email:false} };
+  const state = { data: null, dirty: false };
+
+  // Mapa Status Notion → etapa (espelha o Kanban)
+  const STAGE_RANK = { prospect:0, approved:1, contact:2, engage:3, close:4, hired:5, lost:-1 };
+  const STATUS_TO_STAGE = {
+    'Mapeado':'prospect','Qualificado':'prospect',
+    'Aprovado para contato':'approved',
+    'Contato enviado':'contact','Conexão aceita':'contact',
+    'Aguardando resposta':'engage','Respondeu':'engage',
+    'Reunião marcada':'close','Entrevistado':'close','Aprovado':'close',
+    'Contratado':'hired',
+    'Descartado':'lost','Não retornou':'lost','Sem interesse':'lost','Nutrição futura':'lost','Não aceitou':'lost',
+  };
+  const LOST = ['Descartado','Não retornou','Sem interesse','Nutrição futura','Não aceitou'];
+  const SENT_CH = ['Enviado','Respondeu','Follow-up 1','Follow-up 2','Encerrado','Conexão aceita'];
+
+  // Definição dos 6 status do board
+  const STATUS_DEFS = [
+    { key:'s01', n:'01', label:'Aprovado',   cls:'st-aprovado' },
+    { key:'s02', n:'02', label:'Enviado',    cls:'st-enviado' },
+    { key:'s03', n:'03', label:'Validado',   cls:'st-validado' },
+    { key:'s04', n:'04', label:'Fechamento', cls:'st-fechamento' },
+    { key:'s05', n:'05', label:'Descartado', cls:'st-descartado' },
+    { key:'s06', n:'06', label:'Contratado', cls:'st-contratado' },
+  ];
+
+  // Mensagens técnicas internas a esconder
+  const INTERNAL_RE = /espelho autom|score apenas|cadastro crm|aguardando execu|criado pelo wf|\bwf\d{2}\b|enriquecimento\/scoring|aguardando envio|revis[aã]o manual/i;
+  function isInternal(t){ return !t || INTERNAL_RE.test(String(t)); }
 
   function el(tag, attrs, ...children) {
     const node = document.createElement(tag);
@@ -5414,163 +6185,141 @@ window.loadInteracoes = (function() {
 
   function fmtDate(iso) {
     if (!iso) return '—';
-    try {
-      const d = new Date(iso);
-      return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'2-digit' });
-    } catch(_) { return iso; }
+    try { return new Date(iso).toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' }); }
+    catch(_) { return iso; }
   }
-
   function fmtDateTime(iso) {
-    if (!iso) return '—';
-    try {
-      const d = new Date(iso);
-      return d.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
-    } catch(_) { return iso; }
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
+    catch(_) { return iso; }
   }
 
-  function normKey(s) {
-    return String(s || '').toLowerCase()
-      .normalize('NFD').replace(/[̀-ͯ]/g, '')
-      .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  function computeBadges(c) {
+    const st = c.status || '';
+    const stage = STATUS_TO_STAGE[st];
+    const rank = STAGE_RANK[stage] !== undefined ? STAGE_RANK[stage] : 0;
+    const isLost = LOST.includes(st);
+    const sent = rank >= 2 || SENT_CH.includes(c.status_linkedin) || SENT_CH.includes(c.status_email);
+    const replied = rank >= 3 || c.status_linkedin === 'Respondeu' || c.status_email === 'Respondeu' || !!(c.resposta_recebida && c.resposta_recebida.trim());
+    return {
+      s01: !!(c.pronto || rank >= 1 || sent || isLost),
+      s02: !!sent,
+      s03: !!replied,
+      s04: rank >= 4,
+      s05: !!isLost,
+      s06: stage === 'hired',
+    };
+  }
+
+  function channelCandidates(canal, talentos) {
+    return (talentos || []).filter(c => {
+      const ch = (c.canal || '').toLowerCase();
+      if (canal === 'linkedin') return !!c.linkedin || ch.includes('linkedin') || ch.includes('ambos');
+      return ch.includes('mail') || ch.includes('ambos');
+    });
   }
 
   async function loadInteracoes(canal, opts) {
     const force = !!(opts && opts.force);
-    const cached = state[canal];
-    if (cached && !force && !state.dirty[canal]) {
-      render(canal, cached);
-      return;
-    }
+    if (state.data && !force && !state.dirty) { render(canal); return; }
     const btn = document.querySelector(`.int-refresh[data-canal="${canal}"]`);
     if (btn) { btn.disabled = true; btn.classList.add('spinning'); }
     try {
-      const url = '/api/' + canal + (force || state.dirty[canal] ? '?fresh=1' : '');
-      const r = await fetch(url, { cache: 'no-store' });
+      const r = await fetch('/api/talentos' + (force || state.dirty ? '?fresh=1' : ''), { cache:'no-store' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
-      const data = await r.json();
-      state[canal] = data;
-      state.dirty[canal] = false;
-      render(canal, data);
-      if (force) toast('Interações atualizadas');
-    } catch (e) {
-      const tbody = document.querySelector(`.int-table[data-canal="${canal}"] tbody`);
-      if (tbody) tbody.replaceChildren(el('tr', null,
-        el('td', { colspan: '6', className: 'int-empty' }, 'Erro ao carregar: ' + (e.message || e))
-      ));
+      state.data = await r.json();
+      state.dirty = false;
+      render(canal);
+      if (force) toast('Candidatos atualizados');
+    } catch(e) {
+      const board = document.querySelector(`.cand-board[data-canal="${canal}"]`);
+      if (board) board.replaceChildren(el('div', { className:'cand-board-empty' }, 'Erro ao carregar: ' + (e.message || e)));
     } finally {
       if (btn) { btn.disabled = false; btn.classList.remove('spinning'); }
     }
   }
 
-  function render(canal, data) {
-    renderSummary(canal, data.summary);
-    renderChips(canal, data.summary);
-    populateFilters(canal, data);
-    renderTable(canal);
-    updateTimestamp(canal, data);
+  function render(canal) {
+    const cands = channelCandidates(canal, state.data && state.data.talentos);
+    renderSummary(canal, cands);
+    renderBoard(canal, cands);
     wireFilters(canal);
     wireRefresh(canal);
+    updateTimestamp(canal);
   }
 
-  function renderSummary(canal, s) {
+  function renderSummary(canal, cands) {
     const root = document.querySelector(`.int-summary[data-canal="${canal}"]`);
     if (!root) return;
-    const map = {
-      total: s.total, enviados: s.enviados, aguardando: s.aguardando,
-      respondidos: s.respondidos, taxa: s.taxa_resposta + '%',
-    };
-    Object.entries(map).forEach(([k, v]) => {
-      const n = root.querySelector(`[data-stat="${k}"]`);
-      if (n) n.textContent = String(v);
-    });
-  }
-
-  const TIPO_SHORT = {
-    'Inicial':'inicial','Follow-up':'followup','Resposta':'resposta',
-    'Encerramento':'encerramento','Preparação':'preparacao','Preparacao':'preparacao',
-    'Enfileirado':'enfileirado','Enfileiramento':'enfileirado','Cadastro CRM':'cadastro',
-  };
-
-  function tipoKey(t) { return TIPO_SHORT[t] || normKey(t); }
-
-  function renderChips(canal, s) {
-    const root = document.querySelector(`.int-chips[data-canal="${canal}"]`);
-    if (!root) return;
-    root.replaceChildren();
-    const tipos = Object.entries(s.por_tipo || {}).sort((a,b) => b[1] - a[1]);
-    tipos.forEach(([tipo, count]) => {
-      if (!tipo || tipo === '—') return;
-      const chip = el('span', { className: 'int-chip tipo-' + tipoKey(tipo) },
-        tipo + ' ',
-        el('span', { className: 'int-chip-count' }, String(count))
-      );
-      root.appendChild(chip);
-    });
-  }
-
-  function populateFilters(canal, data) {
-    const root = document.querySelector(`.int-filters[data-canal="${canal}"]`);
-    if (!root || root._populated) return;
-    root._populated = true;
-    const tiposSel = root.querySelector('.int-filter-tipo');
-    const statusSel = root.querySelector('.int-filter-status');
-    Object.keys(data.summary.por_tipo || {}).sort().forEach(t => {
-      if (t && t !== '—') tiposSel.appendChild(el('option', { value: t }, t));
-    });
-    Object.keys(data.summary.por_status || {}).sort().forEach(s => {
-      if (s && s !== '—') statusSel.appendChild(el('option', { value: s }, s));
-    });
+    let enviados=0, respondidos=0, descartados=0;
+    cands.forEach(c => { const b = computeBadges(c); if (b.s02) enviados++; if (b.s03) respondidos++; if (b.s05) descartados++; });
+    const aguardando = Math.max(enviados - respondidos, 0);
+    const taxa = enviados ? Math.round((respondidos/enviados)*100) : 0;
+    const map = { total: cands.length, enviados, aguardando, respondidos, taxa: taxa + '%' };
+    Object.entries(map).forEach(([k,v]) => { const n = root.querySelector(`[data-stat="${k}"]`); if (n) n.textContent = String(v); });
   }
 
   function getFilters(canal) {
     const root = document.querySelector(`.int-filters[data-canal="${canal}"]`);
-    if (!root) return { search: '', tipo: '', status: '' };
     return {
-      search: (root.querySelector('.int-search')?.value || '').toLowerCase(),
-      tipo:   root.querySelector('.int-filter-tipo')?.value || '',
-      status: root.querySelector('.int-filter-status')?.value || '',
+      search: (root?.querySelector('.int-search')?.value || '').toLowerCase(),
+      stage:  root?.querySelector('.int-filter-stage')?.value || '',
     };
   }
 
-  function filterItems(items, f) {
-    return items.filter(it => {
-      if (f.tipo && it.tipo !== f.tipo) return false;
-      if (f.status && it.status !== f.status) return false;
-      if (f.search) {
-        const hay = ((it.candidato||'') + ' ' + (it.mensagem||'') + ' ' + (it.resposta||'') + ' ' + (it.observacoes||'')).toLowerCase();
-        if (!hay.includes(f.search)) return false;
-      }
-      return true;
-    });
-  }
+  function renderBoard(canal, cands) {
+    const board = document.querySelector(`.cand-board[data-canal="${canal}"]`);
+    if (!board) return;
+    const f = getFilters(canal);
+    let list = cands.slice();
+    if (f.search) list = list.filter(c => (c.nome||'').toLowerCase().includes(f.search));
+    if (f.stage)  list = list.filter(c => computeBadges(c)[f.stage]);
 
-  function renderTable(canal) {
-    const data = state[canal];
-    if (!data) return;
-    const tbody = document.querySelector(`.int-table[data-canal="${canal}"] tbody`);
-    if (!tbody) return;
-    const items = filterItems(data.items || [], getFilters(canal));
-    tbody.replaceChildren();
+    // ordena por etapa (mais avançado primeiro), depois nome
+    list.sort((a,b) => {
+      const ra = STAGE_RANK[STATUS_TO_STAGE[a.status]] ?? 0;
+      const rb = STAGE_RANK[STATUS_TO_STAGE[b.status]] ?? 0;
+      if (rb !== ra) return rb - ra;
+      return (a.nome||'').localeCompare(b.nome||'');
+    });
+
     const countN = document.querySelector(`.int-filters[data-canal="${canal}"] .int-count`);
-    if (countN) countN.textContent = items.length + ' registro' + (items.length !== 1 ? 's' : '');
-    if (!items.length) {
-      tbody.appendChild(el('tr', null,
-        el('td', { colspan: '6', className: 'int-empty' }, 'Nenhuma interação corresponde aos filtros.')
-      ));
+    if (countN) countN.textContent = list.length + ' candidato' + (list.length !== 1 ? 's' : '');
+
+    board.replaceChildren();
+
+    // Header fixo de colunas
+    const header = el('div', { className:'cand-row cand-header' },
+      el('div', { className:'cand-col-main' }, 'Candidato'),
+      el('div', { className:'cand-col-date' }, 'Contato inicial'),
+      el('div', { className:'cand-col-track' },
+        ...STATUS_DEFS.map(s => el('span', { className:'cand-hd-step', title: s.label }, s.label))
+      )
+    );
+    board.appendChild(header);
+
+    if (!list.length) {
+      board.appendChild(el('div', { className:'cand-board-empty' }, 'Nenhum candidato corresponde aos filtros.'));
       return;
     }
-    items.forEach(it => {
-      const tipoCls = it.tipo ? 'tipo-' + tipoKey(it.tipo) : '';
-      const statusCls = it.status ? 'status-' + normKey(it.status) : '';
-      const tr = el('tr', { onclick: () => openDrawer(canal, it) },
-        el('td', { className: 'int-cell-name' }, it.candidato || '—'),
-        el('td', null, it.tipo ? el('span', { className: 'int-badge ' + tipoCls }, it.tipo) : '—'),
-        el('td', null, it.status ? el('span', { className: 'int-badge ' + statusCls }, it.status) : '—'),
-        el('td', { className: 'int-cell-date' }, fmtDate(it.data)),
-        el('td', { className: 'int-cell-msg' }, it.mensagem || it.resposta || it.observacoes || '—'),
-        el('td', { className: 'int-row-action' }, '›')
+
+    list.forEach(c => {
+      const b = computeBadges(c);
+      const track = el('div', { className:'cand-col-track' },
+        ...STATUS_DEFS.map(s => el('span', {
+          className: 'cand-badge ' + s.cls + (b[s.key] ? ' on' : ' off'),
+          title: s.label
+        }, s.label))
       );
-      tbody.appendChild(tr);
+      const row = el('div', { className:'cand-row', onclick: () => openDrawer(canal, c) },
+        el('div', { className:'cand-col-main' },
+          el('span', { className:'cand-name' }, c.nome || '—'),
+          c.cargo ? el('span', { className:'cand-sub' }, c.cargo + (c.empresa ? ' · ' + c.empresa : '')) : null
+        ),
+        el('div', { className:'cand-col-date' }, fmtDate(c.ultimo_contato || c.captura)),
+        track
+      );
+      board.appendChild(row);
     });
   }
 
@@ -5578,120 +6327,152 @@ window.loadInteracoes = (function() {
     const root = document.querySelector(`.int-filters[data-canal="${canal}"]`);
     if (!root || root._wired) return;
     root._wired = true;
-    ['.int-search','.int-filter-tipo','.int-filter-status'].forEach(sel => {
-      const node = root.querySelector(sel);
-      if (node) {
-        const evt = sel === '.int-search' ? 'input' : 'change';
-        node.addEventListener(evt, () => renderTable(canal));
-      }
-    });
+    root.querySelector('.int-search')?.addEventListener('input', () => renderBoard(canal, channelCandidates(canal, state.data.talentos)));
+    root.querySelector('.int-filter-stage')?.addEventListener('change', () => renderBoard(canal, channelCandidates(canal, state.data.talentos)));
   }
 
   function wireRefresh(canal) {
     const btn = document.querySelector(`.int-refresh[data-canal="${canal}"]`);
     if (!btn || btn._wired) return;
     btn._wired = true;
-    btn.addEventListener('click', () => loadInteracoes(canal, { force: true }));
+    btn.addEventListener('click', () => loadInteracoes(canal, { force:true }));
   }
 
-  function updateTimestamp(canal, data) {
+  function updateTimestamp(canal) {
     const node = document.querySelector(`.int-updated[data-canal="${canal}"]`);
     if (!node) return;
-    const ts = data && data.updated_at;
-    const d = ts ? new Date(ts < 1e12 ? ts * 1000 : ts) : new Date();
+    const ts = state.data && state.data.updated_at;
+    const d = ts ? new Date(ts < 1e12 ? ts*1000 : ts) : new Date();
     node.textContent = 'Atualizado ' + d.toLocaleString('pt-BR').replace(', ', ' | ');
   }
 
   function toast(msg, isError) {
     const t = document.getElementById('kanban-toast');
     if (!t) return;
-    t.textContent = msg;
-    t.classList.toggle('error', !!isError);
-    t.classList.add('show');
-    clearTimeout(t._tm);
-    t._tm = setTimeout(() => t.classList.remove('show'), 2400);
+    t.textContent = msg; t.classList.toggle('error', !!isError); t.classList.add('show');
+    clearTimeout(t._tm); t._tm = setTimeout(() => t.classList.remove('show'), 2400);
   }
 
-  /* ── Drawer ── */
-  function openDrawer(canal, item) {
+  /* ── Drawer candidato ── */
+  async function openDrawer(canal, c) {
     const overlay = document.getElementById('int-drawer-overlay');
     if (!overlay) return;
-    const title = document.getElementById('int-drawer-title');
-    const sub = document.getElementById('int-drawer-subtitle');
+    document.getElementById('int-drawer-title').textContent = c.nome || '—';
+    document.getElementById('int-drawer-subtitle').textContent =
+      (canal === 'linkedin' ? 'LinkedIn' : 'E-mail') + (c.status ? ' · ' + c.status : '');
+
+    // badges
     const badges = document.getElementById('int-drawer-badges');
-    const body = document.getElementById('int-drawer-body');
-
-    title.textContent = item.candidato || '—';
-    sub.textContent = (item.canal || canal.toUpperCase()) + ' · ' + fmtDateTime(item.data);
-
     badges.replaceChildren();
-    if (item.tipo)   badges.appendChild(el('span', { className: 'int-badge tipo-' + tipoKey(item.tipo) }, item.tipo));
-    if (item.status) badges.appendChild(el('span', { className: 'int-badge status-' + normKey(item.status) }, item.status));
+    const b = computeBadges(c);
+    STATUS_DEFS.forEach(s => {
+      if (b[s.key]) badges.appendChild(el('span', { className:'cand-badge ' + s.cls + ' on' }, s.label));
+    });
 
+    const body = document.getElementById('int-drawer-body');
     body.replaceChildren();
 
-    // Mensagem enviada
-    if (item.mensagem) {
-      body.appendChild(el('div', { className: 'int-drawer-section' },
-        el('div', { className: 'int-drawer-label' }, 'Mensagem enviada'),
-        el('div', { className: 'int-drawer-text' }, item.mensagem)
-      ));
-    }
-    // Resposta recebida
-    if (item.resposta) {
-      body.appendChild(el('div', { className: 'int-drawer-section' },
-        el('div', { className: 'int-drawer-label' }, 'Resposta recebida'),
-        el('div', { className: 'int-drawer-text' }, item.resposta)
-      ));
-    }
-    // Observações
-    if (item.observacoes) {
-      body.appendChild(el('div', { className: 'int-drawer-section' },
-        el('div', { className: 'int-drawer-label' }, 'Observações'),
-        el('div', { className: 'int-drawer-text' }, item.observacoes)
-      ));
-    }
-    // Meta grid (próxima ação + próximo follow-up)
-    if (item.proxima_acao || item.proximo_followup || item.registro_interno) {
-      const meta = el('div', { className: 'int-drawer-meta' });
-      if (item.proxima_acao) {
-        meta.appendChild(el('div', { className: 'int-drawer-meta-item' },
-          el('div', { className: 'int-drawer-label' }, 'Próxima ação'),
-          el('div', { className: 'int-drawer-meta-val' }, item.proxima_acao)
-        ));
-      }
-      if (item.proximo_followup) {
-        meta.appendChild(el('div', { className: 'int-drawer-meta-item' },
-          el('div', { className: 'int-drawer-label' }, 'Próximo follow-up'),
-          el('div', { className: 'int-drawer-meta-val' }, fmtDateTime(item.proximo_followup))
-        ));
-      }
-      body.appendChild(el('div', { className: 'int-drawer-section' }, meta));
-    }
-    if (item.registro_interno) {
-      body.appendChild(el('div', { className: 'int-drawer-section' },
-        el('div', { className: 'int-drawer-label' }, 'Registro interno (Notion)'),
-        el('div', { className: 'int-drawer-text' }, item.registro_interno)
-      ));
-    }
+    // Timeline de mensagens
+    const msgWrap = el('div', { className:'int-drawer-section' },
+      el('div', { className:'int-drawer-label' }, 'Mensagens trocadas'));
+    const timeline = el('div', { className:'msg-timeline' },
+      el('div', { className:'msg-loading' }, 'Carregando mensagens…'));
+    msgWrap.appendChild(timeline);
+    body.appendChild(msgWrap);
 
-    // CTA: abre histórico completo do candidato (popup já existente)
-    if (item.candidato) {
-      const cta = el('button', { className: 'int-drawer-cta',
-        onclick: () => {
-          closeDrawer();
-          if (typeof window.openHistFromInteracoes === 'function') {
-            window.openHistFromInteracoes(item.candidato);
-          }
-        }
-      }, '📋 Ver histórico completo do candidato →');
-      body.appendChild(cta);
-    }
+    // Observações editável (livre)
+    const obsWrap = el('div', { className:'int-drawer-section' });
+    const obsInput = el('textarea', {
+      className:'drawer-obs-input',
+      placeholder:'Escreva uma observação e clique em Salvar — ela fica fixada no histórico.'
+    });
+    const saveBtn = el('button', { className:'drawer-obs-save' }, 'Salvar');
+    const saveStatus = el('span', { className:'drawer-obs-status' });
+    saveBtn.addEventListener('click', async () => {
+      const txt = obsInput.value.trim();
+      if (!txt) { saveStatus.textContent = 'Digite algo'; setTimeout(()=>saveStatus.textContent='',1500); return; }
+      saveBtn.disabled = true; saveStatus.textContent = 'Salvando…';
+      try {
+        const r = await fetch('/api/update_talento', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ page_id: c.page_id, append_observacao: txt })
+        });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const now = new Date().toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+        c.observacoes = '[' + now + '] ' + txt + (c.observacoes ? '\n\n' + c.observacoes : '');
+        state.dirty = true;
+        // fixa a nota no feed imediatamente
+        const note = el('div', { className:'msg-bubble msg-note' },
+          el('div', { className:'msg-meta' }, 'Nota · ' + now),
+          el('div', { className:'msg-text' }, txt));
+        if (timeline.querySelector('.msg-empty')) timeline.replaceChildren();
+        timeline.appendChild(note);
+        obsInput.value = '';
+        saveStatus.textContent = '✓ Salvo';
+        setTimeout(() => saveStatus.textContent = '', 2000);
+      } catch(e) { saveStatus.textContent = 'Erro ao salvar'; }
+      finally { saveBtn.disabled = false; }
+    });
+    obsWrap.appendChild(el('div', { className:'int-drawer-label' }, 'Observações (manual)'));
+    obsWrap.appendChild(obsInput);
+    obsWrap.appendChild(el('div', { className:'drawer-obs-actions' }, saveBtn, saveStatus));
+    body.appendChild(obsWrap);
 
     overlay.classList.add('open');
     overlay.onclick = e => { if (e.target === overlay) closeDrawer(); };
     overlay._esc = e => { if (e.key === 'Escape') closeDrawer(); };
     document.addEventListener('keydown', overlay._esc);
+
+    // Buscar mensagens (interações) e montar timeline
+    try {
+      const r = await fetch('/api/interacoes?nome=' + encodeURIComponent(c.nome), { cache:'no-store' });
+      const data = r.ok ? await r.json() : { interacoes: [] };
+      const msgs = [];
+      // mensagem inicial do talento
+      if (c.mensagem_inicial && !isInternal(c.mensagem_inicial))
+        msgs.push({ dir:'out', date: c.captura, text: c.mensagem_inicial });
+      (data.interacoes || []).forEach(it => {
+        if (it.mensagem && !isInternal(it.mensagem)) msgs.push({ dir:'out', date: it.data, text: it.mensagem });
+        if (it.resposta && !isInternal(it.resposta)) msgs.push({ dir:'in', date: it.data, text: it.resposta });
+      });
+      // resposta recebida (talento)
+      if (c.resposta_recebida && !isInternal(c.resposta_recebida))
+        msgs.push({ dir:'in', date: c.ultimo_contato, text: c.resposta_recebida });
+
+      // dedupe por texto
+      const seen = new Set(); const clean = [];
+      msgs.forEach(m => { const k = (m.text||'').trim(); if (k && !seen.has(k)) { seen.add(k); clean.push(m); } });
+      clean.sort((a,b) => (a.date||'') < (b.date||'') ? -1 : 1);
+
+      // Notas manuais (campo Observações: "[data] texto" separadas por \n\n)
+      const notas = [];
+      (c.observacoes || '').split('\n\n').forEach(seg => {
+        const t = seg.trim(); if (!t || isInternal(t)) return;
+        const mm = t.match(/^\[([^\]]+)\]\s*([\s\S]+)$/);
+        if (mm) notas.push({ date: mm[1], text: mm[2].trim() });
+        else notas.push({ date: '', text: t });
+      });
+
+      timeline.replaceChildren();
+      if (!clean.length && !notas.length) {
+        timeline.appendChild(el('div', { className:'msg-empty' }, 'Nenhuma mensagem registrada ainda.'));
+      } else {
+        clean.forEach(m => {
+          timeline.appendChild(el('div', { className:'msg-bubble msg-' + m.dir },
+            el('div', { className:'msg-meta' }, (m.dir === 'out' ? 'Enviada' : 'Resposta') + (m.date ? ' · ' + fmtDateTime(m.date) : '')),
+            el('div', { className:'msg-text' }, m.text)
+          ));
+        });
+        notas.forEach(nt => {
+          timeline.appendChild(el('div', { className:'msg-bubble msg-note' },
+            el('div', { className:'msg-meta' }, 'Nota' + (nt.date ? ' · ' + nt.date : '')),
+            el('div', { className:'msg-text' }, nt.text)
+          ));
+        });
+      }
+    } catch(_) {
+      timeline.replaceChildren(el('div', { className:'msg-empty' }, 'Não foi possível carregar as mensagens.'));
+    }
   }
 
   function closeDrawer() {
@@ -5701,7 +6482,6 @@ window.loadInteracoes = (function() {
     if (overlay._esc) { document.removeEventListener('keydown', overlay._esc); overlay._esc = null; }
   }
 
-  // Wire close button
   const _close = document.getElementById('int-drawer-close');
   if (_close) _close.addEventListener('click', closeDrawer);
 
