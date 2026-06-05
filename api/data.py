@@ -19,10 +19,11 @@ DB_LINKEDIN  = "0de0fd3843f44df2932314b2f43c4ff4"
 DB_EMAIL     = "bee299209e5143dbbc7a7a68d0d6626d"
 
 PIPELINE_STAGES = [
-    "Mapeado", "Pré-qualificado", "Enriquecido", "Score aplicado",
-    "Aprovado para contato", "Contato enviado", "Aguardando resposta",
-    "Respondeu", "Reunião marcada", "Entrevistado",
-    "Aprovado", "Contratado", "Nutrição", "Descartado",
+    "Mapeado", "Qualificado",
+    "Aprovado para contato", "Contato enviado", "Conexão aceita",
+    "Aguardando resposta", "Respondeu", "Reunião marcada", "Entrevistado",
+    "Aprovado", "Contratado",
+    "Não retornou", "Não aceitou", "Sem interesse", "Nutrição futura", "Descartado",
 ]
 
 

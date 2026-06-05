@@ -12,9 +12,9 @@ from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
 sys.path.insert(0, os.path.dirname(__file__))
-from interacoes import _query, _normalize, DB_LINKEDIN, NOTION_TOKEN  # noqa: E402
+from interacoes import _query, _normalize, DB_LINKEDIN, NOTION_TOKEN, TIPOS_INTERNOS  # noqa: E402
 
-_cache = {"at": 0, "data": None}
+_cache = {}
 CACHE_TTL = 180  # 3 min
 
 
@@ -52,13 +52,19 @@ def build_summary(items):
     }
 
 
-def build_linkedin(force=False):
+def build_linkedin(force=False, include_internal=False):
+    cache_key = "all" if include_internal else "candidato"
     now = time.time()
-    if not force and _cache["data"] and (now - _cache["at"] < CACHE_TTL):
-        return _cache["data"]
+    cached = _cache.get(cache_key)
+    if not force and cached and (now - cached["at"] < CACHE_TTL):
+        return cached["data"]
 
     pages = _query(DB_LINKEDIN)
     items = [_normalize(p) for p in pages]
+
+    if not include_internal:
+        items = [i for i in items if (i.get("tipo") or "") not in TIPOS_INTERNOS]
+
     # Ordena por data decrescente
     items.sort(key=lambda x: x.get("data") or "", reverse=True)
 
@@ -68,8 +74,7 @@ def build_linkedin(force=False):
         "summary": build_summary(items),
         "updated_at": now,
     }
-    _cache["at"] = now
-    _cache["data"] = data
+    _cache[cache_key] = {"at": now, "data": data}
     return data
 
 
@@ -81,7 +86,8 @@ class handler(BaseHTTPRequestHandler):
         try:
             qs = parse_qs(urlparse(self.path).query)
             force = qs.get("fresh", ["0"])[0] in ("1", "true")
-            data = build_linkedin(force=force)
+            include_internal = (qs.get("include_internal") or ["0"])[0] in ("1", "true")
+            data = build_linkedin(force=force, include_internal=include_internal)
             self._respond(200, data)
         except Exception as e:
             self._respond(500, {"error": str(e)})

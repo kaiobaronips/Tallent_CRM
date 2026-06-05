@@ -23,6 +23,10 @@ NOTION_VER   = "2022-06-28"
 DB_LINKEDIN  = "0de0fd3843f44df2932314b2f43c4ff4"
 DB_EMAIL     = "bee299209e5143dbbc7a7a68d0d6626d"
 
+# Tipos internos do pipeline — não representam eventos visíveis ao candidato.
+# Ocultados do feed por padrão. Use ?include_internal=1 para ver tudo.
+TIPOS_INTERNOS = {"Cadastro CRM", "Preparacao", "Preparação", "Enfileiramento", "Enfileirado"}
+
 
 def _headers():
     return {
@@ -183,11 +187,14 @@ def _normalize(page):
     }
 
 
-def build_interacoes(nome):
+def build_interacoes(nome, include_internal=False):
     li_pages = _query_by_nome(DB_LINKEDIN, nome)
     em_pages = _query_by_nome(DB_EMAIL, nome)
 
     items = [_normalize(p) for p in li_pages] + [_normalize(p) for p in em_pages]
+
+    if not include_internal:
+        items = [i for i in items if (i.get("tipo") or "") not in TIPOS_INTERNOS]
 
     # Ordena por data decrescente (mais recente primeiro)
     items.sort(key=lambda x: x["data"] or "", reverse=True)
@@ -195,8 +202,8 @@ def build_interacoes(nome):
     return {
         "nome":       nome,
         "total":      len(items),
-        "linkedin":   len(li_pages),
-        "email":      len(em_pages),
+        "linkedin":   sum(1 for i in items if i.get("canal") == "LinkedIn"),
+        "email":      sum(1 for i in items if i.get("canal") == "Email"),
         "interacoes": items,
     }
 
@@ -210,6 +217,7 @@ class handler(BaseHTTPRequestHandler):
             qs = parse_qs(urlparse(self.path).query)
             nome    = (qs.get("nome")    or [""])[0].strip()
             page_id = (qs.get("page_id") or [""])[0].strip()
+            include_internal = (qs.get("include_internal") or ["0"])[0] in ("1", "true")
 
             if not nome and page_id:
                 nome = _fetch_page_title(page_id)
@@ -218,7 +226,7 @@ class handler(BaseHTTPRequestHandler):
                 self._respond(400, {"error": "nome ou page_id obrigatório"})
                 return
 
-            data = build_interacoes(nome)
+            data = build_interacoes(nome, include_internal=include_internal)
             self._respond(200, data)
         except Exception as e:
             self._respond(500, {"error": str(e)})

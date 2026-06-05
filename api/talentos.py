@@ -106,16 +106,21 @@ def build_talentos():
             "classificacao": _select(p, "Classificação"),
             "score":         _number(p, "Score geral"),
             "status":        _select(p, "Status"),
+            "status_linkedin": _select(p, "Status LinkedIn"),
+            "status_email":  _select(p, "Status E-mail"),
             "cidade":        _text(p, "Cidade"),
             "estado":        _text(p, "Estado"),
             "linkedin":      _url(p, "LinkedIn URL"),
             "canal":         _select(p, "Canal recomendado"),
             "captura":       _date(p, "Data da captura"),
+            "ultimo_contato": _date(p, "Último contato"),
             "proximo_followup": _date(p, "Data do próximo follow-up"),
             "proxima_acao":  _text(p, "Próxima ação"),
             "pronto":        _checkbox(p, "Pronto para automação"),
             "motivo_descarte": _text(p, "Motivo de descarte"),
             "observacoes":   _text(p, "Observações"),
+            "mensagem_inicial": _text(p, "Mensagem inicial"),
+            "resposta_recebida": _text(p, "Resposta recebida"),
         })
 
     # Sort: score descending, then alphabetical

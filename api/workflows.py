@@ -13,7 +13,7 @@ from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
 N8N_API_KEY = os.environ.get("N8N_API_KEY", "")
-N8N_BASE    = "https://soreninvest.app.n8n.cloud/api/v1"
+N8N_BASE    = os.environ.get("N8N_BASE", "https://soreninvest.app.n8n.cloud/api/v1").rstrip("/")
 
 _cache = {"at": 0, "data": None}
 CACHE_TTL = 180  # 3 min
@@ -111,12 +111,29 @@ def build_workflows(force=False):
             edata = execs.get("data", [])
             if edata:
                 e = edata[0]
+                err_msg = None
+                if e.get("status") == "error" and e.get("id"):
+                    det = _get(f"/executions/{e['id']}", {"includeData": "true"})
+                    if "_error" not in det:
+                        rd = det.get("data", {}).get("resultData", {})
+                        top_err = rd.get("error") or {}
+                        err_msg = top_err.get("message") or top_err.get("description")
+                        if not err_msg:
+                            for node_runs in (rd.get("runData") or {}).values():
+                                for run in (node_runs if isinstance(node_runs, list) else []):
+                                    node_err = run.get("error") or {}
+                                    if node_err.get("message"):
+                                        err_msg = node_err["message"][:400]
+                                        break
+                                if err_msg:
+                                    break
                 last_exec = {
                     "id": e.get("id"),
                     "status": e.get("status"),
                     "mode": e.get("mode"),
                     "started_at": e.get("startedAt"),
                     "stopped_at": e.get("stoppedAt"),
+                    "error_message": err_msg,
                 }
                 recent_status = [x.get("status") for x in edata]
 
