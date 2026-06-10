@@ -10,41 +10,19 @@ Atualiza propriedades de um talento no Notion:
 
 import json
 import os
-import urllib.request
+import sys
 from datetime import datetime, timezone, timedelta
-from http.server import BaseHTTPRequestHandler
 
-NOTION_TOKEN = os.environ.get("NOTION_TOKEN", "")
-NOTION_API   = "https://api.notion.com/v1"
-NOTION_VER   = "2022-06-28"
-
-VALID_STATUS = {
-    "Mapeado", "Qualificado", "Aprovado para contato",
-    "Contato enviado", "Conexão aceita",
-    "Aguardando resposta", "Respondeu",
-    "Reunião marcada", "Entrevistado",
-    "Aprovado", "Contratado",
-    "Não retornou", "Sem interesse", "Não aceitou",
-    "Descartado", "Nutrição futura",
-}
-
-
-def _rich_text(text):
-    if not text:
-        return {"rich_text": []}
-    # Notion limita rich_text segments a 2000 chars; vamos chunk-ar se necessário.
-    chunks = [text[i:i+1900] for i in range(0, len(text), 1900)] or [""]
-    return {"rich_text": [{"type": "text", "text": {"content": c}} for c in chunks]}
+sys.path.insert(0, os.path.dirname(__file__))
+from _lib import (  # noqa: E402
+    NOTION_TOKEN, VALID_STATUS, JsonHandler,
+    notion_get_page, notion_patch_page, rich_text_value,
+)
 
 
 def _get_page_observacoes(page_id):
     """Lê o conteúdo atual de Observações da página."""
-    req = urllib.request.Request(
-        f"{NOTION_API}/pages/{page_id}",
-        headers={"Authorization": f"Bearer {NOTION_TOKEN}", "Notion-Version": NOTION_VER},
-    )
-    with urllib.request.urlopen(req, timeout=12) as r:
-        data = json.loads(r.read())
+    data = notion_get_page(page_id)
     prop = data.get("properties", {}).get("Observações", {})
     parts = prop.get("rich_text") or []
     return "".join(p.get("plain_text", "") for p in parts)
@@ -56,7 +34,7 @@ def _now_brt():
     return datetime.now(brt).strftime("%Y-%m-%d %H:%M")
 
 
-def patch_notion_page(page_id, fields):
+def patch_talento(page_id, fields):
     props = {}
 
     status = (fields.get("status") or "").strip()
@@ -69,11 +47,11 @@ def patch_notion_page(page_id, fields):
         props["Status"] = {"select": None}
 
     if "motivo_descarte" in fields:
-        props["Motivo de descarte"] = _rich_text(fields.get("motivo_descarte") or "")
+        props["Motivo de descarte"] = rich_text_value(fields.get("motivo_descarte") or "")
 
     if "observacoes" in fields:
         # Substitui (modo legado)
-        props["Observações"] = _rich_text(fields.get("observacoes") or "")
+        props["Observações"] = rich_text_value(fields.get("observacoes") or "")
 
     append_obs = (fields.get("append_observacao") or "").strip()
     if append_obs:
@@ -81,70 +59,40 @@ def patch_notion_page(page_id, fields):
         atual = _get_page_observacoes(page_id)
         marker = f"[{_now_brt()}] {append_obs}"
         novo = marker + ("\n\n" + atual if atual else "")
-        props["Observações"] = _rich_text(novo)
+        props["Observações"] = rich_text_value(novo)
 
     if "proxima_acao" in fields:
-        props["Próxima ação"] = _rich_text(fields.get("proxima_acao") or "")
+        props["Próxima ação"] = rich_text_value(fields.get("proxima_acao") or "")
 
     if not props:
         raise ValueError("Nenhum campo válido para atualizar")
 
-    body = json.dumps({"properties": props}, ensure_ascii=False).encode()
-    req = urllib.request.Request(
-        f"{NOTION_API}/pages/{page_id}",
-        data=body,
-        method="PATCH",
-        headers={
-            "Authorization": f"Bearer {NOTION_TOKEN}",
-            "Notion-Version": NOTION_VER,
-            "Content-Type": "application/json",
-        },
-    )
-    with urllib.request.urlopen(req, timeout=12) as r:
-        return json.loads(r.read())
+    return notion_patch_page(page_id, props)
 
 
-class handler(BaseHTTPRequestHandler):
+class handler(JsonHandler):
+    METHODS = "POST, OPTIONS"
+
     def do_POST(self):
+        if not self.require_auth():
+            return
         if not NOTION_TOKEN:
-            self._respond(500, {"error": "NOTION_TOKEN não configurado"})
+            self.respond(500, {"error": "NOTION_TOKEN não configurado"})
             return
         try:
             length = int(self.headers.get("Content-Length", 0))
             body = json.loads(self.rfile.read(length)) if length else {}
             page_id = (body.get("page_id") or "").strip()
             if not page_id:
-                self._respond(400, {"error": "page_id obrigatório"})
+                self.respond(400, {"error": "page_id obrigatório"})
                 return
-            # Aceita: status, motivo_descarte, observacoes, proxima_acao
-            patch_notion_page(page_id, body)
-            self._respond(200, {"ok": True, "page_id": page_id, "updated": [
+            # Aceita: status, motivo_descarte, observacoes, append_observacao, proxima_acao
+            patch_talento(page_id, body)
+            self.respond(200, {"ok": True, "page_id": page_id, "updated": [
                 k for k in ("status", "motivo_descarte", "observacoes", "append_observacao", "proxima_acao")
                 if k in body
             ]})
         except ValueError as e:
-            self._respond(400, {"error": str(e)})
+            self.respond(400, {"error": str(e)})
         except Exception as e:
-            self._respond(500, {"error": str(e)})
-
-    def do_OPTIONS(self):
-        self.send_response(204)
-        self._cors()
-        self.end_headers()
-
-    def _cors(self):
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
-
-    def _respond(self, code, body):
-        raw = json.dumps(body, ensure_ascii=False).encode()
-        self.send_response(code)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", str(len(raw)))
-        self._cors()
-        self.end_headers()
-        self.wfile.write(raw)
-
-    def log_message(self, *args):
-        pass
+            self.respond(500, {"error": str(e)})

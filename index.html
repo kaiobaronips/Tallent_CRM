@@ -5182,6 +5182,43 @@
 
 
 <script>
+// ── AUTH GATE ─────────────────────────────────────────────────────────────
+// Injeta o header X-Dashboard-Key em toda chamada /api/ e pede a chave em 401.
+// Se o backend não tiver DASHBOARD_KEY configurada, nunca retorna 401 → no-op.
+(function() {
+  const STORE = 'dashKey';
+  const origFetch = window.fetch.bind(window);
+  let prompting = false;
+
+  function getKey() { return localStorage.getItem(STORE) || ''; }
+
+  function askKey() {
+    if (prompting) return;
+    prompting = true;
+    const k = window.prompt('Chave de acesso do dashboard:');
+    if (k) { localStorage.setItem(STORE, k); location.reload(); }
+    else { prompting = false; }
+  }
+
+  window.fetch = function(input, init) {
+    init = init || {};
+    const url = (typeof input === 'string') ? input : (input && input.url) || '';
+    const isApi = url.indexOf('/api/') !== -1;
+    if (isApi) {
+      const headers = new Headers(
+        init.headers || (typeof input !== 'string' && input.headers) || {}
+      );
+      const k = getKey();
+      if (k) headers.set('X-Dashboard-Key', k);
+      init = Object.assign({}, init, { headers });
+    }
+    return origFetch(input, init).then(function(resp) {
+      if (isApi && resp.status === 401) askKey();
+      return resp;
+    });
+  };
+})();
+
 // ── 0. SIDEBAR NAVIGATION ────────────────────────────────────────────────
 (function() {
   const sidebar     = document.getElementById('sidebar');

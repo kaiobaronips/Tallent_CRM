@@ -50,6 +50,7 @@ Dashboard SPA single-file para o CRM autônomo de recrutamento SOREN. Lê do Not
 /
 ├── index.html              SPA inteira (HTML + CSS + JS inline)
 ├── api/                    Funções serverless Python
+│   ├── _lib.py             módulo compartilhado (Notion, extratores, JsonHandler, auth)
 │   ├── data.py
 │   ├── insights.py
 │   ├── chat.py
@@ -57,13 +58,21 @@ Dashboard SPA single-file para o CRM autônomo de recrutamento SOREN. Lê do Not
 │   ├── update_empresa.py
 │   ├── talentos.py
 │   ├── update_talento.py
-│   └── interacoes.py
+│   ├── interacoes.py
+│   ├── linkedin.py
+│   ├── emails.py           (rota /api/email — nome evita sombrear a stdlib `email`)
+│   └── workflows.py
 ├── assets/                 logos / imagens estáticas
 │   └── rtx.png
 ├── vercel.json             builds + routes
-├── requirements.txt        anthropic>=0.40.0
-└── .claude/settings.json   hook Stop: vercel --prod no fim da sessão
+├── requirements.txt        anthropic>=0.40,<2
+└── .claude/settings.json   hook Stop: vercel (preview) no fim da sessão
 ```
+
+> **`api/_lib.py`** centraliza o que estava duplicado nos endpoints: cliente
+> Notion (query paginada, get/patch), extratores de propriedades, a taxonomia
+> única `PIPELINE_STAGES`/`VALID_STATUS`, e a base HTTP `JsonHandler` (CORS +
+> resposta JSON + autenticação). Não é um endpoint (prefixo `_`).
 
 ---
 
@@ -86,6 +95,26 @@ Auth via `NOTION_TOKEN` (env var). Versão API: `Notion-Version: 2022-06-28`.
 - `chat.py` — Sonnet 4.6 conversational
 - Auth via `ANTHROPIC_API_KEY`
 - Fallback heurístico em `insights.py` quando key ausente
+- Prompt fixo cacheado; o snapshot live do CRM vai na mensagem do usuário (fora do cache), preservando o cache hit entre requisições
+
+---
+
+## Autenticação (`DASHBOARD_KEY`)
+
+Todos os endpoints exigem o header `X-Dashboard-Key`, comparado em tempo
+constante (`hmac.compare_digest`) com a env var `DASHBOARD_KEY`.
+
+- **Se `DASHBOARD_KEY` não estiver setada** no ambiente, o acesso é liberado
+  (modo dev local). Ou seja, deployar este código **sem** configurar a env var
+  mantém o comportamento atual — nada quebra.
+- **Em produção, configure `DASHBOARD_KEY`** (Settings → Environment Variables).
+  A partir daí, requisições sem a chave correta recebem `401`.
+- O frontend (`index.html`) intercepta `window.fetch`: injeta o header em toda
+  chamada `/api/`, e em caso de `401` pede a chave via prompt e a guarda em
+  `localStorage` (`dashKey`). Sem alteração nos call sites individuais.
+
+> Alternativa/complemento: a [Deployment Protection da Vercel](https://vercel.com/docs/deployment-protection)
+> protege o deploy inteiro por senha/SSO, sem tocar no código.
 
 ---
 
@@ -262,6 +291,8 @@ Depois:
 6. **Configurar env vars na Vercel** (Settings → Environment Variables):
    - `NOTION_TOKEN`
    - `ANTHROPIC_API_KEY` (opcional — sem ela, `/api/insights` cai em heurística e `/api/chat` retorna erro)
+   - `N8N_API_KEY` (para `/api/workflows`)
+   - `DASHBOARD_KEY` (ver **Autenticação** abaixo)
 7. **Deploy**:
    ```bash
    vercel --prod

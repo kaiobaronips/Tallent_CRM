@@ -1,22 +1,22 @@
 """
 Tallent CRM — /api/insights
-Claude gera 3-5 insights acionáveis a partir do estado atual do CRM.
-Padrão: prompt caching no system prompt + JSON mode para output estruturado.
+Claude gera 4 insights acionáveis a partir do estado atual do CRM.
+Padrão: prompt caching no system prompt FIXO (snapshot vai na mensagem do user,
+fora do cache, para não invalidar o bloco cacheado a cada mudança de dados).
 """
 
 import json
 import os
+import sys
 import time
-from http.server import BaseHTTPRequestHandler
 
 try:
     from anthropic import Anthropic
 except Exception:
     Anthropic = None
 
-# Reusa o build_data() do endpoint principal
-import sys
 sys.path.insert(0, os.path.dirname(__file__))
+from _lib import JsonHandler  # noqa: E402
 from data import build_data  # noqa: E402
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -90,7 +90,8 @@ def _parse_json(raw):
 
 
 def _heuristic_insights(s):
-    """Fallback determinístico se ANTHROPIC_API_KEY não estiver setada."""
+    """Fallback determinístico se ANTHROPIC_API_KEY não estiver setada.
+    Usa apenas estágios da taxonomia atual (ver PIPELINE_STAGES em _lib)."""
     out = []
     cl = s.get("classification") or {}
     pipe = {x["stage"]: x["count"] for x in s.get("pipeline", [])}
@@ -102,6 +103,7 @@ def _heuristic_insights(s):
             "severity": "warn",
             "action": "Rodar WF Scorer",
         })
+
     aguardando = pipe.get("Aguardando resposta", 0)
     if aguardando >= 15:
         out.append({
@@ -110,15 +112,31 @@ def _heuristic_insights(s):
             "severity": "warn",
             "action": "Disparar follow-up",
         })
-    enriq = pipe.get("Enriquecido", 0)
-    score = pipe.get("Score aplicado", 0)
-    if enriq > score + 5:
+
+    # Gap entre quem foi qualificado e quem efetivamente recebeu contato.
+    qualificado = pipe.get("Qualificado", 0)
+    aprovado_contato = pipe.get("Aprovado para contato", 0)
+    contato_enviado = pipe.get("Contato enviado", 0)
+    fila_sem_contato = qualificado + aprovado_contato
+    if fila_sem_contato > contato_enviado + 5:
         out.append({
-            "title": "Gap entre enriquecidos e score",
-            "description": f"{enriq - score} talentos enriquecidos sem score aplicado.",
+            "title": "Fila qualificada sem contato",
+            "description": f"{fila_sem_contato} qualificados/aprovados ainda sem contato enviado.",
             "severity": "info",
-            "action": "Reprocessar scorer",
+            "action": "Aprovar para contato",
         })
+
+    # Candidatos que responderam mas não evoluíram para reunião.
+    respondeu = pipe.get("Respondeu", 0)
+    reuniao = pipe.get("Reunião marcada", 0)
+    if respondeu > reuniao + 3:
+        out.append({
+            "title": "Respostas sem reunião",
+            "description": f"{respondeu} responderam mas só {reuniao} têm reunião marcada.",
+            "severity": "warn",
+            "action": "Agendar reuniões",
+        })
+
     if s.get("linkedin", 0) > s.get("email", 0) * 5:
         out.append({
             "title": "E-mail subutilizado",
@@ -126,6 +144,7 @@ def _heuristic_insights(s):
             "severity": "info",
             "action": "Ativar WF06",
         })
+
     return out[:4]
 
 
@@ -145,35 +164,18 @@ def get_insights():
     return payload
 
 
-class handler(BaseHTTPRequestHandler):
+class handler(JsonHandler):
+    METHODS = "GET, OPTIONS"
+
     def do_GET(self):
+        if not self.require_auth():
+            return
         try:
             data = get_insights()
-            self._respond(200, data)
+            self.respond(200, data)
         except Exception as e:
-            self._respond(200, {
+            self.respond(200, {
                 "insights": [],
                 "error": str(e),
                 "source": "error",
             })
-
-    def do_OPTIONS(self):
-        self.send_response(204)
-        self._cors()
-        self.end_headers()
-
-    def _cors(self):
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
-
-    def _respond(self, code, body):
-        raw = json.dumps(body, ensure_ascii=False).encode()
-        self.send_response(code)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", str(len(raw)))
-        self._cors()
-        self.end_headers()
-        self.wfile.write(raw)
-
-    def log_message(self, *args):
-        pass

@@ -3,16 +3,14 @@ Tallent CRM — /api/linkedin
 Lista todos os registros do DB_LINKEDIN com summary (KPIs + chips por tipo).
 """
 
-import json
 import os
 import sys
 import time
-import urllib.request
-from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
 sys.path.insert(0, os.path.dirname(__file__))
-from interacoes import _query, _normalize, DB_LINKEDIN, NOTION_TOKEN, TIPOS_INTERNOS  # noqa: E402
+from _lib import NOTION_TOKEN, DB_LINKEDIN, JsonHandler  # noqa: E402
+from interacoes import _query, _normalize, TIPOS_INTERNOS  # noqa: E402
 
 _cache = {}
 CACHE_TTL = 180  # 3 min
@@ -78,37 +76,20 @@ def build_linkedin(force=False, include_internal=False):
     return data
 
 
-class handler(BaseHTTPRequestHandler):
+class handler(JsonHandler):
+    METHODS = "GET, OPTIONS"
+
     def do_GET(self):
+        if not self.require_auth():
+            return
         if not NOTION_TOKEN:
-            self._respond(500, {"error": "NOTION_TOKEN não configurado"})
+            self.respond(500, {"error": "NOTION_TOKEN não configurado"})
             return
         try:
             qs = parse_qs(urlparse(self.path).query)
             force = qs.get("fresh", ["0"])[0] in ("1", "true")
             include_internal = (qs.get("include_internal") or ["0"])[0] in ("1", "true")
             data = build_linkedin(force=force, include_internal=include_internal)
-            self._respond(200, data)
+            self.respond(200, data)
         except Exception as e:
-            self._respond(500, {"error": str(e)})
-
-    def do_OPTIONS(self):
-        self.send_response(204)
-        self._cors()
-        self.end_headers()
-
-    def _cors(self):
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
-
-    def _respond(self, code, body):
-        raw = json.dumps(body, ensure_ascii=False).encode()
-        self.send_response(code)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", str(len(raw)))
-        self._cors()
-        self.end_headers()
-        self.wfile.write(raw)
-
-    def log_message(self, *args):
-        pass
+            self.respond(500, {"error": str(e)})

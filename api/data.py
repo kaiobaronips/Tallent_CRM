@@ -3,83 +3,33 @@ SOREN Dashboard — /api/data
 Serverless function: consulta Notion API e retorna métricas ao vivo.
 """
 
-import json
 import os
-import re
+import sys
 import time
-import urllib.request
-from http.server import BaseHTTPRequestHandler
 
-NOTION_TOKEN = os.environ.get("NOTION_TOKEN", "")
-NOTION_API   = "https://api.notion.com/v1"
-NOTION_VER   = "2022-06-28"
-
-DB_TALENTOS  = "35de2f848c81804eba5ddedff68f6cc7"
-DB_LINKEDIN  = "0de0fd3843f44df2932314b2f43c4ff4"
-DB_EMAIL     = "bee299209e5143dbbc7a7a68d0d6626d"
-
-PIPELINE_STAGES = [
-    "Mapeado", "Qualificado",
-    "Aprovado para contato", "Contato enviado", "Conexão aceita",
-    "Aguardando resposta", "Respondeu", "Reunião marcada", "Entrevistado",
-    "Aprovado", "Contratado",
-    "Não retornou", "Não aceitou", "Sem interesse", "Nutrição futura", "Descartado",
-]
-
-
-def _notion_query(db_id, filter_body=None):
-    results = []
-    cursor = None
-    while True:
-        body = {"page_size": 100}
-        if cursor:
-            body["start_cursor"] = cursor
-        if filter_body:
-            body["filter"] = filter_body
-        req = urllib.request.Request(
-            f"{NOTION_API}/databases/{db_id}/query",
-            data=json.dumps(body).encode(),
-            method="POST",
-            headers={
-                "Authorization": f"Bearer {NOTION_TOKEN}",
-                "Notion-Version": NOTION_VER,
-                "Content-Type": "application/json",
-            },
-        )
-        with urllib.request.urlopen(req, timeout=12) as r:
-            resp = json.loads(r.read())
-        results.extend(resp.get("results", []))
-        if not resp.get("has_more"):
-            break
-        cursor = resp.get("next_cursor")
-    return results
-
-
-def _select(page, name):
-    p = page.get("properties", {}).get(name, {})
-    t = p.get("type")
-    if t in ("select", "status"):
-        sel = p.get(t) or {}
-        return sel.get("name")
-    return None
+sys.path.insert(0, os.path.dirname(__file__))
+from _lib import (  # noqa: E402
+    NOTION_TOKEN, DB_TALENTOS, DB_LINKEDIN, DB_EMAIL,
+    PIPELINE_STAGES, notion_query, prop_select, JsonHandler,
+)
 
 
 def build_data():
-    talentos = _notion_query(DB_TALENTOS)
-    li_pages = _notion_query(DB_LINKEDIN, filter_body={
+    talentos = notion_query(DB_TALENTOS)
+    li_pages = notion_query(DB_LINKEDIN, filter_body={
         "property": "Status",
         "select": {"is_not_empty": True},
     })
-    em_pages = _notion_query(DB_EMAIL)
+    em_pages = notion_query(DB_EMAIL)
 
     status_counts = {}
     classif_counts = {"A+": 0, "A": 0, "B": 0, "C": 0}
 
     for p in talentos:
-        s = _select(p, "Status")
+        s = prop_select(p, "Status")
         if s:
             status_counts[s] = status_counts.get(s, 0) + 1
-        c = _select(p, "Classificação")
+        c = prop_select(p, "Classificação")
         if c and c in classif_counts:
             classif_counts[c] += 1
 
@@ -106,34 +56,17 @@ def build_data():
     }
 
 
-class handler(BaseHTTPRequestHandler):
+class handler(JsonHandler):
+    METHODS = "GET, OPTIONS"
+
     def do_GET(self):
+        if not self.require_auth():
+            return
         if not NOTION_TOKEN:
-            self._respond(500, {"error": "NOTION_TOKEN não configurado"})
+            self.respond(500, {"error": "NOTION_TOKEN não configurado"})
             return
         try:
             data = build_data()
-            self._respond(200, data)
+            self.respond(200, data)
         except Exception as e:
-            self._respond(500, {"error": str(e)})
-
-    def do_OPTIONS(self):
-        self.send_response(204)
-        self._cors()
-        self.end_headers()
-
-    def _cors(self):
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
-
-    def _respond(self, code, body):
-        raw = json.dumps(body, ensure_ascii=False).encode()
-        self.send_response(code)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", str(len(raw)))
-        self._cors()
-        self.end_headers()
-        self.wfile.write(raw)
-
-    def log_message(self, *args):
-        pass
+            self.respond(500, {"error": str(e)})
