@@ -1,5 +1,5 @@
 """
-Tallent CRM — /api/interacoes
+RTX Talent CRM — /api/interacoes
 Retorna histórico de interações (LinkedIn + Email) de um talento.
 
 A vinculação no Notion é feita pelo campo rich_text "Candidato" (nome do

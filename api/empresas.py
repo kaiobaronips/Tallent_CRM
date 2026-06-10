@@ -1,5 +1,5 @@
 """
-Tallent CRM — /api/empresas
+RTX Talent CRM — /api/empresas
 Lista as empresas-alvo do Notion para a view dedicada na sidebar.
 """
 

@@ -1,5 +1,5 @@
 """
-Tallent CRM — /api/insights
+RTX Talent CRM — /api/insights
 Claude gera 4 insights acionáveis a partir do estado atual do CRM.
 Padrão: prompt caching no system prompt FIXO (snapshot vai na mensagem do user,
 fora do cache, para não invalidar o bloco cacheado a cada mudança de dados).
@@ -26,7 +26,7 @@ _cache = {"at": 0, "data": None}
 CACHE_TTL = 600  # 10 min
 
 
-SYSTEM_PROMPT = """Você é um analista sênior de recrutamento do CRM Tallent Intelligence.
+SYSTEM_PROMPT = """Você é um analista sênior de recrutamento do RTX Talent CRM.
 Sua missão: olhar o estado atual do funil e retornar exatamente 4 insights acionáveis,
 priorizando o que pode ser feito HOJE para destravar o pipeline.
 

@@ -1,5 +1,5 @@
 """
-SOREN Dashboard — /api/data
+RTX Talent CRM — /api/data
 Serverless function: consulta Notion API e retorna métricas ao vivo.
 """
 

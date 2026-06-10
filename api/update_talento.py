@@ -1,5 +1,5 @@
 """
-Tallent CRM — /api/update_talento
+RTX Talent CRM — /api/update_talento
 Atualiza propriedades de um talento no Notion:
   - status (select): mudança de estágio do pipeline
   - motivo_descarte (rich_text): motivo de descarte/notas finais

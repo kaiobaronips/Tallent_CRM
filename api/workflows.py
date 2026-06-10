@@ -1,6 +1,6 @@
 """
-Tallent CRM — /api/workflows
-Lista todos os workflows do n8n (VPS) SOREN com metadata + última execução.
+RTX Talent CRM — /api/workflows
+Lista todos os workflows do n8n (VPS) com metadata + última execução.
 Usado pelas views "Workflows" e "Agentes n8n" (essa última filtra por schedule).
 
 Detalhes + execuções de cada workflow são buscados em paralelo
@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from _lib import JsonHandler  # noqa: E402
 
 N8N_API_KEY = os.environ.get("N8N_API_KEY", "")
-N8N_BASE    = os.environ.get("N8N_BASE", "https://soreninvest.app.n8n.cloud/api/v1").rstrip("/")
+N8N_BASE    = os.environ.get("N8N_BASE", "").rstrip("/")
 
 # n8n base pública para montar URLs de UI (sem o sufixo /api/v1).
 N8N_PUBLIC  = N8N_BASE.rsplit("/api/", 1)[0]

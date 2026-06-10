@@ -1,5 +1,5 @@
 """
-Tallent CRM — /api/update_empresa
+RTX Talent CRM — /api/update_empresa
 Atualiza a prioridade de uma empresa-alvo no Notion.
 """
 

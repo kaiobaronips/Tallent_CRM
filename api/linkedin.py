@@ -1,5 +1,5 @@
 """
-Tallent CRM — /api/linkedin
+RTX Talent CRM — /api/linkedin
 Lista todos os registros do DB_LINKEDIN com summary (KPIs + chips por tipo).
 """
 

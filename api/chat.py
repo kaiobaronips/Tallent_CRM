@@ -1,5 +1,5 @@
 """
-Tallent CRM — /api/chat
+RTX Talent CRM — /api/chat
 Assistente conversacional com contexto completo do CRM.
 Padrão: system prompt FIXO cacheado (cache hit em turnos subsequentes); o
 snapshot live do CRM é injetado como 1ª mensagem do usuário, fora do cache,
@@ -42,7 +42,7 @@ def _ctx():
 # System prompt FIXO — não contém dados dinâmicos, então o bloco cacheado
 # permanece válido entre requisições (cache hit ~10× mais barato).
 SYSTEM_PROMPT = (
-    "Você é o assistente do Tallent Intelligence CRM — Norte do Paraná, mercado financeiro.\n"
+    "Você é o assistente do RTX Talent CRM — Norte do Paraná, mercado financeiro.\n"
     "Responde de forma EXECUTIVA: 1-3 frases, direto, números primeiro, ações no fim.\n"
     "Português do Brasil. Sem floreio. Sem markdown decorativo. Sem listas longas.\n"
     "Quando recomendar ação, cite o workflow exato (WF01, WF12, WF18, WF19, WF22, SERENA).\n"

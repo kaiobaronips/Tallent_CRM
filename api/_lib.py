@@ -1,5 +1,5 @@
 """
-Tallent CRM — api/_lib
+RTX Talent CRM — api/_lib
 Módulo compartilhado entre as funções serverless:
   - Constantes (Notion, databases, taxonomia de status do pipeline)
   - Cliente Notion (query paginada, get/patch de página)

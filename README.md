@@ -1,6 +1,6 @@
-# Tallent Intelligence CRM — Dashboard
+# RTX Talent CRM — Dashboard
 
-Dashboard SPA single-file para o CRM autônomo de recrutamento SOREN. Lê do Notion ao vivo (sem banco intermediário) e roda em Vercel como funções serverless Python.
+Dashboard SPA single-file para o CRM autônomo de recrutamento do Grupo RTX Holding. Lê do Notion ao vivo (sem banco intermediário) e roda em Vercel como funções serverless Python.
 
 - **Produção:** https://rtx-dashboard-chi.vercel.app
 - **Deploy:** `vercel --prod` (CLI Vercel, sem pipeline Git/GitHub)
@@ -197,9 +197,9 @@ Tema **"Midnight Terminal"** com CSS custom properties.
 
 ---
 
-## Padrões de integração com SOREN
+## Padrões de integração com o n8n
 
-O dashboard é uma **camada de leitura/escrita sobre o Notion** — não armazena estado próprio. Quem produz os dados são os workflows SOREN no n8n:
+O dashboard é uma **camada de leitura/escrita sobre o Notion** — não armazena estado próprio. Quem produz os dados são os workflows do RTX Talent CRM no n8n:
 
 - **WF01** (`S4EszbJ2FUnpslG7`) — envio inicial por email. Cria registros `Inicial/Enviado` em `DB_EMAIL`, atualiza `Status=Contato enviado` no talento. Filtro Notion JSON robusto + idempotência 24h.
 - **WF03B** (`Ex5CD5McWQS9gC1b`) — polling Gmail. Cria registros `Resposta/Respondido` em `DB_EMAIL` quando candidato responde.
@@ -251,9 +251,9 @@ vercel login
 Use quando você quer apenas continuar trabalhando no mesmo projeto Vercel a partir de outra máquina. **Tempo: ~5 min**.
 
 ```bash
-git clone https://github.com/kaiobaronips/Tallent_CRM.git
-cd Tallent_CRM
-vercel link          # vincula a pasta ao projeto "tallent-crm" existente
+git clone https://github.com/kaiobaronips/RTX_Talent_CRM.git
+cd RTX_Talent_CRM
+vercel link          # vincula a pasta ao projeto "rtx-talent-crm" existente
 vercel pull          # baixa env vars locais (sensíveis ficam cifradas)
 vercel dev           # roda local em http://localhost:3000
 # OU
@@ -267,8 +267,8 @@ As env vars (`NOTION_TOKEN`, `ANTHROPIC_API_KEY`) já estão no projeto Vercel e
 Use quando você quer criar uma **cópia independente** (outra conta Vercel, outro workspace Notion). **Tempo: ~30 min**.
 
 ```bash
-git clone https://github.com/kaiobaronips/Tallent_CRM.git
-cd Tallent_CRM
+git clone https://github.com/kaiobaronips/RTX_Talent_CRM.git
+cd RTX_Talent_CRM
 vercel               # primeira vez nesta pasta — vai pedir nome novo de projeto
 ```
 

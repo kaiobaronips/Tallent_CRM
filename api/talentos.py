@@ -1,5 +1,5 @@
 """
-Tallent CRM — /api/talentos
+RTX Talent CRM — /api/talentos
 Lista os talentos do banco principal para a view dedicada.
 """
 

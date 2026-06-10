@@ -1,5 +1,5 @@
 """
-Tallent CRM — /api/email
+RTX Talent CRM — /api/email
 Lista todos os registros do DB_EMAIL com summary (KPIs + chips por tipo).
 """
 
