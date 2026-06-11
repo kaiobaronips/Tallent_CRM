@@ -2,6 +2,8 @@
 RTX Talent CRM — /api/update_talento
 Atualiza propriedades de um talento no Notion:
   - status (select): mudança de estágio do pipeline
+  - status_linkedin (select): status do canal LinkedIn
+  - status_email (select): status do canal E-mail
   - motivo_descarte (rich_text): motivo de descarte/notas finais
   - observacoes (rich_text): observações gerais (SUBSTITUI)
   - append_observacao (str): adiciona uma nova observação com timestamp ao topo
@@ -18,6 +20,12 @@ from _lib import (  # noqa: E402
     NOTION_TOKEN, VALID_STATUS, JsonHandler,
     notion_get_page, notion_patch_page, rich_text_value,
 )
+
+# Status dos canais LinkedIn/E-mail (tipo select no Notion). Opções observadas
+# na base — usado para validar writes e evitar criar options por engano.
+VALID_STATUS_CANAL = {
+    "Preparado", "Pendente", "Enviado", "Aguardando", "Respondeu", "Encerrado", "Erro",
+}
 
 
 def _get_page_observacoes(page_id):
@@ -45,6 +53,16 @@ def patch_talento(page_id, fields):
         props["Status"] = {"select": {"name": status}}
     elif "status" in fields and fields["status"] is None:
         props["Status"] = {"select": None}
+
+    for key, notion_name in (("status_linkedin", "Status LinkedIn"),
+                             ("status_email", "Status E-mail")):
+        val = (fields.get(key) or "").strip()
+        if val:
+            if val not in VALID_STATUS_CANAL:
+                raise ValueError(f"{notion_name} inválido: {val}")
+            props[notion_name] = {"select": {"name": val}}
+        elif key in fields and fields[key] is None:
+            props[notion_name] = {"select": None}
 
     if "motivo_descarte" in fields:
         props["Motivo de descarte"] = rich_text_value(fields.get("motivo_descarte") or "")
@@ -86,10 +104,12 @@ class handler(JsonHandler):
             if not page_id:
                 self.respond(400, {"error": "page_id obrigatório"})
                 return
-            # Aceita: status, motivo_descarte, observacoes, append_observacao, proxima_acao
+            # Aceita: status, status_linkedin, status_email, motivo_descarte,
+            #         observacoes, append_observacao, proxima_acao
             patch_talento(page_id, body)
             self.respond(200, {"ok": True, "page_id": page_id, "updated": [
-                k for k in ("status", "motivo_descarte", "observacoes", "append_observacao", "proxima_acao")
+                k for k in ("status", "status_linkedin", "status_email", "motivo_descarte",
+                            "observacoes", "append_observacao", "proxima_acao")
                 if k in body
             ]})
         except ValueError as e:
